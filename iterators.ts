@@ -342,7 +342,7 @@ var AsyncIterator = function AsyncIterator() { } as AsyncIteratorConstructor;
                 while (1) {
                     const next = call(_next, self);
                     if (next.done) return array;
-                    array[index] = next.value;
+                    array[index++] = next.value;
                 }
             } catch (error) {
                 IteratorClose(self, error);
@@ -546,7 +546,7 @@ var AsyncIterator = function AsyncIterator() { } as AsyncIteratorConstructor;
                 while (1) {
                     const next = await call(_next, self);
                     if (next.done) return array;
-                    array[index] = next.value;
+                    array[index++] = next.value;
                 }
             } catch (error) {
                 await AsyncIteratorClose(self, error);
