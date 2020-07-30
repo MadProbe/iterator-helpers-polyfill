@@ -392,7 +392,7 @@ var AsyncIterator = function AsyncIterator() { };
                     if (next.done)
                         return;
                     const value = next.value;
-                    if (!fn(value))
+                    if (fn(value))
                         return value;
                 }
             }
@@ -620,7 +620,7 @@ var AsyncIterator = function AsyncIterator() { };
                     if (next.done)
                         return;
                     const value = next.value;
-                    if (!fn(value))
+                    if (fn(value))
                         return value;
                 }
             }

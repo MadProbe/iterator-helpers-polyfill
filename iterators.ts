@@ -399,7 +399,7 @@ var AsyncIterator = function AsyncIterator() { } as AsyncIteratorConstructor;
                     const next = call(_next, self);
                     if (next.done) return;
                     const value = next.value as T;
-                    if (!fn(value)) return value;
+                    if (fn(value)) return value;
                 }
             } catch (error) {
                 IteratorClose(self, error);
@@ -603,7 +603,7 @@ var AsyncIterator = function AsyncIterator() { } as AsyncIteratorConstructor;
                     const next = await call(_next, self);
                     if (next.done) return;
                     const value = next.value as T;
-                    if (!fn(value)) return value;
+                    if (fn(value)) return value;
                 }
             } catch (error) {
                 await AsyncIteratorClose(self, error);
