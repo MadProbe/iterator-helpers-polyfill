@@ -10,7 +10,6 @@
             "dom"
         ],
         "declaration": true,
-        "skipLibCheck": false,
-        "skipDefaultLibCheck": true
+        "sourceMap": true
     }
 }
