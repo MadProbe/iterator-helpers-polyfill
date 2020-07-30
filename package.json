@@ -1,0 +1,27 @@
+{
+  "name": "iterator-helpers-proposal-polyfill",
+  "version": "1.0.0",
+  "description": "A polyfill for Iterator helpers proposal",
+  "main": "iterators.js",
+  "directories": {
+    "test": "tests"
+  },
+  "scripts": {
+    "test": "node ./tests/test.js"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/MadProbe/iterator-helper-polyfill.git"
+  },
+  "keywords": [
+    "polyfill",
+    "iterator-helpers-proposal",
+    "iterator-helpers"
+  ],
+  "author": "MadProbe#7435",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/MadProbe/iterator-helper-polyfill/issues"
+  },
+  "homepage": "https://github.com/MadProbe/iterator-helper-polyfill#readme"
+}
