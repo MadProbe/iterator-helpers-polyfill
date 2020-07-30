@@ -164,13 +164,13 @@ var AsyncIterator = function AsyncIterator() { } as AsyncIteratorConstructor;
     const { floor, abs } = Math;
     const { getPrototypeOf, defineProperty, getOwnPropertyNames } = Object;
     const typeerror = TypeError;
-    const $reasons = [" is not function"] as string[];
+    const $reasons = [" is not function", " is not iterable (cannot read property Symbol(Symbol.iterator))" , "Reduce of empty array with no initial value"] as string[];
     type AnyFunction = (...args: any[]) => any;
     const isCallable = <T extends AnyFunction>(fn: any): fn is T => typeof fn === "function";
     const assertCallable: (fn: any) => asserts fn is Function = (fn) => {
         if (!isCallable(fn)) throw typeerror(fn + "is not callable");
     };
-    const _call = noop.call as Function;
+    const _call = isCallable.call as Function;
     const call = _call.bind(_call) as <T extends AnyFunction>(fn: T, thisArg?: ThisParameterType<T> | null, ...args: Parameters<T>) => ReturnType<T>;
     const SymbolToStringTag = Symbol.toStringTag;
     const IteratorPrototype = getPrototypeOf(getPrototypeOf(getPrototypeOf(noop())));
@@ -323,7 +323,7 @@ var AsyncIterator = function AsyncIterator() { } as AsyncIteratorConstructor;
             if (!(1 in arguments)) { // It's the only way to check if initialValue is not present
                 let __next = call(_next, self);
                 if (__next.done) {
-                    throw typeerror($reasons[3]);
+                    throw typeerror($reasons[2]);
                 }
                 accumulator = __next.value;
             }
@@ -524,7 +524,7 @@ var AsyncIterator = function AsyncIterator() { } as AsyncIteratorConstructor;
                 if (!(1 in arguments)) { // It's the only way to check if initialValue is not present
                     let __next = await call(_next, self);
                     if (__next.done) {
-                        throw typeerror($reasons[3]);
+                        throw typeerror($reasons[2]);
                     }
                     accumulator = __next.value;
                 }

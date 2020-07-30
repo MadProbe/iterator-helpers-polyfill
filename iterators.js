@@ -126,13 +126,13 @@ var AsyncIterator = function AsyncIterator() { };
     const { floor, abs } = Math;
     const { getPrototypeOf, defineProperty, getOwnPropertyNames } = Object;
     const typeerror = TypeError;
-    const $reasons = [" is not function"];
+    const $reasons = [" is not function", " is not iterable (cannot read property Symbol(Symbol.iterator))", "Reduce of empty array with no initial value"];
     const isCallable = (fn) => typeof fn === "function";
     const assertCallable = (fn) => {
         if (!isCallable(fn))
             throw typeerror(fn + "is not callable");
     };
-    const _call = noop.call;
+    const _call = isCallable.call;
     const call = _call.bind(_call);
     const SymbolToStringTag = Symbol.toStringTag;
     const IteratorPrototype = getPrototypeOf(getPrototypeOf(getPrototypeOf(noop())));
@@ -304,7 +304,7 @@ var AsyncIterator = function AsyncIterator() { };
             if (!(1 in arguments)) { // It's the only way to check if initialValue is not present
                 let __next = call(_next, self);
                 if (__next.done) {
-                    throw typeerror($reasons[3]);
+                    throw typeerror($reasons[2]);
                 }
                 accumulator = __next.value;
             }
@@ -528,7 +528,7 @@ var AsyncIterator = function AsyncIterator() { };
                 if (!(1 in arguments)) { // It's the only way to check if initialValue is not present
                     let __next = await call(_next, self);
                     if (__next.done) {
-                        throw typeerror($reasons[3]);
+                        throw typeerror($reasons[2]);
                     }
                     accumulator = __next.value;
                 }
