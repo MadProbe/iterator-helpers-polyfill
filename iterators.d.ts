@@ -39,12 +39,12 @@ interface AsyncIterator<T, TReturn = any, TNext = undefined> {
 interface IteratorConstructor<T = unknown, TReturn = any, TNext = undefined> {
     prototype: Iterator<T, TReturn, TNext>;
     new (): Iterator<T, TReturn, TNext>;
-    from<T>(iterable: Iterable<T>): Iterator<T>;
+    from<T>(iterable: Iterable<T> | Iterator<T>): Iterator<T>;
 }
 interface AsyncIteratorConstructor<T = unknown, TReturn = any, TNext = undefined> {
     prototype: AsyncIterator<T, TReturn, TNext>;
     new (): AsyncIterator<T, TReturn, TNext>;
-    from<T>(iterable: AsyncIterable<T> | Iterable<T>): AsyncIterator<T>;
+    from<T>(iterable: AsyncIterable<T> | AsyncIterator<T> | Iterable<T> | Iterator<T>): AsyncIterator<T>;
 }
 declare var Iterator: IteratorConstructor<unknown, any, undefined>;
 declare var AsyncIterator: AsyncIteratorConstructor<unknown, any, undefined>;
