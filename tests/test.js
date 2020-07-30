@@ -13,7 +13,7 @@ const { join } = require("path");
             exec();
         } catch (error) {
             console.error("Test in " + file + "failed with error: ", error);
-        }        
+        }
     }
     const asyncTests = readdirSync(join(main, "tests/async"));
     for (let i = 0; i < asyncTests.length; i++) {
@@ -23,7 +23,7 @@ const { join } = require("path");
             await exec();
         } catch (error) {
             console.error("Test in " + file + "failed with error: ", error);
-        }        
+        }
     }
 })();
 module.exports = null;
