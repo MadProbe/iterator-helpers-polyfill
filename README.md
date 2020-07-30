@@ -4,4 +4,4 @@ This polyfill is independend (doesn't have any dependecies) can be used in envir
 <!-- I dont know what to write else here lol -->
 
 ## Notes:
-This polyfill also implements behavior from [issue #114 - flatMap should act like it does a `yield *` on each iterable](https://github.com/tc39/proposal-iterator-helpers/issues/114);
+This polyfill also implements behavior from [issue #114 - flatMap should act like it does a `yield *` on each iterable](https://github.com/tc39/proposal-iterator-helpers/issues/114)
