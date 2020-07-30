@@ -178,7 +178,7 @@ var AsyncIterator = function AsyncIterator() { };
             asyncIteratorRecord = object;
         return WrapForValidAsyncIteratorPrototype(asyncIteratorRecord, assert(asyncIteratorRecord));
     };
-    polyfill(Iterator, GeneratorPrototype, class Iterator {
+    polyfill(Iterator, GeneratorPrototype, class {
         *map(mapper) {
             let self = this;
             let _next = assert(self);
@@ -281,7 +281,7 @@ var AsyncIterator = function AsyncIterator() { };
                         return;
                     // Issue #114 flatMap should act like it does a `yield *` on each iterable
                     // https://github.com/tc39/proposal-iterator-helpers/issues/114
-                    yield* mapper(next.value);
+                    yield* Iterator.from(mapper(next.value));
                     // const innerIterator = mapper(next.value as T)[Symbol.iterator]();
                     // const __next = innerIterator.next;
                     // let innerAlive = true;
