@@ -135,8 +135,8 @@ var AsyncIterator = function AsyncIterator() { };
     const _call = noop.call;
     const call = _call.bind(_call);
     const SymbolToStringTag = Symbol.toStringTag;
-    const GeneratorPrototype = getPrototypeOf(getPrototypeOf(getPrototypeOf(noop())));
-    const AsyncGeneratorPrototype = getPrototypeOf(getPrototypeOf(getPrototypeOf(asyncNoop())));
+    const IteratorPrototype = getPrototypeOf(getPrototypeOf(getPrototypeOf(noop())));
+    const AsyncIteratorPrototype = getPrototypeOf(getPrototypeOf(getPrototypeOf(asyncNoop())));
     const polyfill = (constructor, prototype, klass) => {
         prototype.constructor = constructor;
         constructor.prototype = prototype;
@@ -151,7 +151,7 @@ var AsyncIterator = function AsyncIterator() { };
         }
         self[constructor.name] = constructor;
     };
-    Iterator.from = function (O) {
+    const IteratorFrom = Iterator.from = function (O) {
         var object = Object(O);
         var usingIterator = object[Symbol.iterator];
         var iteratorRecord;
@@ -164,7 +164,7 @@ var AsyncIterator = function AsyncIterator() { };
             iteratorRecord = object;
         return WrapForValidIteratorPrototype(iteratorRecord, assert(iteratorRecord));
     };
-    AsyncIterator.from = function (O) {
+    const AsyncIteratorFrom = AsyncIterator.from = function (O) {
         var _a, _b;
         var object = Object(O);
         var usingIterator = (_b = (_a = object[Symbol.asyncIterator]) !== null && _a !== void 0 ? _a : object[Symbol.iterator]) !== null && _b !== void 0 ? _b : object['@@iterator'];
@@ -178,7 +178,7 @@ var AsyncIterator = function AsyncIterator() { };
             asyncIteratorRecord = object;
         return WrapForValidAsyncIteratorPrototype(asyncIteratorRecord, assert(asyncIteratorRecord));
     };
-    polyfill(Iterator, GeneratorPrototype, class {
+    polyfill(Iterator, IteratorPrototype, class {
         *map(mapper) {
             let self = this;
             let _next = assert(self);
@@ -281,7 +281,7 @@ var AsyncIterator = function AsyncIterator() { };
                         return;
                     // Issue #114 flatMap should act like it does a `yield *` on each iterable
                     // https://github.com/tc39/proposal-iterator-helpers/issues/114
-                    yield* Iterator.from(mapper(next.value));
+                    yield* IteratorFrom(mapper(next.value));
                     // const innerIterator = mapper(next.value as T)[Symbol.iterator]();
                     // const __next = innerIterator.next;
                     // let innerAlive = true;
@@ -401,10 +401,7 @@ var AsyncIterator = function AsyncIterator() { };
             }
         }
     });
-    polyfill(AsyncIterator, AsyncGeneratorPrototype, class AsyncIterator {
-        constructor() {
-            this["constructor"] = self.AsyncIterator;
-        }
+    polyfill(AsyncIterator, AsyncIteratorPrototype, class {
         async *map(mapper) {
             let self = this;
             let _next = assert(self);
@@ -507,12 +504,12 @@ var AsyncIterator = function AsyncIterator() { };
                         return;
                     // Issue #114 flatMap should act like it does a `yield *` on each iterable
                     // https://github.com/tc39/proposal-iterator-helpers/issues/114
-                    yield* await mapper(next.value);
+                    yield* AsyncIteratorFrom(await mapper(next.value));
                     // const innerIterator = mapper(next.value as T)[Symbol.iterator]();
                     // const __next = innerIterator.next;
                     // let innerAlive = true;
                     // while (innerAlive) {
-                    //     const innerNext = call(__next, innerIterator);
+                    //     const innerNext = await call(__next, innerIterator);
                     //     if (innerNext.done) innerAlive = false;
                     //     else yield innerNext.value as R;
                     // }
@@ -647,3 +644,4 @@ var AsyncIterator = function AsyncIterator() { };
     delete proto.__magic__;
     return global;
 }()));
+//# sourceMappingURL=iterators.js.map

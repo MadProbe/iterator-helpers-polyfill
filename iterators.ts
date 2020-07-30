@@ -52,6 +52,8 @@ var Iterator = function Iterator() { } as IteratorConstructor;
 // @ts-ignore
 var AsyncIterator = function AsyncIterator() { } as AsyncIteratorConstructor;
 ((self, u?: undefined) => {
+    type IteratorNext<T, TNext, TReturn> = (...args: [] | [value: TNext]) => IteratorResult<T, TReturn>;
+    type AsyncIteratorNext<T, TNext, TReturn> = (...args: [] | [value: TNext]) => Promise<IteratorResult<T, TReturn>>;
     function* noop() { }
     async function* asyncNoop() { }
     const ToInteger = (argument: number) => {
@@ -171,8 +173,8 @@ var AsyncIterator = function AsyncIterator() { } as AsyncIteratorConstructor;
     const _call = noop.call as Function;
     const call = _call.bind(_call) as <T extends AnyFunction>(fn: T, thisArg?: ThisParameterType<T> | null, ...args: Parameters<T>) => ReturnType<T>;
     const SymbolToStringTag = Symbol.toStringTag;
-    const GeneratorPrototype = getPrototypeOf(getPrototypeOf(getPrototypeOf(noop())));
-    const AsyncGeneratorPrototype = getPrototypeOf(getPrototypeOf(getPrototypeOf(asyncNoop())));
+    const IteratorPrototype = getPrototypeOf(getPrototypeOf(getPrototypeOf(noop())));
+    const AsyncIteratorPrototype = getPrototypeOf(getPrototypeOf(getPrototypeOf(asyncNoop())));
     const polyfill = (constructor: any, prototype: any, klass: any) => {
         prototype.constructor = constructor;
         constructor.prototype = prototype;
@@ -186,7 +188,7 @@ var AsyncIterator = function AsyncIterator() { } as AsyncIteratorConstructor;
         }
         self[constructor.name] = constructor;
     }
-    Iterator.from = function <T>(O: any) {
+    const IteratorFrom = Iterator.from = function <T>(O: any) {
         var object = Object(O);
         var usingIterator = object[Symbol.iterator];
         var iteratorRecord;
@@ -196,7 +198,7 @@ var AsyncIterator = function AsyncIterator() { } as AsyncIteratorConstructor;
         } else iteratorRecord = object;
         return WrapForValidIteratorPrototype<T>(iteratorRecord, assert(iteratorRecord));
     };
-    AsyncIterator.from = function <T>(O: any) {
+    const AsyncIteratorFrom = AsyncIterator.from = function <T>(O: any) {
         var object = Object(O);
         var usingIterator = object[Symbol.asyncIterator] ?? object[Symbol.iterator] ?? object['@@iterator'];
         var asyncIteratorRecord;
@@ -206,7 +208,7 @@ var AsyncIterator = function AsyncIterator() { } as AsyncIteratorConstructor;
         } else asyncIteratorRecord = object;
         return WrapForValidAsyncIteratorPrototype<T>(asyncIteratorRecord, assert(asyncIteratorRecord));
     };
-    polyfill(Iterator, GeneratorPrototype, class <T = unknown, TReturn = any, TNext = undefined> {
+    polyfill(Iterator, IteratorPrototype, class <T = unknown, TReturn = any, TNext = undefined> {
         next!: IteratorNext<T, TNext, TReturn>;
         return!: (value: TReturn) => IteratorResult<T, TReturn>;
         throw!: (e?: any) => IteratorResult<T, TReturn>;
@@ -299,7 +301,7 @@ var AsyncIterator = function AsyncIterator() { } as AsyncIteratorConstructor;
                     if (next.done) return;
                     // Issue #114 flatMap should act like it does a `yield *` on each iterable
                     // https://github.com/tc39/proposal-iterator-helpers/issues/114
-                    yield* Iterator.from(mapper(next.value as T)) as Iterator<R, TReturn, TNext>;
+                    yield* IteratorFrom(mapper(next.value as T)) as Iterator<R, TReturn, TNext>;
                     // const innerIterator = mapper(next.value as T)[Symbol.iterator]();
                     // const __next = innerIterator.next;
                     // let innerAlive = true;
@@ -406,11 +408,10 @@ var AsyncIterator = function AsyncIterator() { } as AsyncIteratorConstructor;
         [Symbol.iterator]!: () => this;
         readonly [Symbol.toStringTag]!: "Iterator";
     });
-    polyfill(AsyncIterator, AsyncGeneratorPrototype, class AsyncIterator<T = unknown, TReturn = any, TNext = undefined> {
+    polyfill(AsyncIterator, AsyncIteratorPrototype, class <T = unknown, TReturn = any, TNext = undefined> {
         next!: AsyncIteratorNext<T, TNext, TReturn>;
         return!: (value: TReturn | PromiseLike<TReturn>) => Promise<IteratorResult<T, TReturn>>;
         throw!: (e?: any) => Promise<IteratorResult<T, TReturn>>;
-        ["constructor"] = self.AsyncIterator;
         async *map<R>(mapper: (value: T) => R | PromiseLike<R>) {
             let self = this;
             let _next = assert(self) as AsyncIteratorNext<T, TNext, TReturn>;
@@ -500,12 +501,12 @@ var AsyncIterator = function AsyncIterator() { } as AsyncIteratorConstructor;
                     if (next.done) return;
                     // Issue #114 flatMap should act like it does a `yield *` on each iterable
                     // https://github.com/tc39/proposal-iterator-helpers/issues/114
-                    yield* await mapper(next.value as T);
+                    yield* AsyncIteratorFrom(await mapper(next.value as T)) as AsyncIterator<R, TReturn, TNext>;
                     // const innerIterator = mapper(next.value as T)[Symbol.iterator]();
                     // const __next = innerIterator.next;
                     // let innerAlive = true;
                     // while (innerAlive) {
-                    //     const innerNext = call(__next, innerIterator);
+                    //     const innerNext = await call(__next, innerIterator);
                     //     if (innerNext.done) innerAlive = false;
                     //     else yield innerNext.value as R;
                     // }
@@ -611,8 +612,6 @@ var AsyncIterator = function AsyncIterator() { } as AsyncIteratorConstructor;
         [Symbol.asyncIterator]!: () => this;
         readonly [Symbol.toStringTag]!: "AsyncIterator";
     });
-    type IteratorNext<T, TNext, TReturn> = (...args: [] | [value: TNext]) => IteratorResult<T, TReturn>;
-    type AsyncIteratorNext<T, TNext, TReturn> = (...args: [] | [value: TNext]) => Promise<IteratorResult<T, TReturn>>;
 })((function () {
     var proto = Object.prototype;
     Object.defineProperty(proto, '__magic__', {
