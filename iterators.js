@@ -126,7 +126,7 @@ var AsyncIterator = function AsyncIterator() { };
     const { floor, abs } = Math;
     const { getPrototypeOf, defineProperty, getOwnPropertyNames } = Object;
     const typeerror = TypeError;
-    const $reasons = [" is not function", " is not iterable (cannot read property Symbol(Symbol.iterator))", "Reduce of empty array with no initial value"];
+    const $reasons = [" is not function", " is not iterable (cannot read property Symbol(Symbol.iterator))", "Reduce of empty iterator with no initial value"];
     const isCallable = (fn) => typeof fn === "function";
     const assertCallable = (fn) => {
         if (!isCallable(fn))

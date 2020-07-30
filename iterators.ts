@@ -164,7 +164,7 @@ var AsyncIterator = function AsyncIterator() { } as AsyncIteratorConstructor;
     const { floor, abs } = Math;
     const { getPrototypeOf, defineProperty, getOwnPropertyNames } = Object;
     const typeerror = TypeError;
-    const $reasons = [" is not function", " is not iterable (cannot read property Symbol(Symbol.iterator))" , "Reduce of empty array with no initial value"] as string[];
+    const $reasons = [" is not function", " is not iterable (cannot read property Symbol(Symbol.iterator))" , "Reduce of empty iterator with no initial value"] as string[];
     type AnyFunction = (...args: any[]) => any;
     const isCallable = <T extends AnyFunction>(fn: any): fn is T => typeof fn === "function";
     const assertCallable: (fn: any) => asserts fn is Function = (fn) => {
