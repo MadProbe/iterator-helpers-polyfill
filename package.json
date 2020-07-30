@@ -11,7 +11,7 @@
   },
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/MadProbe/iterator-helper-polyfill.git"
+    "url": "git+https://github.com/MadProbe/iterator-helpers-polyfill.git"
   },
   "keywords": [
     "polyfill",
@@ -21,7 +21,7 @@
   "author": "MadProbe#7435",
   "license": "ISC",
   "bugs": {
-    "url": "https://github.com/MadProbe/iterator-helper-polyfill/issues"
+    "url": "https://github.com/MadProbe/iterator-helpers-polyfill/issues"
   },
-  "homepage": "https://github.com/MadProbe/iterator-helper-polyfill#readme"
+  "homepage": "https://github.com/MadProbe/iterator-helpers-polyfill#readme"
 }
