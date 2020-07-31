@@ -89,7 +89,7 @@ var AsyncIterator = function AsyncIterator() { };
                 }
             }
         };
-        Object.setPrototypeOf(object, Iterator.prototype);
+        setPrototypeOf(object, IteratorPrototype);
         return object;
     };
     const WrapForValidAsyncIteratorPrototype = (iterable, next) => {
@@ -120,11 +120,11 @@ var AsyncIterator = function AsyncIterator() { };
                 }
             }
         };
-        Object.setPrototypeOf(object, AsyncIterator.prototype);
+        setPrototypeOf(object, AsyncIteratorPrototype);
         return object;
     };
     const { floor, abs } = Math;
-    const { getPrototypeOf, defineProperty, getOwnPropertyNames } = Object;
+    const { getPrototypeOf, defineProperty, getOwnPropertyNames, setPrototypeOf } = Object;
     const typeerror = TypeError;
     const $reasons = [" is not function", " is not iterable (cannot read property Symbol(Symbol.iterator))", "Reduce of empty iterator with no initial value"];
     const isCallable = (fn) => typeof fn === "function";
@@ -165,9 +165,9 @@ var AsyncIterator = function AsyncIterator() { };
         return WrapForValidIteratorPrototype(iteratorRecord, assert(iteratorRecord));
     };
     const AsyncIteratorFrom = AsyncIterator.from = function (O) {
-        var _a, _b;
+        var _a;
         var object = Object(O);
-        var usingIterator = (_b = (_a = object[Symbol.asyncIterator]) !== null && _a !== void 0 ? _a : object[Symbol.iterator]) !== null && _b !== void 0 ? _b : object['@@iterator'];
+        var usingIterator = (_a = object[Symbol.asyncIterator]) !== null && _a !== void 0 ? _a : object[Symbol.iterator];
         var asyncIteratorRecord;
         if (usingIterator != u) {
             asyncIteratorRecord = call(usingIterator, object);
@@ -629,10 +629,10 @@ var AsyncIterator = function AsyncIterator() { };
             }
         }
     });
-})((function () {
+})((Object => {
     var proto = Object.prototype;
     Object.defineProperty(proto, '__magic__', {
-        get: function () {
+        get() {
             return this;
         },
         configurable: true
@@ -643,5 +643,5 @@ var AsyncIterator = function AsyncIterator() { };
     // @ts-ignore
     delete proto.__magic__;
     return global;
-}()));
+})(Object));
 //# sourceMappingURL=iterators.js.map

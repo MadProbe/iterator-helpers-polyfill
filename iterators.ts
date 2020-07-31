@@ -130,7 +130,7 @@ var AsyncIterator = function AsyncIterator() { } as AsyncIteratorConstructor;
                 }
             }
         }
-        Object.setPrototypeOf(object, Iterator.prototype);
+        setPrototypeOf(object, IteratorPrototype);
         return object as Iterator<T>;
     }
 
@@ -158,11 +158,11 @@ var AsyncIterator = function AsyncIterator() { } as AsyncIteratorConstructor;
                 }
             }
         }
-        Object.setPrototypeOf(object, AsyncIterator.prototype);
+        setPrototypeOf(object, AsyncIteratorPrototype);
         return object as AsyncIterator<T>;
     }
     const { floor, abs } = Math;
-    const { getPrototypeOf, defineProperty, getOwnPropertyNames } = Object;
+    const { getPrototypeOf, defineProperty, getOwnPropertyNames, setPrototypeOf } = Object;
     const typeerror = TypeError;
     const $reasons = [" is not function", " is not iterable (cannot read property Symbol(Symbol.iterator))" , "Reduce of empty iterator with no initial value"] as string[];
     type AnyFunction = (...args: any[]) => any;
@@ -200,7 +200,7 @@ var AsyncIterator = function AsyncIterator() { } as AsyncIteratorConstructor;
     };
     const AsyncIteratorFrom = AsyncIterator.from = function <T>(O: any) {
         var object = Object(O);
-        var usingIterator = object[Symbol.asyncIterator] ?? object[Symbol.iterator] ?? object['@@iterator'];
+        var usingIterator = object[Symbol.asyncIterator] ?? object[Symbol.iterator];
         var asyncIteratorRecord;
         if (usingIterator != u) {
             asyncIteratorRecord = call(usingIterator, object);
@@ -612,18 +612,18 @@ var AsyncIterator = function AsyncIterator() { } as AsyncIteratorConstructor;
         [Symbol.asyncIterator]!: () => this;
         readonly [Symbol.toStringTag]!: "AsyncIterator";
     });
-})((function () {
+})((Object => {
     var proto = Object.prototype;
     Object.defineProperty(proto, '__magic__', {
-        get: function () {
+        get() {
             return this;
         },
         configurable: true
     });
     // JS magic should be ignored
     // @ts-ignore
-    var global = __magic__;
+    var global = __magic__ as typeof globalThis;
     // @ts-ignore
     delete proto.__magic__;
-    return global as typeof globalThis;
-}()));
+    return global;
+})(Object));
