@@ -151,7 +151,7 @@ var AsyncIterator = function AsyncIterator() { };
         }
         self[constructor.name] = constructor;
     };
-    const IteratorFrom = Iterator.from = function (O) {
+    const IteratorFrom = Iterator.from = (O) => {
         var object = Object(O);
         var usingIterator = object[Symbol.iterator];
         var iteratorRecord;
@@ -164,7 +164,7 @@ var AsyncIterator = function AsyncIterator() { };
             iteratorRecord = object;
         return WrapForValidIteratorPrototype(iteratorRecord, assert(iteratorRecord));
     };
-    const AsyncIteratorFrom = AsyncIterator.from = function (O) {
+    const AsyncIteratorFrom = AsyncIterator.from = (O) => {
         var _a;
         var object = Object(O);
         var usingIterator = (_a = object[Symbol.asyncIterator]) !== null && _a !== void 0 ? _a : object[Symbol.iterator];
@@ -630,7 +630,7 @@ var AsyncIterator = function AsyncIterator() { };
         }
     });
 })((Object => {
-    var proto = Object.prototype;
+    var proto = Object.prototype, global;
     Object.defineProperty(proto, '__magic__', {
         get() {
             return this;
@@ -639,7 +639,7 @@ var AsyncIterator = function AsyncIterator() { };
     });
     // JS magic should be ignored
     // @ts-ignore
-    var global = __magic__;
+    global = __magic__;
     // @ts-ignore
     delete proto.__magic__;
     return global;

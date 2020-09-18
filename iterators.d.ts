@@ -19,16 +19,15 @@ interface Iterator<T = unknown, TReturn = any, TNext = undefined> {
     [Symbol.iterator](): Iterator<T, TReturn, TNext>;
 }
 interface AsyncIterator<T, TReturn = any, TNext = undefined> {
-    map<R = T>(mapper: (value: T) => R): AsyncGenerator<R, TReturn, TNext>;
-    filter(filterer: (value: T) => boolean): AsyncGenerator<T, TReturn, TNext>;
-    filter<R extends T = T>(filterer: (value: T) => value is R): AsyncGenerator<R, TReturn, TNext>;
+    map<R = T>(mapper: (value: T) => R | PromiseLike<R>): AsyncGenerator<R, TReturn, TNext>;
+    filter(filterer: (value: T) => boolean | PromiseLike<boolean>): AsyncGenerator<T, TReturn, TNext>;
     asIndexedPairs(): AsyncGenerator<readonly [number, T], TReturn, TNext>;
     take(limit: number): AsyncGenerator<T, TReturn, TNext>;
     drop(limit: number): AsyncGenerator<T, TReturn, TNext>;
     flatMap<R = T>(mapper: (value: T) => PromiseLike<AsyncIterator<R> | Iterator<R>> | AsyncIterator<R> | Iterator<R>): AsyncGenerator<R, TReturn, TNext>;
-    forEach(fn: (value: T) => void): Promise<void>;
+    forEach(fn: (value: T) => void | PromiseLike<void>): Promise<void>;
     toArray(): Promise<T[]>;
-    reduce(reducer: (previousValue: T, currentValue: T) => T): Promise<T>;
+    reduce(reducer: (previousValue: T, currentValue: T) => T | PromiseLike<T>): Promise<T>;
     reduce(reducer: (previousValue: T, currentValue: T) => T | PromiseLike<T>, initialValue: T): Promise<T>;
     reduce<U>(reducer: (previousValue: U, currentValue: T) => U | PromiseLike<U>, initialValue: U): Promise<U>;
     some(fn: (value: T) => unknown | PromiseLike<unknown>): Promise<boolean>;

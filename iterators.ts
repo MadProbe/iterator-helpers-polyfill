@@ -20,16 +20,15 @@ interface Iterator<T = unknown, TReturn = any, TNext = undefined> {
     [Symbol.iterator](): Iterator<T, TReturn, TNext>;
 }
 interface AsyncIterator<T, TReturn = any, TNext = undefined> {
-    map<R = T>(mapper: (value: T) => R): AsyncGenerator<R, TReturn, TNext>;
-    filter(filterer: (value: T) => boolean): AsyncGenerator<T, TReturn, TNext>;
-    filter<R extends T = T>(filterer: (value: T) => value is R): AsyncGenerator<R, TReturn, TNext>;
+    map<R = T>(mapper: (value: T) => R | PromiseLike<R>): AsyncGenerator<R, TReturn, TNext>;
+    filter(filterer: (value: T) => boolean | PromiseLike<boolean>): AsyncGenerator<T, TReturn, TNext>;
     asIndexedPairs(): AsyncGenerator<readonly [number, T], TReturn, TNext>;
     take(limit: number): AsyncGenerator<T, TReturn, TNext>;
     drop(limit: number): AsyncGenerator<T, TReturn, TNext>;
     flatMap<R = T>(mapper: (value: T) => PromiseLike<AsyncIterator<R> | Iterator<R>> | AsyncIterator<R> | Iterator<R>): AsyncGenerator<R, TReturn, TNext>;
-    forEach(fn: (value: T) => void): Promise<void>;
+    forEach(fn: (value: T) => void | PromiseLike<void>): Promise<void>;
     toArray(): Promise<T[]>;
-    reduce(reducer: (previousValue: T, currentValue: T) => T): Promise<T>;
+    reduce(reducer: (previousValue: T, currentValue: T) => T | PromiseLike<T>): Promise<T>;
     reduce(reducer: (previousValue: T, currentValue: T) => T | PromiseLike<T>, initialValue: T): Promise<T>;
     reduce<U>(reducer: (previousValue: U, currentValue: T) => U | PromiseLike<U>, initialValue: U): Promise<U>;
     some(fn: (value: T) => unknown | PromiseLike<unknown>): Promise<boolean>;
@@ -188,7 +187,7 @@ var AsyncIterator = function AsyncIterator() { } as AsyncIteratorConstructor;
         }
         self[constructor.name] = constructor;
     }
-    const IteratorFrom = Iterator.from = function <T>(O: any) {
+    const IteratorFrom = Iterator.from = <T>(O: any) => {
         var object = Object(O);
         var usingIterator = object[Symbol.iterator];
         var iteratorRecord;
@@ -198,7 +197,7 @@ var AsyncIterator = function AsyncIterator() { } as AsyncIteratorConstructor;
         } else iteratorRecord = object;
         return WrapForValidIteratorPrototype<T>(iteratorRecord, assert(iteratorRecord));
     };
-    const AsyncIteratorFrom = AsyncIterator.from = function <T>(O: any) {
+    const AsyncIteratorFrom = AsyncIterator.from = <T>(O: any) => {
         var object = Object(O);
         var usingIterator = object[Symbol.asyncIterator] ?? object[Symbol.iterator];
         var asyncIteratorRecord;
@@ -613,7 +612,7 @@ var AsyncIterator = function AsyncIterator() { } as AsyncIteratorConstructor;
         readonly [Symbol.toStringTag]!: "AsyncIterator";
     });
 })((Object => {
-    var proto = Object.prototype;
+    var proto = Object.prototype, global;
     Object.defineProperty(proto, '__magic__', {
         get() {
             return this;
@@ -622,7 +621,7 @@ var AsyncIterator = function AsyncIterator() { } as AsyncIteratorConstructor;
     });
     // JS magic should be ignored
     // @ts-ignore
-    var global = __magic__ as typeof globalThis;
+    global = __magic__ as typeof globalThis;
     // @ts-ignore
     delete proto.__magic__;
     return global;
