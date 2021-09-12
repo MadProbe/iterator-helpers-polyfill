@@ -3,7 +3,6 @@ const { readdirSync } = require("fs");
 const { join } = require("path");
 
 (async () => {
-    console.log();
     const main = join(__dirname, '..')
     const syncTests = readdirSync(join(main, "tests/sync"));
     for (let i = 0; i < syncTests.length; i++) {

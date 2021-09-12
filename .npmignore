@@ -1,0 +1,8 @@
+.*
+src
+tests
+node_modules
+*.html
+*.json
+*.config.js
+*.md

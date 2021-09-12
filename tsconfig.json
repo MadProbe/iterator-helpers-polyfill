@@ -9,7 +9,15 @@
             "es2018",
             "dom"
         ],
-        "declaration": true,
-        "sourceMap": true
+        "sourceMap": true,
+        "paths": {
+            "@async/*": ["./src/methods/async/*"],
+            "@sync/*": ["./src/methods/sync/*"],
+            "@utils/*": ["./src/utils/*"],
+            "@wrappers/*": ["./src/wrappers/*"],
+        },
+        "experimentalDecorators": true,
+        "noEmitHelpers": true,
+        "strict": true
     }
 }
