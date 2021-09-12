@@ -23,7 +23,7 @@
     ],
     "types": "./declarations/index.d.ts",
     "author": "MadProbe#7435",
-    "license": "ISC",
+    "license": "MIT",
     "bugs": {
         "url": "https://github.com/MadProbe/iterator-helpers-polyfill/issues"
     },
