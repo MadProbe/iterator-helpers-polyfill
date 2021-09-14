@@ -4,7 +4,6 @@ import * as async_methods from "@async/all.js";
 import * as sync_methods from "@sync/all.js";
 import async_from from "@async/from.js";
 import from from "@sync/from.js";
-import { WrapForVaildIteratorPrototype } from "@wrappers/sync.js";
 
 function initPrototype(constructor: AnyFunction, prototype: unknown, methods: Record<string, AnyFunction>) {
     for (const key in methods) {
@@ -28,7 +27,5 @@ Iterator.from = from;
 
 $globalThis["Iterator"] = Iterator as never;
 $globalThis["AsyncIterator"] = AsyncIterator as never;
-// @ts-ignore
-$globalThis["asdfasdf"] = WrapForVaildIteratorPrototype as never;
 
 export * from "@utils/iterators.js";
