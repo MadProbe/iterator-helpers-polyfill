@@ -3,7 +3,7 @@ import { assertIterator, assertReplace, isPositiveInteger, mimic } from "@utils/
 
 
 export default mimic(undefined, "drop", assertReplace(isPositiveInteger, assertIterator(
-    function* (this: Generator<unknown>, _next: Generator<unknown>["next"], remaining: number) {
+    function* (this: Iterator<unknown>, _next: Iterator<unknown, unknown, unknown>["next"], remaining: number) {
         while (remaining--) {
             if (_next().done) return;
         }

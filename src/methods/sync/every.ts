@@ -3,7 +3,7 @@ import { assert, assertIterator, closeIterator, isFunction, mimic } from "@utils
 
 
 export default mimic(undefined, "every", assert(isFunction, O => `${ O } is not a function`, assertIterator(
-    function (this: Generator<unknown>, _next: Generator<unknown>["next"], fn: (item: any) => boolean) {
+    function (this: Iterator<unknown>, _next: Iterator<unknown, unknown, unknown>["next"], fn: (item: any) => boolean) {
         var done: boolean | undefined, value: unknown;
         while ({ done, value } = _next(), !done)
             try {

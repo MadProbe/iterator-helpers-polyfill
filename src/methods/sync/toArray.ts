@@ -1,7 +1,7 @@
 import { assertIterator, mimic } from "@utils/utils.js";
 
 export default mimic(0, "toArray", assertIterator(
-    function (this: Generator<unknown>, _next: Generator<unknown>["next"]) {
+    function (this: Iterator<unknown>, _next: Iterator<unknown, unknown, unknown>["next"]) {
         var array = [] as unknown[];
         var index = 0;
         var done: boolean | undefined, value: unknown;
