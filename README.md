@@ -17,6 +17,6 @@ Pre-checks are done **BEFORE** all functions start their shenanigans, **INCLUDIN
 4. Open pull request!
 
 ## Build:
-1. Install all modules by `npm i --force` (Ignore the warnings) in the command prompt.
+1. Install all modules by `npm i` in the command prompt.
 2. Build by `npm run build` if you just need the .mjs bundle or `npm run build-full` if you also need .cjs bundle.  
 NOTE: Builds include source maps.
