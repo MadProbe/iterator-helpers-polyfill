@@ -3,7 +3,7 @@ import { assert, assertIterator, closeIterator, isFunction, mimic } from "@utils
 import from from "./from.js";
 
 
-export default mimic(undefined, "flatMap", assertIterator(assert(isFunction, O => `${ O } is not a function`,
+export default mimic(undefined, "flatMap", assert(isFunction, O => `${ O } is not a function`, assertIterator(
     function* (this: Generator<unknown>, _next: Generator<unknown>["next"], fn: (item: any) => Iterator) {
         var done: boolean | undefined, value: unknown;
         while ({ done, value } = _next(), !done) try {

@@ -3,7 +3,7 @@ import { assert, assertIterator, closeAsyncIterator, isFunction, mimic } from "@
 import from from "./from.js";
 
 
-export default mimic(undefined, "flatMap", assertIterator(assert(isFunction, O => `${ O } is not a function`,
+export default mimic(undefined, "flatMap", assert(isFunction, O => `${ O } is not a function`, assertIterator(
     async function* (this: AsyncGenerator<unknown>, _next: AsyncGenerator<unknown>["next"], fn: (item: any) => _Awaitable<AsyncIterator<unknown>>) {
         var done: boolean | undefined, value: unknown;
         while ({ done, value } = await _next(), !done) try {

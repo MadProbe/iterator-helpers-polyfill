@@ -71,7 +71,7 @@ export const assertIterator = (func: AnyFunction) => {
     return $function;
 };
 export const assert = (asserter: AnyFunction, message: (argument: unknown) => string, func: AnyFunction) => {
-    function $function(this: unknown, $: unknown, _: unknown) {
+    function $function(this: unknown, _: unknown) {
         if (!asserter(_)) {
             throw TypeError(message(_));
         }
@@ -81,9 +81,9 @@ export const assert = (asserter: AnyFunction, message: (argument: unknown) => st
     $function[MimicedFunctionSymbol] = func[MimicedFunctionSymbol] || func;
     return $function;
 };
-export const assertReplace = (asserter: (argument: unknown) => void, func: AnyFunction) => {
-    function $function(this: unknown, $: unknown, _: unknown) {
-        asserter(_);
+export const assertReplace = (asserter: (argument: unknown) => unknown, func: AnyFunction) => {
+    function $function(this: unknown, $: unknown) {
+        $ = asserter($);
         return apply(func, this, arguments);
     }
     // @ts-ignore

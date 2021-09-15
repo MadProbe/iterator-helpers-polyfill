@@ -2,7 +2,7 @@ import { undefined } from "tslib";
 import { assert, assertIterator, closeIterator, isFunction, mimic } from "@utils/utils.js";
 
 
-export default mimic(undefined, "reduce", assertIterator(assert(isFunction, O => `${ O } is not a function`,
+export default mimic(undefined, "reduce", assert(isFunction, O => `${ O } is not a function`, assertIterator(
     function (this: Generator<unknown>, _next: Generator<unknown>["next"], fn: (acc: unknown, item: unknown) => _Awaitable<boolean>, accumulator?: unknown) {
         if (!(2 in arguments)) {
             if ({ value, done } = _next(), done) {
