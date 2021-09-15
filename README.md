@@ -8,6 +8,7 @@ The polyfill aims to be as close to the specification as possible, including `fu
 ## Notes:
 It also implements (Async)Iterator.prototype.flatMap() behavior from [issue #114 - flatMap should act like it does a `yield *` on each iterable](https://github.com/tc39/proposal-iterator-helpers/issues/114).
 Pre-checks are done **BEFORE** all functions start their shenanigans, **INCLUDING** async ones. (Yet i have unsettled thinking about async function pre-checks, maybe variations of pre-check will come out behind a flag? (config)).
+It takes globalThis by a polyfill written by Mathias Bynens from [his awensome article](https://mathiasbynens.be/notes/globalthis) (Lingers on fact that `__magic__` preperty doesn't exist in Object.prototype and Object.defineProperty isn't changed before the script is run).
 
 ## Development:
 **Please propose feature by opening an issue before starting working on pull request, because i can reject your proposal and your work won't be needed at all**  
