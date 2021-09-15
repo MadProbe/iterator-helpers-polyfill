@@ -11,7 +11,7 @@ export default mimic(undefined, "flatMap", assertIterator(assert(isFunction, O =
             // https://github.com/tc39/proposal-iterator-helpers/issues/114
             yield* from(await fn(value));
         } catch (error) {
-            closeAsyncIterator(this);
+            await closeAsyncIterator(this);
             throw error;
         }
     }

@@ -10,7 +10,7 @@ export default mimic(undefined, "map", assert(isFunction, O => `${ O } is not a 
         while ({ done, value } = await _next(lastValue), !done) try {
             lastValue = yield await fn(value as any);
         } catch (error) {
-            closeAsyncIterator(this);
+            await closeAsyncIterator(this);
             throw error;
         }
     }

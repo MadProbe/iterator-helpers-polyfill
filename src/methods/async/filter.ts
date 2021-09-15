@@ -8,7 +8,7 @@ export default mimic(undefined, "filter", assertIterator(assert(isFunction, O =>
             try {
                 if (await fn(value)) lastValue = yield value;
             } catch (error) {
-                closeAsyncIterator(this);
+                await closeAsyncIterator(this);
                 throw error;
             }
         }

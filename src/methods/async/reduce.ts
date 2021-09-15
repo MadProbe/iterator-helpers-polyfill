@@ -14,7 +14,7 @@ export default mimic(undefined, "reduce", assertIterator(assert(isFunction, O =>
         while ({ value, done } = await _next(), !done) try {
             accumulator = await fn(value, accumulator);
         } catch (error) {
-            closeAsyncIterator(this);
+            await closeAsyncIterator(this);
             throw error;
         }
         return accumulator;

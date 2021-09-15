@@ -1,5 +1,5 @@
 import { undefined } from "tslib";
-import { assertIterator, assertReplace, closeAsyncIterator, isPositiveInteger, mimic } from "@utils/utils.js";
+import { assertIterator, assertReplace, isPositiveInteger, mimic } from "@utils/utils.js";
 
 
 export default mimic(undefined, "drop", assertReplace(isPositiveInteger, assertIterator(
@@ -7,13 +7,8 @@ export default mimic(undefined, "drop", assertReplace(isPositiveInteger, assertI
         while (remaining--) {
             if ((await _next()).done) return;
         }
-        while (1) try {
-            var lastValue: unknown, { done, value } = await _next(lastValue);;
-            if (done) return;
+        for (var lastValue: unknown, done: boolean | undefined, value: unknown; { done, value } = await _next(lastValue), !done;) {
             lastValue = yield value;
-        } catch (error) {
-            closeAsyncIterator(this);
-            throw error;
         }
     }
 )));

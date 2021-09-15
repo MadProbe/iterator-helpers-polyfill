@@ -8,7 +8,7 @@ export default mimic(undefined, "find", assertIterator(assert(isFunction, O => `
         while ({ value, done } = await _next(), !done) try {
             if (await fn(value)) return closeAsyncIterator(this, value);
         } catch (error) {
-            closeAsyncIterator(this);
+            await closeAsyncIterator(this);
             throw error;
         }
     }
