@@ -1,27 +1,37 @@
 {
-	"name": "iterator-helpers-proposal-polyfill",
-	"version": "1.0.0",
-	"description": "A polyfill for Iterator helpers proposal",
-	"main": "iterators.js",
-	"directories": {
-		"test": "tests"
-	},
-	"scripts": {
-		"test": "node ./tests/test.js"
-	},
-	"repository": {
-		"type": "git",
-		"url": "git+https://github.com/MadProbe/iterator-helpers-polyfill.git"
-	},
-	"keywords": [
-		"polyfill",
-		"iterator-helpers-proposal",
-		"iterator-helpers"
-	],
-	"author": "MadProbe#7435",
-	"license": "ISC",
-	"bugs": {
-		"url": "https://github.com/MadProbe/iterator-helpers-polyfill/issues"
-	},
-	"homepage": "https://github.com/MadProbe/iterator-helpers-polyfill#readme"
+    "name": "iterator-helpers-proposal-polyfill",
+    "version": "2.0.0",
+    "description": "A polyfill for Iterator helpers proposal",
+    "main": "./build/bundle.min.cjs",
+    "module": "./build/bundle.min.mjs",
+    "directories": {
+        "test": "tests"
+    },
+    "scripts": {
+        "test": "node ./tests/test.js",
+        "build": "rollup -c",
+        "build-full": "rollup -c --environment FULL"
+    },
+    "repository": {
+        "type": "git",
+        "url": "git+https://github.com/MadProbe/iterator-helpers-polyfill.git"
+    },
+    "keywords": [
+        "polyfill",
+        "iterator-helpers-proposal",
+        "iterator-helpers"
+    ],
+    "types": "./declarations/index.d.ts",
+    "author": "MadProbe#7435",
+    "license": "MIT",
+    "bugs": {
+        "url": "https://github.com/MadProbe/iterator-helpers-polyfill/issues"
+    },
+    "homepage": "https://github.com/MadProbe/iterator-helpers-polyfill#readme",
+    "devDependencies": {
+        "rollup": "^2.56.3",
+        "rollup-plugin-terser": "^7.0.2",
+        "rollup-plugin-typescript2": "^0.30.0",
+        "typescript": "^4.4.3"
+    }
 }
