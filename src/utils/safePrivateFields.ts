@@ -49,7 +49,7 @@ export class ClassField<T = any> {
         methods[methods.length] = property;
         return descriptor;
     }
-    get<R extends T = T>(thisArg: object): R {
+    get<R extends T = T>(thisArg: object): R | undefined {
         return this.map.get(thisArg) as R;
     }
     has(thisArg: object): boolean {

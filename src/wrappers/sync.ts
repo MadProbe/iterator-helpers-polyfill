@@ -13,12 +13,12 @@ export class WrapForVaildIteratorPrototype extends ClassField.init(next = new Cl
     }
     @ClassField.check
     return(value: any) {
-        const $return = iterator.get(this).return;
+        const $return = iterator.get(this)!.return;
         return { value: $return !== undefined ? call($return, iterator.get(this)) : value, done: true };
     }
     @ClassField.check
     throw(value: any) {
-        const $throw = iterator.get(this).throw;
+        const $throw = iterator.get(this)!.throw;
         if ($throw !== undefined) {
             call($throw, iterator.get(this), value);
         } else {

@@ -1,6 +1,6 @@
 {
     "compilerOptions": {
-        "target": "es2018",
+        "experimentalDecorators": true,
         "lib": [
             "es5",
             "es2015",
@@ -9,15 +9,16 @@
             "es2018",
             "dom"
         ],
-        "sourceMap": true,
+        "module": "esnext",
         "paths": {
             "@async/*": ["./src/methods/async/*"],
             "@sync/*": ["./src/methods/sync/*"],
             "@utils/*": ["./src/utils/*"],
             "@wrappers/*": ["./src/wrappers/*"],
         },
-        "experimentalDecorators": true,
-        "noEmitHelpers": true,
-        "strict": true
+        "sourceMap": true,
+        "strict": true,
+        "suppressImplicitAnyIndexErrors": true,
+        "target": "es2018"
     }
 }

@@ -66,7 +66,6 @@ export const assertIterator = (func: AnyFunction) => {
         const next = assertIsIterator(this);
         return call(func, this, (...args: unknown[]) => apply(next, this, args), ...arguments);
     }
-    // @ts-ignore
     $function[MimicedFunctionSymbol] = func[MimicedFunctionSymbol] || func;
     return $function;
 };
@@ -77,7 +76,6 @@ export const assert = (asserter: AnyFunction, message: (argument: unknown) => st
         }
         return apply(func, this, arguments);
     }
-    // @ts-ignore
     $function[MimicedFunctionSymbol] = func[MimicedFunctionSymbol] || func;
     return $function;
 };
@@ -86,7 +84,6 @@ export const assertReplace = (asserter: (argument: unknown) => unknown, func: An
         $ = asserter($);
         return apply(func, this, arguments);
     }
-    // @ts-ignore
     $function[MimicedFunctionSymbol] = func[MimicedFunctionSymbol] || func;
     return $function;
 };
@@ -126,7 +123,7 @@ export const mimic = (argsLength: number | undefined, name: string, $function: A
     // it will be very common to have next parameter as first parameter
     // while still having opportunity to change it manually
     argsLength ??= length - 1;
-    defineProperties($function, { length: { value: argsLength, configurable: 1 as any }, name: { value: name, configurable: 1 as any } });
+    defineProperties($function, { length: { value: argsLength, configurable: true }, name: { value: name, configurable: true } });
     // @ts-ignore
     delete $function[MimicedFunctionSymbol];
     return concealSourceCode($function);

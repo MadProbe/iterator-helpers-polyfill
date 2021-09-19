@@ -20,12 +20,10 @@ initPrototype(Iterator, IteratorPrototype, sync_methods);
 
 initPrototype(AsyncIterator, AsyncIteratorPrototype, async_methods);
 
-// @ts-ignore; Are you serious?
 AsyncIterator.from = async_from;
-// @ts-ignore; same!
 Iterator.from = from;
 
-$globalThis["Iterator"] = Iterator as never;
-$globalThis["AsyncIterator"] = AsyncIterator as never;
+$globalThis["Iterator"] = Iterator;
+$globalThis["AsyncIterator"] = AsyncIterator;
 
 export * from "@utils/iterators.js";
