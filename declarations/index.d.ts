@@ -2,15 +2,16 @@
 /// <reference lib="es2018.asyncgenerator" />
 
 declare type _Awaitable<T> = PromiseLike<T> | T;
-declare type _AsyncIteratorLike<T, TReturn = any, TNext = undefined> = AsyncIterator<T, TReturn, TNext> | Iterator<_Awaitable<T>>;
-interface Iterator<T = unknown, TReturn = any, TNext = undefined> {
+declare type _IteratorLike<T = unknown, TReturn = any, TNext = undefined> = Iterator<T, TReturn, TNext> | Iterable<T>;
+declare type _AsyncIteratorLike<T = unknown, TReturn = any, TNext = undefined> = AsyncIterator<T, TReturn, TNext> | AsyncIterable<T> | _IteratorLike<_Awaitable<T>, TReturn, TNext>;
+declare interface Iterator<T = unknown, TReturn = any, TNext = undefined> {
     map<R = T>(mapper: (value: T) => R): Generator<R, void, TNext>;
-    filter(filterer: (value: T) => boolean): Generator<T, void, TNext>;
+    filter(filterer: (value: T) => unknown): Generator<T, void, TNext>;
     filter<R extends T = T>(filterer: (value: T) => value is R): Generator<R, void, TNext>;
     asIndexedPairs(): Generator<readonly [number, T], void, TNext>;
     take(limit: number): Generator<T, void, TNext>;
     drop(limit: number): Generator<T, void, TNext>;
-    flatMap<R = T>(mapper: (value: T) => Iterator<R>): Generator<R, TReturn, TNext>;
+    flatMap<R = T>(mapper: (value: T) => Iterator<R>): Generator<R, void, never>;
     forEach(fn: (value: T) => void): void;
     toArray(): T[];
     reduce(reducer: (previousValue: T, currentValue: T) => T): T;
@@ -19,16 +20,16 @@ interface Iterator<T = unknown, TReturn = any, TNext = undefined> {
     some(fn: (value: T) => unknown): boolean;
     every(fn: (value: T) => unknown): boolean;
     find(fn: (value: T) => unknown): T;
-    [Symbol.iterator](): Iterator<T, TReturn, TNext>;
+    [Symbol.iterator](): this;
 }
-interface AsyncIterator<T, TReturn = any, TNext = undefined> {
+declare interface AsyncIterator<T = unknown, TReturn = any, TNext = undefined> {
     map<R = T>(mapper: (value: T) => _Awaitable<R>): AsyncGenerator<R, void, TNext>;
-    filter(filterer: (value: T) => _Awaitable<boolean>): AsyncGenerator<T, void, TNext>;
+    filter(filterer: (value: T) => _Awaitable<unknown>): AsyncGenerator<T, void, TNext>;
     asIndexedPairs(): AsyncGenerator<readonly [number, T], void, TNext>;
     take(limit: number): AsyncGenerator<T, void, TNext>;
     drop(limit: number): AsyncGenerator<T, void, TNext>;
-    flatMap<R = T>(mapper: (value: T) => _Awaitable<_AsyncIteratorLike<R>>): AsyncGenerator<R, void, undefined>;
-    forEach(fn: (value: T) => _Awaitable<void>): Promise<void>;
+    flatMap<R = T>(mapper: (value: T) => _Awaitable<_AsyncIteratorLike<R>>): AsyncGenerator<R, void, never>;
+    forEach(fn: (value: T) => _Awaitable<unknown>): Promise<void>;
     toArray(): Promise<T[]>;
     reduce(reducer: (previousValue: T, currentValue: T) => _Awaitable<T>): Promise<T>;
     reduce(reducer: (previousValue: T, currentValue: T) => _Awaitable<T>, initialValue: T): Promise<T>;
@@ -36,17 +37,17 @@ interface AsyncIterator<T, TReturn = any, TNext = undefined> {
     some(fn: (value: T) => _Awaitable<unknown>): Promise<boolean>;
     every(fn: (value: T) => _Awaitable<unknown>): Promise<boolean>;
     find(fn: (value: T) => _Awaitable<unknown>): Promise<T>;
-    [Symbol.asyncIterator](): AsyncIterator<T, TReturn, TNext>;
+    [Symbol.asyncIterator](): this;
 }
-interface IteratorConstructor {
-    prototype: Iterator<unknown, any, undefined>;
+declare interface IteratorConstructor {
+    prototype: Iterator;
     new <T = unknown, TReturn = any, TNext = undefined>(): Iterator<T, TReturn, TNext>;
-    from<T>(iterable: Iterable<T> | Iterator<T>): Iterator<T>;
+    from<T>(iterable: _IteratorLike<T>): Iterator<T>;
 }
-interface AsyncIteratorConstructor {
-    prototype: AsyncIterator<unknown, any, undefined>;
+declare interface AsyncIteratorConstructor {
+    prototype: AsyncIterator;
     new <T = unknown, TReturn = any, TNext = undefined>(): AsyncIterator<T, TReturn, TNext>;
-    from<T>(iterable: AsyncIterable<T> | AsyncIterator<T> | Iterable<_Awaitable<T>> | Iterator<_Awaitable<T>>): AsyncIterator<T>;
+    from<T>(iterable: _AsyncIteratorLike<T>): AsyncIterator<T>;
 }
 declare var Iterator: IteratorConstructor;
 declare var AsyncIterator: AsyncIteratorConstructor;
