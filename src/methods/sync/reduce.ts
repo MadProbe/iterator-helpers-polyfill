@@ -10,7 +10,7 @@ export default mimic(undefined, "reduce", assert(isFunction, O => `${ O } is not
             }
             accumulator = value;
         }
-        var value: any, done: boolean | undefined;
+        var value: unknown, done: boolean | undefined;
         while ({ value, done } = _next(), !done) try {
             accumulator = fn(value, accumulator);
         } catch (error) {
