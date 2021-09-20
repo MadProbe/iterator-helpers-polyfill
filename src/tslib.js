@@ -13,10 +13,10 @@ OTHER TORTIOUS ACTION, ARISING OUT OF OR IN CONNECTION WITH THE USE OR
 PERFORMANCE OF THIS SOFTWARE.
 ***************************************************************************** */
 
-var extendStatics = function(d, b) {
-    extendStatics = Object.setPrototypeOf ||
+var extendStatics = function (d, b) {
+    extendStatics = setPrototypeOf ||
         ({ __proto__: [] } instanceof Array && function (d, b) { d.__proto__ = b; }) ||
-        function (d, b) { for (var p in b) if (Object.prototype.hasOwnProperty.call(b, p)) d[p] = b[p]; };
+        function (d, b) { for (var p in b) if (hasOwnProperty(b, p)) d[p] = b[p]; };
     return extendStatics(d, b);
 };
 
@@ -28,16 +28,16 @@ export function __extends(d, b) {
     d.prototype = b === null ? Object.create(b) : (__.prototype = b.prototype, new __());
 }
 
-export var __assign = function() {
+export var __assign = function () {
     __assign = Object.assign || function __assign(t) {
         for (var s, i = 1, n = arguments.length; i < n; i++) {
             s = arguments[i];
             for (var p in s) if (Object.prototype.hasOwnProperty.call(s, p)) t[p] = s[p];
         }
         return t;
-    }
+    };
     return __assign.apply(this, arguments);
-}
+};
 
 export function __rest(s, e) {
     var t = {};
@@ -58,7 +58,7 @@ export function __decorate(decorators, target, key, desc) {
 }
 
 export function __param(paramIndex, decorator) {
-    return function (target, key) { decorator(target, key, paramIndex); }
+    return function (target, key) { decorator(target, key, paramIndex); };
 }
 
 export function __metadata(metadataKey, metadataValue) {
@@ -76,8 +76,8 @@ export function __awaiter(thisArg, _arguments, P, generator) {
 }
 
 export function __generator(thisArg, body) {
-    var _ = { label: 0, sent: function() { if (t[0] & 1) throw t[1]; return t[1]; }, trys: [], ops: [] }, f, y, t, g;
-    return g = { next: verb(0), "throw": verb(1), "return": verb(2) }, typeof Symbol === "function" && (g[Symbol.iterator] = function() { return this; }), g;
+    var _ = { label: 0, sent: function () { if (t[0] & 1) throw t[1]; return t[1]; }, trys: [], ops: [] }, f, y, t, g;
+    return g = { next: verb(0), "throw": verb(1), "return": verb(2) }, typeof Symbol === "function" && (g[Symbol.iterator] = function () { return this; }), g;
     function verb(n) { return function (v) { return step([n, v]); }; }
     function step(op) {
         if (f) throw new TypeError("Generator is already executing.");
@@ -103,10 +103,10 @@ export function __generator(thisArg, body) {
     }
 }
 
-export var __createBinding = Object.create ? (function(o, m, k, k2) {
+export var __createBinding = Object.create ? (function (o, m, k, k2) {
     if (k2 === undefined) k2 = k;
-    Object.defineProperty(o, k2, { enumerable: true, get: function() { return m[k]; } });
-}) : (function(o, m, k, k2) {
+    Object.defineProperty(o, k2, { enumerable: true, get: function () { return m[k]; } });
+}) : (function (o, m, k, k2) {
     if (k2 === undefined) k2 = k;
     o[k2] = m[k];
 });
@@ -197,7 +197,7 @@ export function __asyncValues(o) {
     var m = o[Symbol.asyncIterator], i;
     return m ? m.call(o) : (o = typeof __values === "function" ? __values(o) : o[Symbol.iterator](), i = {}, verb("next"), verb("throw"), verb("return"), i[Symbol.asyncIterator] = function () { return this; }, i);
     function verb(n) { i[n] = o[n] && function (v) { return new Promise(function (resolve, reject) { v = o[n](v), settle(resolve, reject, v.done, v.value); }); }; }
-    function settle(resolve, reject, d, v) { Promise.resolve(v).then(function(v) { resolve({ value: v, done: d }); }, reject); }
+    function settle(resolve, reject, d, v) { Promise.resolve(v).then(function (v) { resolve({ value: v, done: d }); }, reject); }
 }
 
 export function __makeTemplateObject(cooked, raw) {
@@ -205,9 +205,9 @@ export function __makeTemplateObject(cooked, raw) {
     return cooked;
 };
 
-var __setModuleDefault = Object.create ? (function(o, v) {
+var __setModuleDefault = Object.create ? (function (o, v) {
     Object.defineProperty(o, "default", { enumerable: true, value: v });
-}) : function(o, v) {
+}) : function (o, v) {
     o["default"] = v;
 };
 
@@ -237,34 +237,35 @@ export function __classPrivateFieldSet(receiver, state, value, kind, f) {
 }
 
 const _Object = Object;
-const _TypeError = TypeError;
-const _call = _Object.call;
-const { getPrototypeOf, setPrototypeOf, defineProperty, defineProperties, prototype, getOwnPropertyDescriptor, create, preventExtensions, keys, isExtensible } = _Object;
+const { call: _call, prototype } = _Object;
+export const { getPrototypeOf, setPrototypeOf, defineProperty, defineProperties, getOwnPropertyDescriptor, getOwnPropertyNames, create, preventExtensions, keys, isExtensible, freeze } = _Object;
 const { hasOwnProperty: f } = prototype;
-export const { asyncIterator, iterator } = Symbol;
 export const AsyncIteratorPrototype = getPrototypeOf(getPrototypeOf(getPrototypeOf((async function* () { })())));
 export const IteratorPrototype = getPrototypeOf(getPrototypeOf(getPrototypeOf((function* () { })())));
-export { _Object as Object, _TypeError as TypeError };
-export var undefined = [][[]];
+export { _Object as Object };
 export const $globalThis = (() => {
+    // I've actually taken this snippet from a wonderful article made by Mathias Bynens:
+    // https://mathiasbynens.be/notes/globalthis, go and check it out!
+    // (actually it's modified a bit, but anyway)
     var global;
-    defineProperty(prototype, '__magic__', {
+    defineProperty(prototype, '__マジック__', {
         get() {
             return this;
         },
         configurable: true
     });
     // JS magic should be ignored
-    // @ts-ignore
-    global = __magic__;
-    // @ts-ignore
-    delete prototype.__magic__;
+    global = __マジック__;
+    delete prototype.__マジック__;
     return global;
 })();
+export const { Array, TypeError, Symbol, Proxy, WeakMap } = $globalThis;
+export const undefined = {}[Symbol()];
+export const { asyncIterator, iterator } = Symbol;
 export const bind = _call.bind(_call.bind);
 export const call = bind(_call, _call);
 export const apply = bind(_call, _call.apply);
 export const hasOwnProperty = bind(_call, f);
+export const unshift = bind(_call, Array.prototype.unshift);
 export const { floor } = Math;
 export const { get, set } = Reflect;
-export { getPrototypeOf, setPrototypeOf, defineProperty, defineProperties, getOwnPropertyDescriptor, create, preventExtensions, keys, isExtensible };

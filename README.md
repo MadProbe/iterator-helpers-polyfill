@@ -6,9 +6,14 @@ The polyfill aims to be as immune to built-in values changes as possible (NOTE: 
 The polyfill aims to be as close to the specification as possible, including `function () { [native code] }` return value of functions.toString()  
 
 ## Notes:
-It also implements (Async)Iterator.prototype.flatMap() behavior from [issue #114 - flatMap should act like it does a `yield *` on each iterable](https://github.com/tc39/proposal-iterator-helpers/issues/114).
-Pre-checks are done **BEFORE** all functions start their shenanigans, **INCLUDING** async ones. (Yet i have unsettled thinking about async function pre-checks, maybe variations of pre-check will come out behind a flag? (config)).
-It takes globalThis by a polyfill written by Mathias Bynens from [his awensome article](https://mathiasbynens.be/notes/globalthis) (Lingers on fact that `__magic__` preperty doesn't exist in Object.prototype and Object.defineProperty isn't changed before the script is run).
+It also implements (Async)Iterator.prototype.flatMap() behavior from [issue #114 - flatMap should act like it does a `yield *` on each iterable](https://github.com/tc39/proposal-iterator-helpers/issues/114).  
+Pre-checks are done **BEFORE** all functions start doing their stuff, **INCLUDING** async ones. (Yet i have unsettled thinking about async function pre-checks, maybe variations of pre-check will come out behind a flag? (in the config variable)).  
+It takes globalThis by a polyfill written by Mathias Bynens from [his awensome article](https://mathiasbynens.be/notes/globalthis) (Lingers on fact that `__magic__` preperty doesn't exist in Object.prototype and Object.defineProperty isn't changed before the script is run).  
+UMD bundle is exposed into global as `__IteratorHelpersPolyfill`.  
+All bundles are **minified**.  
+Typings mutate `AsyncIterator` interface so its `T` type variable is optional and defaults to `unknown` (just to be consistent with `Iterator` interface).  
+Additional helpers can be removed by the `config` variable from exports.  
+This polyfill's size is less than 4 kb (3.64 kb atm) when compressed by Brotli compression algorithm.  
 
 ## Development:
 **Please propose feature by opening an issue before starting working on pull request, because i can reject your proposal and your work won't be needed at all**  
@@ -19,5 +24,5 @@ It takes globalThis by a polyfill written by Mathias Bynens from [his awensome a
 
 ## Build:
 1. Install all modules by `npm i` in the command prompt.
-2. Build by `npm run build` if you just need the .mjs bundle or `npm run build-full` if you also need .cjs bundle.  
+2. Build by `npm run build` if you just need the .mjs bundle or `npm run build-full` if you also need commonjs and umd bundle.  
 NOTE: Builds include source maps.

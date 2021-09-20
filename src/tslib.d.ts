@@ -162,19 +162,20 @@ declare module "tslib" {
     ): V;
     export function __createBinding(object: object, target: object, key: PropertyKey, objectKey?: PropertyKey): void;
 
-    export const undefined: undefined;
-    export const { asyncIterator, iterator }: SymbolConstructor;
+    type globalThis = typeof globalThis;
+    export const $globalThis: globalThis;
+    export type AnyFunction = (...args: any[]) => unknown;
+    export const asyncIterator: SymbolConstructor["asyncIterator"];
+    export const iterator: SymbolConstructor["iterator"];
     export const AsyncIteratorPrototype: AsyncIterator<unknown>;
     export const IteratorPrototype: Iterator<unknown>;
     export const call: CallFunctionType;
     export const apply: ApplyFunctionType;
     export const bind: BindFunctionType;
-    export const Object: Object;
-    export type AnyFunction = (...args: any[]) => unknown;
-    export const $globalThis: typeof globalThis;
     export const hasOwnProperty: (object: object, property: PropertyKey) => boolean;
-    export const TypeError: TypeErrorConstructor;
     export const { get, set }: typeof Reflect;
-    export const { getPrototypeOf, setPrototypeOf, defineProperty, defineProperties, create, getOwnPropertyDescriptor, preventExtensions, keys, isExtensible }: ObjectConstructor;
+    export const { getPrototypeOf, setPrototypeOf, defineProperty, defineProperties, create, getOwnPropertyDescriptor, getOwnPropertyNames, preventExtensions, keys, isExtensible, freeze }: ObjectConstructor;
     export const { floor }: Math;
+    export const unshift: <T>(array: T[], element: T) => number;
+    export const { Array, Object, Proxy, TypeError, WeakMap, Symbol, undefined }: globalThis;
 }

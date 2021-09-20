@@ -13,12 +13,12 @@ export class WrapForVaildAsyncIteratorPrototype extends ClassField.init(next = n
     }
     @ClassField.check
     async return(value: any) {
-        const $return = iterator.get(this).return;
+        const $return = iterator.get(this)!.return;
         return { value: $return !== undefined ? await call($return, iterator.get(this)) : value, done: true };
     }
     @ClassField.check
     async throw(value: any) {
-        const $throw = iterator.get(this).throw;
+        const $throw = iterator.get(this)!.throw;
         if ($throw !== undefined) {
             await call($throw, iterator.get(this), value);
         } else {

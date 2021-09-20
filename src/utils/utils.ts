@@ -1,6 +1,6 @@
 import {
-    AnyFunction, apply, bind, call, create, defineProperties, defineProperty, floor, get, getOwnPropertyDescriptor,
-    getPrototypeOf, isExtensible, iterator, keys, preventExtensions, set, setPrototypeOf, TypeError, undefined
+    AnyFunction, apply, bind, call, create, defineProperties, defineProperty, floor, get, getOwnPropertyDescriptor, getOwnPropertyNames,
+    getPrototypeOf, isExtensible, keys, preventExtensions, Proxy, set, setPrototypeOf, Symbol, TypeError, undefined, WeakMap
 } from "tslib";
 
 const MimicedFunctionSymbol = Symbol();
@@ -66,7 +66,6 @@ export const assertIterator = (func: AnyFunction) => {
         const next = assertIsIterator(this);
         return call(func, this, (...args: unknown[]) => apply(next, this, args), ...arguments);
     }
-    // @ts-ignore
     $function[MimicedFunctionSymbol] = func[MimicedFunctionSymbol] || func;
     return $function;
 };
@@ -77,24 +76,31 @@ export const assert = (asserter: AnyFunction, message: (argument: unknown) => st
         }
         return apply(func, this, arguments);
     }
-    // @ts-ignore
     $function[MimicedFunctionSymbol] = func[MimicedFunctionSymbol] || func;
     return $function;
 };
 export const assertReplace = (asserter: (argument: unknown) => unknown, func: AnyFunction) => {
     function $function(this: unknown, $: unknown) {
-        $ = asserter($);
+        arguments.length ||= 1;
+        arguments[0] = asserter($);
         return apply(func, this, arguments);
     }
-    // @ts-ignore
+    $function[MimicedFunctionSymbol] = func[MimicedFunctionSymbol] || func;
+    return $function;
+};
+export const assertReplaceStar = (asserter: (argument: IArguments) => void, func: AnyFunction) => {
+    function $function(this: unknown) {
+        asserter(arguments);
+        return apply(func, this, arguments);
+    }
     $function[MimicedFunctionSymbol] = func[MimicedFunctionSymbol] || func;
     return $function;
 };
 export class SafeWeakMap<K extends object, V> extends WeakMap<K, V> {
     static {
-        const { prototype } = WeakMap;
-        for (const key of ["get", "has", "set", "delete"]) {
-            // @ts-ignore
+        var { prototype } = WeakMap;
+        var a = getOwnPropertyNames(prototype);
+        for (var i = 0, l = a.length, key; key = a[i], i++ < l;) {
             this.prototype[key] = prototype[key];
         }
     }
@@ -126,7 +132,7 @@ export const mimic = (argsLength: number | undefined, name: string, $function: A
     // it will be very common to have next parameter as first parameter
     // while still having opportunity to change it manually
     argsLength ??= length - 1;
-    defineProperties($function, { length: { value: argsLength, configurable: 1 as any }, name: { value: name, configurable: 1 as any } });
+    defineProperties($function, { length: { value: argsLength, configurable: true }, name: { value: name, configurable: true } });
     // @ts-ignore
     delete $function[MimicedFunctionSymbol];
     return concealSourceCode($function);
