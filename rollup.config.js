@@ -14,15 +14,23 @@ export default {
             sourcemap: true,
             freeze: false
         },
-        ...(process.env.FULL ? [{
-            file: './build/bundle.min.cjs',
-            format: 'commonjs',
-            sourcemap: true,
-            freeze: false
-        }] : [])
+        ...(process.env.FULL ? [
+            {
+                file: './build/bundle.min.cjs',
+                format: 'commonjs',
+                sourcemap: true,
+                freeze: false
+            }, {
+                name: '__IteratorHelpersPolyfill',
+                file: './build/bundle.min.js',
+                format: 'umd',
+                sourcemap: true,
+                freeze: false
+            }
+        ] : [])
     ],
     plugins: [
         Object.create(typescript(), { load: { value: x => x === "\0tslib.js" ? tslib : null } }),
-        terser({ format: { comments: false }, mangle: { reserved: ['AsyncIterator', 'Iterator'] }, compress: { unsafe: true } })
+        terser({ format: { comments: false }, mangle: { reserved: ['AsyncIterator', 'Iterator', 'Config'] }, compress: { unsafe: true } })
     ]
 };

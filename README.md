@@ -19,5 +19,5 @@ It takes globalThis by a polyfill written by Mathias Bynens from [his awensome a
 
 ## Build:
 1. Install all modules by `npm i` in the command prompt.
-2. Build by `npm run build` if you just need the .mjs bundle or `npm run build-full` if you also need .cjs bundle.  
+2. Build by `npm run build` if you just need the .mjs bundle or `npm run build-full` if you also need commonjs and umd bundle.  
 NOTE: Builds include source maps.
