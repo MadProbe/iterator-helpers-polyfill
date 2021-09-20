@@ -3,6 +3,9 @@ src
 tests
 node_modules
 *.html
-*.json
+package-lock.json
+tscofig.json
 *.config.js
 *.md
+*.tgz
+*.map
