@@ -81,7 +81,8 @@ export const assert = (asserter: AnyFunction, message: (argument: unknown) => st
 };
 export const assertReplace = (asserter: (argument: unknown) => unknown, func: AnyFunction) => {
     function $function(this: unknown, $: unknown) {
-        $ = asserter($);
+        arguments.length ||= 1;
+        arguments[0] = asserter($);
         return apply(func, this, arguments);
     }
     $function[MimicedFunctionSymbol] = func[MimicedFunctionSymbol] || func;
