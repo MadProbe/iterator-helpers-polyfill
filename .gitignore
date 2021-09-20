@@ -1,6 +1,4 @@
-.vscode
-.trash
-./iterators.*
+.*
 node_modules
 build
 index.html

@@ -54,11 +54,62 @@ declare var AsyncIterator: AsyncIteratorConstructor;
 
 // Additional features available to polyfill (TODO)
 
-interface Iterator<T = unknown, TReturn = any, TNext = undefined> {
-    skip(count: number): Iterator<T, void, TNext>;
-    skipWhile(fn: (item: T) => unknown): Iterator<T, void, TNext>;
-    takeWhile(fn: (item: T) => unknown): Iterator<T, void, TNext>;
-    dropWhile(fn: (item: T) => unknown): Iterator<T, void, TNext>;
-    starMap<S>(fn: (...args: T extends unknown[] ? T : T extends Iterable<infer I> ? I[] : T extends Iterator<infer I> ? I[] : never) => S): Iterator<S, void, TNext>;
+declare type _MapIterator<A extends _RA<_IteratorLike<unknown>>> = A extends readonly [] ? A : A extends readonly [infer R, ...(infer Rest)] ?
+    [_INR<R>, ..._MapIterator<Rest extends _IteratorLike<unknown>[] ? Rest : []>] : A extends _RA<infer I> ? _INR<I>[] : [];
+declare type _MapAsyncIterator<A extends _RA<_AsyncIteratorLike<unknown>>> = A extends readonly [] ? A : A extends readonly [infer R, ...(infer Rest)] ?
+    [_INR<R>, ..._MapIterator<Rest extends _IteratorLike<unknown>[] ? Rest : []>] : A extends _RA<infer I> ? _INR<I>[] : [];
+/** IteratorNextResult */
+declare type _INR<R> = R extends _IteratorLike<infer I> ? I : never;
+declare type _RA<T> = readonly T[];
+
+// elegant solution from https://deno.land/std@0.107.0/async/tee.ts
+// licensed by same lisence as used in this project
+// license can be found here: https://deno.land/std@0.107.0/LICENSE
+// ::start
+declare type _Tuple<T, N extends number> = N extends N ? number extends N ? T[] : _TupleOf<T, N, []> : never;
+declare type _TupleOf<T, N extends number, R extends unknown[]> = R["length"] extends N ? R : _TupleOf<T, N, [T, ...R]>;
+// ::end
+
+declare interface Iterator<T = unknown, TReturn = any, TNext = undefined> {
+    /** @note <TNext> value is used only when  */
+    tee<N extends number = 2>(count?: N): _Tuple<Generator<T, TReturn, TNext>, N>;
+    // TODO: TNext must be aglomeration of TNext of supplied iterators + TNext of this;
+    zip<A extends _RA<_IteratorLike<unknown>>>(...iterators: A): Generator<[T, ..._MapIterator<A>], void, unknown>;
+    skip(count: number): Generator<T, void, TNext>;
+    // TODO: Same
+    chain<A extends _RA<_IteratorLike<unknown>>>(...iterators: A): Generator<T | A extends _RA<_IteratorLike<infer A>> ? A : never, void, unknown>;
+    starMap<S>(fn: (...args: T extends unknown[] ? T : T extends _IteratorLike<infer I> ? I[] : never) => S): Generator<S, void, TNext>;
+    skipWhile(fn: (item: T) => unknown): Generator<T, void, TNext>;
+    takeWhile(fn: (item: T) => unknown): Generator<T, void, TNext>;
+    dropWhile(fn: (item: T) => unknown): Generator<T, void, TNext>;
+    // TODO: Same
+    zipLongest<A extends _RA<_IteratorLike<unknown>>>(...iterators: A): Generator<[T, ..._MapIterator<A>], void, unknown>;
 }
-declare module "iterator-helpers-polyfill/additional" { }
+
+declare interface AsyncIterator<T = unknown, TReturn = any, TNext = undefined> {
+    // TODO: Same
+    zip<A extends _RA<_AsyncIteratorLike<unknown>>>(...iterators: A): AsyncGenerator<[T, ..._MapAsyncIterator<A>], void, unknown>;
+    skip(count: number): AsyncGenerator<T, void, TNext>;
+    // TODO: Same
+    chain<A extends _RA<_AsyncIteratorLike<unknown>>>(...iterators: A): AsyncGenerator<T | (A extends _RA<_AsyncIteratorLike<infer A>> ? A : never), void, unknown>;
+    entries(): AsyncGenerator<readonly [number, T], void, TNext>;
+    starMap<S>(fn: (...args: T extends unknown[] ? T : T extends _IteratorLike<infer I> ? I[] : never) => _Awaitable<S>): AsyncGenerator<S, void, TNext>;
+    skipWhile(fn: (item: T) => unknown): AsyncGenerator<T, void, TNext>;
+    takeWhile(fn: (item: T) => unknown): AsyncGenerator<T, void, TNext>;
+    dropWhile(fn: (item: T) => unknown): AsyncGenerator<T, void, TNext>;
+    // TODO: Same
+    zipLongest<A extends _RA<_AsyncIteratorLike<unknown>>>(...iterators: A): AsyncGenerator<[T, ..._MapAsyncIterator<A>], void, unknown>;
+}
+
+declare module "iterator-helpers-polyfill" {
+    class Config {
+        additionals: boolean & {
+            skip: boolean;
+            skipWhile: boolean;
+            takeWhile: boolean;
+            dropWhile: boolean;
+            starMap: boolean;
+        };
+    }
+    export const config: Config;
+}
