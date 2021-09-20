@@ -102,14 +102,10 @@ declare interface AsyncIterator<T = unknown, TReturn = any, TNext = undefined> {
 }
 
 declare module "iterator-helpers-polyfill" {
+    type keys = "zip" | "chain" | "skip" | "enties" | "starMap" | "skipWhile" | "dropWhile" | "takeWhile" | "zipLongest";
     class Config {
-        additionals: boolean & {
-            skip: boolean;
-            skipWhile: boolean;
-            takeWhile: boolean;
-            dropWhile: boolean;
-            starMap: boolean;
-        };
+        additionals: boolean & Record<keys, boolean>;
+        polyfilled: boolean & Record<Exclude<keyof Iterator, keys>, boolean>;
     }
     export const config: Config;
 }
