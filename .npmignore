@@ -4,7 +4,7 @@ tests
 node_modules
 *.html
 package-lock.json
-tscofig.json
+tsconfig.json
 *.config.js
 *.md
 *.tgz
