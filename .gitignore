@@ -3,3 +3,4 @@
 ./iterators.*
 node_modules
 build
+index.html
