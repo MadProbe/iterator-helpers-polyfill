@@ -1,4 +1,5 @@
-.*
+.trash
+.vscode
 node_modules
 build
 index.html
