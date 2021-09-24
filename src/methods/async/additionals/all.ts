@@ -1,8 +1,12 @@
 export { default as zipLongest } from "./zipLongest.js";
-export { default as dropWhile, default as skipWhile } from "./dropWhile.js";
+export { default as dropWhile } from "./dropWhile.js";
+export { default as skipWhile } from "./dropWhile.js";
 export { default as takeWhile } from "./takeWhile.js";
-export { default as entries } from "../../async/asIndexedPairs.js";
+export { default as entries } from "../asIndexedPairs.js";
 export { default as chain } from "./chain.js";
-export { default as skip } from "../../async/drop.js";
+export { default as cycle } from "./cycle.js";
+export { default as skip } from "../drop.js";
+export { default as max } from "./max.js";
+export { default as min } from "./min.js";
 export { default as tee } from "./tee.js";
 export { default as zip } from "./zip.js";
