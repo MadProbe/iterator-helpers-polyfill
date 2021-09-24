@@ -177,5 +177,6 @@ declare module "tslib" {
     export const { getPrototypeOf, setPrototypeOf, defineProperty, defineProperties, create, getOwnPropertyDescriptor, getOwnPropertyNames, preventExtensions, keys, isExtensible, freeze }: ObjectConstructor;
     export const { floor }: Math;
     export const unshift: <T>(array: T[], element: T) => number;
+    export const shift: <T>(array: T[]) => T;
     export const { Array, Object, Proxy, TypeError, WeakMap, Symbol, undefined }: globalThis;
 }

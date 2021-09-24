@@ -260,12 +260,14 @@ export const $globalThis = (() => {
     return global;
 })();
 export const { Array, TypeError, Symbol, Proxy, WeakMap } = $globalThis;
+const a = Array.prototype;
 export const undefined = {}[Symbol()];
 export const { asyncIterator, iterator } = Symbol;
 export const bind = _call.bind(_call.bind);
 export const call = bind(_call, _call);
 export const apply = bind(_call, _call.apply);
 export const hasOwnProperty = bind(_call, f);
-export const unshift = bind(_call, Array.prototype.unshift);
+export const unshift = bind(_call, a.unshift);
+export const shift = bind(_call, a.shift);
 export const { floor } = Math;
 export const { get, set } = Reflect;
