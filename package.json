@@ -19,7 +19,8 @@
     "scripts": {
         "test": "node ./tests/test.js",
         "build": "rollup -c",
-        "build-full": "rollup -c --environment FULL"
+        "build-full": "rollup -c --environment FULL",
+        "build-dev": "rollup -c rollup.config.dev.js"
     },
     "repository": {
         "type": "git",
