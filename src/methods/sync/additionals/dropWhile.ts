@@ -3,7 +3,7 @@ import { assert, assertIterator, closeIterator, isFunction, mimic } from "@utils
 
 
 export default mimic(undefined, "dropWhile", assert(isFunction, O => O + " is not a function", assertIterator(
-    function* (this: Iterator<unknown>, _next: Iterator<unknown, unknown, unknown>["next"], fn: (item: unknown) => _Awaitable<boolean>) {
+    function* (this: Iterator<unknown>, _next: Iterator<unknown, unknown, unknown>["next"], fn: (item: unknown) => boolean) {
         var lastValue: unknown, done: boolean | undefined, value: unknown;
         while ({ done, value } = _next(), !done) try {
             if (!fn(value)) break;

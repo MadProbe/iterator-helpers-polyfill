@@ -126,14 +126,12 @@ export const isPositiveInteger = (argument: unknown) => {
     return integer;
 };
 export const mimic = (argsLength: number | undefined, name: string, $function: AnyFunction) => {
-    // @ts-ignore
     const { length } = $function[MimicedFunctionSymbol] || $function;
     // default is original function arguments length - 1 since
     // it will be very common to have next parameter as first parameter
     // while still having opportunity to change it manually
     argsLength ??= length - 1;
     defineProperties($function, { length: { value: argsLength, configurable: true }, name: { value: name, configurable: true } });
-    // @ts-ignore
     delete $function[MimicedFunctionSymbol];
     return concealSourceCode($function);
 };

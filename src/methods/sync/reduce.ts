@@ -3,7 +3,7 @@ import { assert, assertIterator, closeIterator, isFunction, mimic } from "@utils
 
 
 export default mimic(undefined, "reduce", assert(isFunction, O => `${ O } is not a function`, assertIterator(
-    function (this: Iterator<unknown>, _next: Iterator<unknown, unknown, unknown>["next"], fn: (acc: unknown, item: unknown) => _Awaitable<boolean>, accumulator?: unknown) {
+    function (this: Iterator<unknown>, _next: Iterator<unknown, unknown, unknown>["next"], fn: (acc: unknown, item: unknown) => unknown, accumulator?: unknown) {
         if (!(2 in arguments)) {
             if ({ value, done } = _next(), done) {
                 throw TypeError("reduce of empty iterator with no initial value");

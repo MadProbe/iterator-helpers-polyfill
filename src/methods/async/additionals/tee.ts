@@ -28,7 +28,8 @@ class ClonedAsyncIterator {
                     this.doneMoment = [position, value];
                     return value;
                 }
-                this.lastValue = yield this.results[this.positions[index] = position++] = value;
+                this.lastValue = yield this.results[position++] = value;
+                this.positions[index] = position;
                 continue;
             }
             const result = this.results[position++];
@@ -52,7 +53,7 @@ class ClonedAsyncIterator {
 }
 
 export default mimic(undefined, "tee", assertReplace((x = 2) => isPositiveInteger(x), assertIterator(
-    async function (this: AsyncIterator<unknown>, _next: AsyncIterator<unknown, unknown, unknown>["next"], count: number) {
+    function (this: AsyncIterator<unknown>, _next: AsyncIterator<unknown, unknown, unknown>["next"], count: number) {
         return new ClonedAsyncIterator(_next).create(count);
     }
 )));
