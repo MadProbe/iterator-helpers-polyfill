@@ -64,6 +64,7 @@ declare type _MapAsyncIterator<A extends _RA<_AsyncIteratorLike<unknown>>> = A e
 /** IteratorNextResult */
 declare type _INR<R> = R extends _IteratorLike<infer I> ? I : never;
 declare type _RA<T> = readonly T[];
+declare type _UnifyNexts<A> = A extends _RA<_AsyncIteratorLike<unknown, unknown, infer N>> ? N : never
 
 // elegant solution from https://deno.land/std@0.107.0/async/tee.ts
 // licensed by same lisence as used in this project
@@ -77,36 +78,30 @@ declare global {
     interface Iterator<T = unknown, TReturn = any, TNext = undefined> {
         /** @note <TNext> value is used only when the `next` method of `this` iterator is actually called */
         tee<N extends number = 2>(count?: N): _Tuple<Generator<T, TReturn, TNext>, N>;
-        // TODO: TNext must be aglomeration of TNext of supplied iterators + TNext of this;
-        zip<A extends _RA<_IteratorLike<unknown>>>(...iterators: A): Generator<[T, ..._MapIterator<A>], void, unknown>;
+        zip<A extends _RA<_IteratorLike<unknown>>>(...iterators: A): Generator<[T, ..._MapIterator<A>], void, _UnifyNexts<A>>;
         skip(count: number): Generator<T, void, TNext>;
-        // TODO: Same
-        chain<A extends _RA<_IteratorLike<unknown>>>(...iterators: A): Generator<T | A extends _RA<_IteratorLike<infer A>> ? A : never, void, unknown>;
+        chain<A extends _RA<_IteratorLike<unknown>>>(...iterators: A): Generator<T | A extends _RA<_IteratorLike<infer A>> ? A : never, void, _UnifyNexts<A>>;
         starMap<S>(fn: (...args: T extends unknown[] ? T : T extends _IteratorLike<infer I> ? I[] : never) => S): Generator<S, void, TNext>;
         skipWhile(fn: (item: T) => unknown): Generator<T, void, TNext>;
         takeWhile(fn: (item: T) => unknown): Generator<T, void, TNext>;
         dropWhile(fn: (item: T) => unknown): Generator<T, void, TNext>;
-        // TODO: Same
-        zipLongest<A extends _RA<_IteratorLike<unknown>>>(...iterators: A): Generator<[T, ..._MapIterator<A>], void, unknown>;
+        zipLongest<A extends _RA<_IteratorLike<unknown>>>(...iterators: A): Generator<[T, ..._MapIterator<A>], void, _UnifyNexts<A>>;
     }
 
     interface AsyncIterator<T = unknown, TReturn = any, TNext = undefined> {
-        // TODO: Same
-        zip<A extends _RA<_AsyncIteratorLike<unknown>>>(...iterators: A): AsyncGenerator<[T, ..._MapAsyncIterator<A>], void, unknown>;
+        zip<A extends _RA<_AsyncIteratorLike<unknown>>>(...iterators: A): AsyncGenerator<[T, ..._MapAsyncIterator<A>], void, _UnifyNexts<A>>;
         skip(count: number): AsyncGenerator<T, void, TNext>;
-        // TODO: Same
-        chain<A extends _RA<_AsyncIteratorLike<unknown>>>(...iterators: A): AsyncGenerator<T | (A extends _RA<_AsyncIteratorLike<infer A>> ? A : never), void, unknown>;
+        chain<A extends _RA<_AsyncIteratorLike<unknown>>>(...iterators: A): AsyncGenerator<T | (A extends _RA<_AsyncIteratorLike<infer A>> ? A : never), void, _UnifyNexts<A>>;
         entries(): AsyncGenerator<readonly [number, T], void, TNext>;
         starMap<S>(fn: (...args: T extends unknown[] ? T : T extends _IteratorLike<infer I> ? I[] : never) => _Awaitable<S>): AsyncGenerator<S, void, TNext>;
         skipWhile(fn: (item: T) => unknown): AsyncGenerator<T, void, TNext>;
         takeWhile(fn: (item: T) => unknown): AsyncGenerator<T, void, TNext>;
         dropWhile(fn: (item: T) => unknown): AsyncGenerator<T, void, TNext>;
-        // TODO: Same
-        zipLongest<A extends _RA<_AsyncIteratorLike<unknown>>>(...iterators: A): AsyncGenerator<[T, ..._MapAsyncIterator<A>], void, unknown>;
+        zipLongest<A extends _RA<_AsyncIteratorLike<unknown>>>(...iterators: A): AsyncGenerator<[T, ..._MapAsyncIterator<A>], void, _UnifyNexts<A>>;
     }
 }
 
-type keys = "zip" | "chain" | "skip" | "enties" | "starMap" | "skipWhile" | "dropWhile" | "takeWhile" | "zipLongest";
+declare type keys = "zip" | "chain" | "count" | "cycle" | "skip" | "enties" | "starMap" | "dropWhile" | "partition" | "skipWhile" | "takeWhile" | "zipLongest";
 declare class Config {
     additionals: boolean & Record<keys, boolean>;
     polyfilled: boolean & Record<Exclude<keyof Iterator, keys>, boolean>;
