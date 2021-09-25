@@ -27,10 +27,19 @@
         "url": "git+https://github.com/MadProbe/iterator-helpers-polyfill.git"
     },
     "keywords": [
-        "polyfill",
-        "iterator-helpers-proposal",
-        "iterator-helpers"
+        "javascript",
+        "typescript",
+        "iterator-library",
+        "iterator-functions",
+        "iterator-helpers",
+        "iterator-helpers-proposal"
     ],
+    "engines": {
+        "node": ">=10.0.0",
+        "chrome": ">=63",
+        "firefox": ">=57",
+        "safari": ">=11"
+    },
     "bugs": {
         "url": "https://github.com/MadProbe/iterator-helpers-polyfill/issues"
     },
