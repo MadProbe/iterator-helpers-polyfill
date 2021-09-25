@@ -174,9 +174,14 @@ declare module "tslib" {
     export const bind: BindFunctionType;
     export const hasOwnProperty: (object: object, property: PropertyKey) => boolean;
     export const { get, set }: typeof Reflect;
-    export const { getPrototypeOf, setPrototypeOf, defineProperty, defineProperties, create, getOwnPropertyDescriptor, getOwnPropertyNames, preventExtensions, keys, isExtensible, freeze }: ObjectConstructor;
+    export const {
+        getPrototypeOf, setPrototypeOf, defineProperty, defineProperties, create, getOwnPropertyDescriptor,
+        getOwnPropertyNames, preventExtensions, keys, is, isExtensible, freeze
+    }: ObjectConstructor;
     export const { floor }: Math;
     export const unshift: <T>(array: T[], element: T) => number;
     export const shift: <T>(array: T[]) => T;
-    export const { Array, Object, Proxy, TypeError, WeakMap, Symbol, undefined }: globalThis;
+    export const contains: <T>(array: T[], value: T) => boolean;
+    export const { Array, Object, Proxy, String, TypeError, WeakMap, Symbol, undefined }: globalThis;
+    export const SameValueZero: (value1: unknown, value2: unknown) => boolean;
 }

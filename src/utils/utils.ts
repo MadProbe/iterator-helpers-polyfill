@@ -3,6 +3,7 @@ import {
     getPrototypeOf, isExtensible, keys, preventExtensions, Proxy, set, setPrototypeOf, Symbol, TypeError, undefined, WeakMap
 } from "tslib";
 
+
 const MimicedFunctionSymbol = Symbol();
 // gaudy name btw
 export const concealSourceCode = (func: AnyFunction, name = func.name, prototypeHolder = create(null)) => new Proxy(call, {

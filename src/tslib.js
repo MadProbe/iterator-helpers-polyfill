@@ -238,7 +238,7 @@ export function __classPrivateFieldSet(receiver, state, value, kind, f) {
 
 const _Object = Object;
 const { call: _call, prototype } = _Object;
-export const { getPrototypeOf, setPrototypeOf, defineProperty, defineProperties, getOwnPropertyDescriptor, getOwnPropertyNames, create, preventExtensions, keys, isExtensible, freeze } = _Object;
+export const { getPrototypeOf, setPrototypeOf, defineProperty, defineProperties, getOwnPropertyDescriptor, getOwnPropertyNames, create, preventExtensions, keys, isExtensible, freeze, is } = _Object;
 const { hasOwnProperty: f } = prototype;
 export const AsyncIteratorPrototype = getPrototypeOf(getPrototypeOf(getPrototypeOf((async function* () { })())));
 export const IteratorPrototype = getPrototypeOf(getPrototypeOf(getPrototypeOf((function* () { })())));
@@ -271,3 +271,4 @@ export const unshift = bind(_call, a.unshift);
 export const shift = bind(_call, a.shift);
 export const { floor } = Math;
 export const { get, set } = Reflect;
+export const SameValueZero = (x, y) => x === y || (x !== x && y !== y);

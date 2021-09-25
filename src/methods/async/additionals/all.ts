@@ -10,6 +10,7 @@ export { default as chain } from "./chain.js";
 export { default as count } from "./count.js";
 export { default as cycle } from "./cycle.js";
 export { default as skip } from "../drop.js";
+export { default as join } from "./join.js";
 export { default as max } from "./max.js";
 export { default as min } from "./min.js";
 export { default as tee } from "./tee.js";

@@ -7,6 +7,7 @@ import * as additionals_sync from "@sync/additionals/all.js";
 import async_from from "@async/from.js";
 import from from "@sync/from.js";
 
+
 function defineMethods(prototype: unknown, methods: Record<string, AnyFunction>) {
     for (const key in methods) {
         if (hasOwnProperty(methods, key)) {
