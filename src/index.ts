@@ -81,9 +81,9 @@ const makeAdditionalsFrom = (keys: string[]) => {
     const entries = {};
     for (var i = 0, l = keys.length; i < l; i++) {
         const key = keys[i];
-        
+        entries[key] = defaultStateChange(key);
     }
-    return entries
+    return entries;
 }
 
 class Config {
