@@ -167,6 +167,7 @@ declare module "tslib" {
     export type AnyFunction = (...args: any[]) => unknown;
     export const asyncIterator: SymbolConstructor["asyncIterator"];
     export const iterator: SymbolConstructor["iterator"];
+    export const toStringTag: SymbolConstructor["toStringTag"];
     export const AsyncIteratorPrototype: AsyncIterator<unknown>;
     export const IteratorPrototype: Iterator<unknown>;
     export const call: CallFunctionType;

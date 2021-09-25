@@ -262,7 +262,7 @@ export const $globalThis = (() => {
 export const { Array, TypeError, Symbol, Proxy, WeakMap } = $globalThis;
 const a = Array.prototype;
 export const undefined = {}[Symbol()];
-export const { asyncIterator, iterator } = Symbol;
+export const { asyncIterator, iterator, toStringTag } = Symbol;
 export const bind = _call.bind(_call.bind);
 export const call = bind(_call, _call);
 export const apply = bind(_call, _call.apply);

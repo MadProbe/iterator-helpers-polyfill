@@ -1,4 +1,4 @@
-import { $globalThis, defineProperty, IteratorPrototype, AsyncIteratorPrototype, hasOwnProperty, AnyFunction, freeze, getPrototypeOf, keys } from "tslib";
+import { $globalThis, defineProperty, IteratorPrototype, AsyncIteratorPrototype, hasOwnProperty, AnyFunction, freeze, getPrototypeOf, keys, toStringTag, getOwnPropertyDescriptor } from "tslib";
 import { Iterator, AsyncIterator } from "@utils/iterators.js";
 import * as async_methods from "@async/all.js";
 import * as sync_methods from "@sync/all.js";
@@ -19,9 +19,7 @@ function defineMethods(prototype: unknown, methods: Record<string, AnyFunction>)
 
 function deleteMethods(prototype: unknown, methods: string[]) {
     for (const key of methods) {
-        if (hasOwnProperty(methods, key)) {
-            delete (prototype as never)[key];
-        }
+        delete (prototype as never)[key];
     }
 }
 
@@ -45,21 +43,22 @@ Iterator.from = from;
 $globalThis["Iterator"] = Iterator;
 $globalThis["AsyncIterator"] = AsyncIterator;
 
-const configOption = (defaultState: boolean = true, additionalOptions: Record<string, (state: boolean) => void> = {}) =>
-    ((target, property, descriptor) => {
-        let state = defaultState, setState = descriptor.value as never as (state: boolean) => void;
-        for (let $keys = keys(additionalOptions), i = 0, l = $keys.length; i < l; i++) {
-            const key = $keys[i];
-
-        }
-        delete descriptor.value;
-        delete descriptor.writable;
-        descriptor.get = (() => state) as never;
-        descriptor.set = (() => {
-            setState!(state);
-            state = !state;
-        }) as never;
-    }) as MethodDecorator;
+const configOption = (defaultState: boolean = true, additionalOptions: Record<string, (state: boolean) => void> = {}): MethodDecorator =>
+((target, property, descriptor) => {
+    let state = defaultState, setState = descriptor.value as never as (state: boolean) => void, o = {};
+    for (let $keys = keys(additionalOptions), i = 0, l = $keys.length; i < l; i++) {
+        const key = $keys[i];
+        defineProperty(o, key, configOption()({}, "", getOwnPropertyDescriptor(additionalOptions, key)!)!);
+    }
+    freeze(o);
+    delete descriptor.value;
+    delete descriptor.writable;
+    descriptor.get = (() => o) as never;
+    descriptor.set = ((x: boolean) => {
+        setState!(state = x);
+    }) as never;
+    return descriptor;
+});
 
 const EMPTY = (name: string) => {
     // ! All options marked with this must be supported sooner or later!
@@ -67,7 +66,7 @@ const EMPTY = (name: string) => {
 };
 const _ = (method: string, state: boolean, prototype: unknown, initialPrototype: Record<string, AnyFunction>) => {
     if (state) {
-        defineMethods(prototype, { [method]: initialPrototype[method] })
+        defineMethods(prototype, { [method]: initialPrototype[method] });
     } else {
         deleteMethods(prototype, [method]);
     }
@@ -75,7 +74,7 @@ const _ = (method: string, state: boolean, prototype: unknown, initialPrototype:
 const defaultStateChange = (method: string) => (state: boolean) => {
     _(method, state, IteratorPrototype, initialIteratorPrototype);
     _(method, state, AsyncIteratorPrototype, initialAsyncIteratorPrototype);
-}
+};
 
 const makeAdditionalsFrom = (keys: string[]) => {
     const entries = {};
@@ -84,7 +83,7 @@ const makeAdditionalsFrom = (keys: string[]) => {
         entries[key] = defaultStateChange(key);
     }
     return entries;
-}
+};
 
 class Config {
     @configOption(true, makeAdditionalsFrom(keys(additionals_sync)))
@@ -111,7 +110,9 @@ class Config {
     }
 }
 
+defineProperty(IteratorPrototype, toStringTag, { value: "Iterator", configurable: true });
+defineProperty(AsyncIteratorPrototype, toStringTag, { value: "AsyncIterator", configurable: true });
+
 export const config = new Config;
-freeze(getPrototypeOf(freeze(config)));
 
 export * from "@utils/iterators.js";
