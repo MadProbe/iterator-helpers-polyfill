@@ -17,9 +17,9 @@ function defineMethods(prototype: unknown, methods: Record<string, AnyFunction>)
     }
 }
 
-function deleteMethods(prototype: unknown, methods: string[]) {
-    for (const key of methods) {
-        delete (prototype as never)[key];
+function deleteMethods(prototype: {}, methods: string[]) {
+    for (let i = 0, l = methods.length; i < l; i++) {
+        delete prototype[methods[i]];
     }
 }
 
@@ -64,7 +64,7 @@ const EMPTY = (name: string) => {
     // ! All options marked with this must be supported sooner or later!
     throw `Option "${ name }" is not supported! (for now)`;
 };
-const _ = (method: string, state: boolean, prototype: unknown, initialPrototype: Record<string, AnyFunction>) => {
+const _ = (method: string, state: boolean, prototype: {}, initialPrototype: Record<string, AnyFunction>) => {
     if (state) {
         defineMethods(prototype, { [method]: initialPrototype[method] });
     } else {
