@@ -3,6 +3,7 @@ export { default as dropWhile } from "./dropWhile.js";
 export { default as partition } from "./partition.js";
 export { default as skipWhile } from "./dropWhile.js";
 export { default as takeWhile } from "./takeWhile.js";
+export { default as contains } from "./contains.js";
 export { default as entries } from "../asIndexedPairs.js";
 export { default as repeat } from "./cycle.js";
 export { default as chain } from "./chain.js";
