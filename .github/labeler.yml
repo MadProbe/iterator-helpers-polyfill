@@ -1,0 +1,5 @@
+additional methods:
+  - ./src/methods/**/additionals/*.ts
+
+standard methods:
+  - ./src/methods/**/*.ts
