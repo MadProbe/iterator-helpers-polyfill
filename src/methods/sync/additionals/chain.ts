@@ -8,7 +8,7 @@ export default mimic(undefined, "chain", assertReplaceStar(args => {
         args[i] = from(args[i]);
     }
 }, assertIterator(
-    function* (this: Iterator<unknown>, next: Iterator<unknown, unknown, unknown>["next"], ...iterators: Iterator<unknown>[]) {
+    function* (this: Iterator<unknown>, next: Iterator<unknown, unknown, unknown>["next"], ...iterators: IterableIterator<unknown>[]) {
         yield* { [iterator]: () => ({ next }) };
         for (var i = 0, l = iterators.length; i < l;) {
             yield* iterators[i++];

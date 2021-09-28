@@ -9,7 +9,7 @@ export default mimic(undefined, "flatMap", assert(isFunction, O => `${ O } is no
         while ({ done, value } = _next(), !done) try {
             // Issue #114 flatMap should act like it does a `yield *` on each iterable
             // https://github.com/tc39/proposal-iterator-helpers/issues/114
-            yield* from(fn(value));
+            yield* from(fn(value)) as any;
         } catch (error) {
             closeIterator(this);
             throw error;
