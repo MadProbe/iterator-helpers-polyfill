@@ -15,6 +15,7 @@ export { default as repeat } from "./cycle.js";
 export { default as chain } from "./chain.js";
 export { default as count } from "./count.js";
 export { default as cycle } from "./cycle.js";
+export { default as heads } from "./heads.js";
 export { default as skip } from "../drop.js";
 export { default as join } from "./join.js";
 export { default as max } from "./max.js";
