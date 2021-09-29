@@ -1,6 +1,7 @@
 export { default as symmetricDifference } from "./symmetricDifference.js";
 export { default as intersection } from "./intersection.js";
 export { default as difference } from "./difference.js";
+export { default as roundrobin } from "./roundrobin.js";
 export { default as zipLongest } from "./zipLongest.js";
 export { default as dropWhile } from "./dropWhile.js";
 export { default as enumerate } from "../asIndexedPairs.js";
