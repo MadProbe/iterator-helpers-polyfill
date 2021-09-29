@@ -3,8 +3,8 @@ import { assertIsIterator, assertIterator, assertReplace, mimic } from "@utils/u
 import { bind, contains, undefined } from "tslib";
 
 
-export default mimic(undefined, "symmetricDifference", assertReplace((x, s = from(x as never)) =>
-    bind(assertIsIterator(s), s), assertIterator(
+export default mimic(undefined, "symmetricDifference",
+    assertReplace((x, s = from(x as never)) => bind(assertIsIterator(s), s), assertIterator(
         async function* (this: AsyncIterator<unknown>, next: AsyncIterator<unknown, unknown, unknown>["next"], next2: AsyncIterator<unknown, unknown, unknown>["next"]) {
             var array: unknown[] = [], blacklist: unknown[] = [];
             var length = 0, lastValue: unknown, done, value, length2 = 0;
