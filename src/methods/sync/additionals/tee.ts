@@ -6,7 +6,7 @@ import { assertIterator, assertReplace, isPositiveInteger, mimic } from "@utils/
 class ClonedIterator {
     private readonly results: unknown[] = [];
     private readonly positions: [number, ...number[]] = [] as never; // I assert that there'll be atleast 1 number in array.
-    private doneMoment?: readonly [number, unknown];
+    private done?: readonly [number, unknown];
     private index: number = 0;
     private lastValue!: unknown;
     constructor(private readonly next: Iterator<unknown, unknown, unknown>["next"]) { }
@@ -21,11 +21,11 @@ class ClonedIterator {
         const index = this.index++;
         // internal count of items consumed by this instance of iterator.
         var position = this.positions[index] = 0;
-        while (this.doneMoment?.[0] !== position) {
+        while (this.done?.[0] !== position) {
             if (position >= this.results.length) {
                 const { done, value } = this.next(this.lastValue);
                 if (done) {
-                    this.doneMoment = [position, value];
+                    this.done = [position, value];
                     return value;
                 }
                 this.lastValue = yield this.results[this.positions[index] = position++] = value;
@@ -38,7 +38,7 @@ class ClonedIterator {
             }
             yield result;
         }
-        return this.doneMoment[1];
+        return this.done[1];
     }
     get minimal(): number {
         var index = 1;
