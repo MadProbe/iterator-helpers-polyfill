@@ -1,4 +1,4 @@
-import { $globalThis, defineProperty, IteratorPrototype, AsyncIteratorPrototype, hasOwnProperty, AnyFunction, freeze, getPrototypeOf, keys, toStringTag, getOwnPropertyDescriptor } from "tslib";
+import { $globalThis, defineProperty, IteratorPrototype, AsyncIteratorPrototype, hasOwnProperty, AnyFunction, freeze, keys, toStringTag, getOwnPropertyDescriptor } from "tslib";
 import { Iterator, AsyncIterator } from "@utils/iterators.js";
 import * as async_methods from "@async/all.js";
 import * as sync_methods from "@sync/all.js";
@@ -8,7 +8,10 @@ import async_from from "@async/from.js";
 import from from "@sync/from.js";
 
 
-function defineMethods(prototype: unknown, methods: Record<string, AnyFunction>) {
+type Prototype = Record<string, AnyFunction>;
+
+
+function defineMethods(prototype: {}, methods: Prototype) {
     for (const key in methods) {
         if (hasOwnProperty(methods, key)) {
             const value = methods[key];
@@ -23,7 +26,7 @@ function deleteMethods(prototype: {}, methods: string[]) {
     }
 }
 
-function initPrototype(constructor: unknown, prototype: unknown, methods: Record<string, AnyFunction>) {
+function initPrototype(constructor: unknown, prototype: {}, methods: Prototype) {
     defineMethods(prototype, methods);
     defineProperty(constructor, "prototype", { value: prototype });
 }
@@ -64,7 +67,7 @@ const EMPTY = (name: string) => {
     // ! All options marked with this must be supported sooner or later!
     throw `Option "${ name }" is not supported! (for now)`;
 };
-const _ = (method: string, state: boolean, prototype: {}, initialPrototype: Record<string, AnyFunction>) => {
+const _ = (method: string, state: boolean, prototype: {}, initialPrototype: Prototype) => {
     if (state) {
         defineMethods(prototype, { [method]: initialPrototype[method] });
     } else {

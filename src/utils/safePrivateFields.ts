@@ -4,7 +4,7 @@ import { bound, concealSourceCode, SafeWeakMap } from "./utils.js";
 interface FieldMetadata { methods: string[], fields: ClassField[]; }
 type ConstructorPrototype = object;
 
-export class ClassField<T = any> {
+export class ClassField<T = unknown> {
     private static map = new SafeWeakMap<ConstructorPrototype, FieldMetadata>();
     private map = new SafeWeakMap<object, T | undefined>();
     constructor(private initializer?: (this: object, ...args: unknown[]) => T) { }
@@ -25,7 +25,7 @@ export class ClassField<T = any> {
         };
     }
     @bound
-    static link(name: string, decorator: AnyFunction = concealSourceCode): <T extends new (...args: unknown[]) => any>(Class: T) => T {
+    static link(name: string, decorator: AnyFunction = concealSourceCode): <T extends new (...args: unknown[]) => {}>(Class: T) => T {
         return Class => {
             const prototype = Class.prototype;
             const proto = getPrototypeOf(prototype);
@@ -44,7 +44,7 @@ export class ClassField<T = any> {
         };
     }
     @bound
-    static check<T = any>(target: any, property: string, descriptor: TypedPropertyDescriptor<T>) {
+    static check<T = unknown>(target: unknown, property: string, descriptor: TypedPropertyDescriptor<T>) {
         const methods = this.map.get(getPrototypeOf(target))!.methods;
         methods[methods.length] = property;
         return descriptor;

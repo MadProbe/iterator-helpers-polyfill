@@ -107,7 +107,7 @@ export class SafeWeakMap<K extends object, V> extends WeakMap<K, V> {
     }
 }
 export const bound = <T extends AnyFunction>(target: Object, property: string, descriptor: TypedPropertyDescriptor<T>) =>
-    (descriptor.value = bind(descriptor.value! as any, target), descriptor);
+    (descriptor.value = bind(descriptor.value! as AnyFunction, target) as never, descriptor);
 export const isFunction = (value: unknown): value is AnyFunction => typeof value === "function";
 export const isPositiveInteger = (argument: unknown) => {
     var number = +(argument as never);
