@@ -11,7 +11,7 @@ import from from "@sync/from.js";
 type Prototype = Record<string, AnyFunction>;
 
 
-function defineMethods(prototype: {}, methods: Prototype) {
+function defineMethods(prototype: object, methods: Prototype) {
     for (const key in methods) {
         if (hasOwnProperty(methods, key)) {
             const value = methods[key];
@@ -20,13 +20,13 @@ function defineMethods(prototype: {}, methods: Prototype) {
     }
 }
 
-function deleteMethods(prototype: {}, methods: string[]) {
+function deleteMethods(prototype: object, methods: string[]) {
     for (let i = 0, l = methods.length; i < l; i++) {
         delete prototype[methods[i]];
     }
 }
 
-function initPrototype(constructor: unknown, prototype: {}, methods: Prototype) {
+function initPrototype(constructor: unknown, prototype: object, methods: Prototype) {
     defineMethods(prototype, methods);
     defineProperty(constructor, "prototype", { value: prototype });
 }
@@ -46,9 +46,9 @@ Iterator.from = from;
 $globalThis["Iterator"] = Iterator;
 $globalThis["AsyncIterator"] = AsyncIterator;
 
-const configOption = (defaultState: boolean = true, additionalOptions: Record<string, (state: boolean) => void> = {}): MethodDecorator =>
+const configOption = (additionalOptions: Record<string, (state: boolean) => void> = {}): MethodDecorator =>
 ((target, property, descriptor) => {
-    let state = defaultState, setState = descriptor.value as never as (state: boolean) => void, o = {};
+    const setState = descriptor.value as never as (state: boolean) => void, o = {};
     for (let $keys = keys(additionalOptions), i = 0, l = $keys.length; i < l; i++) {
         const key = $keys[i];
         defineProperty(o, key, configOption()({}, "", getOwnPropertyDescriptor(additionalOptions, key)!)!);
@@ -58,16 +58,12 @@ const configOption = (defaultState: boolean = true, additionalOptions: Record<st
     delete descriptor.writable;
     descriptor.get = (() => o) as never;
     descriptor.set = ((x: boolean) => {
-        setState!(state = x);
+        setState!(x);
     }) as never;
     return descriptor;
 });
 
-const EMPTY = (name: string) => {
-    // ! All options marked with this must be supported sooner or later!
-    throw `Option "${ name }" is not supported! (for now)`;
-};
-const _ = (method: string, state: boolean, prototype: {}, initialPrototype: Prototype) => {
+const _ = (method: string, state: boolean, prototype: object, initialPrototype: Prototype) => {
     if (state) {
         defineMethods(prototype, { [method]: initialPrototype[method] });
     } else {
@@ -89,7 +85,7 @@ const makeAdditionalsFrom = (keys: string[]) => {
 };
 
 class Config {
-    @configOption(true, makeAdditionalsFrom(keys(additionals_sync)))
+    @configOption(makeAdditionalsFrom(keys(additionals_sync)))
     additionals(state: boolean) {
         if (state) {
             defineMethods(AsyncIteratorPrototype, additionals_async);
@@ -100,7 +96,7 @@ class Config {
             deleteMethods(IteratorPrototype, k);
         }
     }
-    @configOption(true, makeAdditionalsFrom(keys(sync_methods)))
+    @configOption(makeAdditionalsFrom(keys(sync_methods)))
     polyfilled(state: boolean) {
         if (state) {
             defineMethods(AsyncIteratorPrototype, async_methods);

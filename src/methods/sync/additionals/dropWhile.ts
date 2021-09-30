@@ -10,7 +10,7 @@ export default mimic(undefined, "dropWhile", assert(isFunction, O => O + " is no
         } catch (error) {
             closeIterator(this);
             throw error;
-        };
+        }
         while ({ done, value } = _next(lastValue), !done) lastValue = yield value;
     }
 )));

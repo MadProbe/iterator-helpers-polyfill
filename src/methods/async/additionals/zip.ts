@@ -9,7 +9,7 @@ export default mimic(undefined, "zip", assertReplaceStar(args => {
 }, assertIterator(
     async function* (this: AsyncIterator<unknown>, next: AsyncIterator<unknown, unknown, unknown>["next"], ...nexts: AsyncIterator<unknown, unknown, unknown>["next"][]) {
         var index, length = unshift(nexts, next), array: unknown[], lastValue: unknown;
-        while (array = Array(length)) {
+        while ((array = Array(length))) {
             for (index = 0; index < length; index++) {
                 const { done, value } = await nexts[index](lastValue);
                 if (done) return;

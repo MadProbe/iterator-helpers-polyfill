@@ -25,7 +25,7 @@ export class ClassField<T = unknown> {
         };
     }
     @bound
-    static link(name: string, decorator: AnyFunction = concealSourceCode): <T extends new (...args: unknown[]) => {}>(Class: T) => T {
+    static link(name: string, decorator: AnyFunction = concealSourceCode): <T extends new (...args: unknown[]) => object>(Class: T) => T {
         return Class => {
             const prototype = Class.prototype;
             const proto = getPrototypeOf(prototype);

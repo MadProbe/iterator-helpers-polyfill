@@ -7,7 +7,7 @@ export default mimic(undefined, "chunked", assertReplace(x => isPositiveInteger(
         var results: unknown[], length: number, done: boolean | void, value: unknown, lastValue: unknown;
         loop1: {
             while (length = 0, results = []) {
-                while (length < size && ({ done, value } = await _next())) {
+                while (length < size && ({ done, value } = await _next(lastValue))) {
                     if (done) break loop1;
                     results[length++] = value
                 }

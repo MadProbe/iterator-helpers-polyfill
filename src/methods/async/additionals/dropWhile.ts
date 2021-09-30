@@ -10,7 +10,7 @@ export default mimic(undefined, "dropWhile", assert(isFunction, O => O + " is no
         } catch (error) {
             await closeAsyncIterator(this);
             throw error;
-        };
+        }
         while ({ done, value } = await _next(lastValue), !done) lastValue = yield value;
     }
 )));

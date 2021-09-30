@@ -1,4 +1,4 @@
-import { assertIterator, closeAsyncIterator, mimic } from "@utils/utils.js";
+import { assertIterator, mimic } from "@utils/utils.js";
 
 
 // Decorators would be neat here

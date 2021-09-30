@@ -7,7 +7,7 @@ class ClonedIterator {
     private readonly results: unknown[] = [];
     private readonly positions: [number, ...number[]] = [] as never; // I assert that there'll be atleast 1 number in array.
     private done?: readonly [number, unknown];
-    private index: number = 0;
+    private index = 0;
     private lastValue!: unknown;
     constructor(private readonly next: Iterator<unknown, unknown, unknown>["next"]) { }
     create(count: number): Generator[] {
@@ -16,7 +16,7 @@ class ClonedIterator {
             a[i] = this.start();
         }
         return a;
-    };
+    }
     *start() {
         const index = this.index++;
         // internal count of items consumed by this instance of iterator.
