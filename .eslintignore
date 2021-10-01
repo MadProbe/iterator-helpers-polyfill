@@ -4,3 +4,4 @@ tests
 tslib.js
 tslib.d.ts
 rollup.*
+all.ts

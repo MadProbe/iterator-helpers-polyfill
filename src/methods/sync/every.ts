@@ -5,6 +5,7 @@ import { assert, assertIterator, closeIterator, isFunction, mimic } from "@utils
 export default mimic(undefined, "every", assert(isFunction, O => `${ O } is not a function`, assertIterator(
     function (this: Iterator<unknown>, _next: Iterator<unknown, unknown, unknown>["next"], fn: (item: unknown) => boolean) {
         var done: boolean | undefined, value: unknown;
+
         while ({ done, value } = _next(), !done)
             try {
                 if (!fn(value)) return closeIterator(this, false);
@@ -12,6 +13,7 @@ export default mimic(undefined, "every", assert(isFunction, O => `${ O } is not 
                 closeIterator(this);
                 throw error;
             }
+
         return true;
     }
 )));

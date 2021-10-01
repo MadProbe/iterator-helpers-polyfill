@@ -12,41 +12,50 @@ class ClonedIterator {
     constructor(private readonly next: Iterator<unknown, unknown, unknown>["next"]) { }
     create(count: number): Generator[] {
         const a = Array<Generator>(count);
+
         for (var i = 0; i < count; i++) {
             a[i] = this.start();
         }
+
         return a;
     }
     *start() {
         const index = this.index++;
         // internal count of items consumed by this instance of iterator.
         var position = this.positions[index] = 0;
+
         while (this.done?.[0] !== position) {
             if (position >= this.results.length) {
                 const { done, value } = this.next(this.lastValue);
+
                 if (done) {
                     this.done = [position, value];
+
                     return value;
                 }
                 this.lastValue = yield this.results[this.positions[index] = position++] = value;
                 continue;
             }
             const result = this.results[position++];
+
             this.positions[index] = position;
             if (this.minimal === position) {
                 this.results[position - 1] = null;
             }
             yield result;
         }
+
         return this.done[1];
     }
     get minimal(): number {
         var index = 1;
         var result = this.positions[0];
         var length = this.positions.length;
+
         for (; index < length; index++) {
             result = result > this.positions[index] ? this.positions[index] : result;
         }
+
         return result;
     }
 }

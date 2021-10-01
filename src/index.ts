@@ -15,6 +15,7 @@ function defineMethods(prototype: object, methods: Prototype) {
     for (const key in methods) {
         if (hasOwnProperty(methods, key)) {
             const value = methods[key];
+
             defineProperty(prototype, key, { value, configurable: true, writable: true });
         }
     }
@@ -49,8 +50,10 @@ $globalThis["AsyncIterator"] = AsyncIterator;
 const configOption = (additionalOptions: Record<string, (state: boolean) => void> = {}): MethodDecorator =>
     ((target, property, descriptor) => {
         const setState = descriptor.value as never as (state: boolean) => void, o = {};
+
         for (let $keys = keys(additionalOptions), i = 0, l = $keys.length; i < l; i++) {
             const key = $keys[i];
+
             defineProperty(o, key, configOption()({}, "", getOwnPropertyDescriptor(additionalOptions, key)!)!);
         }
         freeze(o);
@@ -60,9 +63,9 @@ const configOption = (additionalOptions: Record<string, (state: boolean) => void
         descriptor.set = ((x: boolean) => {
             setState!(x);
         }) as never;
+
         return descriptor;
     });
-
 const _ = (method: string, state: boolean, prototype: object, initialPrototype: Prototype) => {
     if (state) {
         defineMethods(prototype, { [method]: initialPrototype[method] });
@@ -74,13 +77,15 @@ const defaultStateChange = (method: string) => (state: boolean) => {
     _(method, state, IteratorPrototype, initialIteratorPrototype);
     _(method, state, AsyncIteratorPrototype, initialAsyncIteratorPrototype);
 };
-
 const makeAdditionalsFrom = (keys: string[]) => {
     const entries = {};
+
     for (var i = 0, l = keys.length; i < l; i++) {
         const key = keys[i];
+
         entries[key] = defaultStateChange(key);
     }
+
     return entries;
 };
 
@@ -92,6 +97,7 @@ class Config {
             defineMethods(IteratorPrototype, additionals_sync);
         } else {
             const k = keys(additionals_async);
+
             deleteMethods(AsyncIteratorPrototype, k);
             deleteMethods(IteratorPrototype, k);
         }
@@ -103,6 +109,7 @@ class Config {
             defineMethods(IteratorPrototype, sync_methods);
         } else {
             const k = keys(async_methods);
+
             deleteMethods(AsyncIteratorPrototype, k);
             deleteMethods(IteratorPrototype, k);
         }

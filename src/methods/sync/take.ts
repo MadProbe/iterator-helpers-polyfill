@@ -6,6 +6,7 @@ export default mimic(undefined, "take", assertReplace(isPositiveInteger, assertI
     function* (this: Iterator<unknown>, _next: Iterator<unknown, unknown, unknown>["next"], remaining: number) {
         while (remaining--) {
             var lastValue: unknown, { done, value } = _next(lastValue);
+
             if (done) return;
             lastValue = yield value;
         }

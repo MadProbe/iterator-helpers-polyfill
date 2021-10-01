@@ -9,9 +9,11 @@ export default mimic(undefined, "zip", assertReplaceStar(args => {
 }, assertIterator(
     function* (this: Iterator<unknown>, next: Iterator<unknown, unknown, unknown>["next"], ...nexts: Iterator<unknown, unknown, unknown>["next"][]) {
         var index, length = unshift(nexts, next), array: unknown[], lastValue: unknown;
+
         while ((array = Array(length))) {
             for (index = 0; index < length; index++) {
                 const { done, value } = nexts[index](lastValue);
+
                 if (done) return;
                 array[index] = value;
             }

@@ -11,15 +11,18 @@ class PartitionateAsyncIterator {
         private readonly fn: (...args: unknown[]) => Promise<boolean>, private readonly iterator: AsyncIterator<unknown>) { }
     private async *start(direction: boolean) {
         var items = this.items[+direction], opposite = this.items[+!direction];
+
         while (1) {
             if (this.rejected) throw this.rejected[0];
             while (items.length > 0) yield shift(items);
             if (this.done) return this.done[0];
             do {
                 var { value, done } = await this.next(this.lastValue);
+
                 if (done) {
                     this.done = [value];
                     while (items.length > 0) yield shift(items);
+
                     return value;
                 }
                 try {
@@ -37,6 +40,7 @@ class PartitionateAsyncIterator {
                 }
             } while (1);
         }
+
         return this.done?.[0];
     }
     public create() {

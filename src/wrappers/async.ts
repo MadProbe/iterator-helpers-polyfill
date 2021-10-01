@@ -15,11 +15,13 @@ export class WrapForVaildAsyncIteratorPrototype extends ClassField.init(next = n
     @ClassField.check
     async return(value: unknown) {
         const $return = iterator.get(this)!.return;
+
         return { value: $return !== undefined ? await call($return, iterator.get(this)) : value, done: true };
     }
     @ClassField.check
     async throw(value: unknown) {
         const $throw = iterator.get(this)!.throw;
+
         if ($throw !== undefined) {
             await call($throw, iterator.get(this), value);
         } else {
@@ -27,6 +29,8 @@ export class WrapForVaildAsyncIteratorPrototype extends ClassField.init(next = n
         }
     }
 }
+
 const { prototype } = WrapForVaildAsyncIteratorPrototype;
+
 delete prototype.constructor;
 setPrototypeOf(prototype, AsyncIteratorPrototype);

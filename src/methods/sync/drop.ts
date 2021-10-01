@@ -7,8 +7,10 @@ export default mimic(undefined, "drop", assertReplace(isPositiveInteger, assertI
         while (remaining--) {
             if (_next().done) return;
         }
+
         while (1) {
             var lastValue: unknown, { done, value } = _next(lastValue);
+
             if (done) return;
             lastValue = yield value;
         }

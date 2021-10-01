@@ -4,7 +4,9 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 
 export declare type _Awaitable<T> = PromiseLike<T> | T;
+
 export declare type _IteratorLike<T = unknown, TReturn = any, TNext = undefined> = Iterator<T, TReturn, TNext> | Iterable<T>;
+
 export declare type _AsyncIteratorLike<T = unknown, TReturn = any, TNext = undefined> = AsyncIterator<T, TReturn, TNext> | AsyncIterable<T> | _IteratorLike<_Awaitable<T>, TReturn, TNext>;
 
 declare global {

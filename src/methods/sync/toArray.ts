@@ -6,9 +6,11 @@ export default mimic(0, "toArray", assertIterator(
         var array = [] as unknown[];
         var index = 0;
         var done: boolean | undefined, value: unknown;
+
         while ({ done, value } = _next(), !done) {
             array[index++] = value;
         }
+
         return array;
     }
 ));

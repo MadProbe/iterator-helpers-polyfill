@@ -11,12 +11,14 @@ export default mimic(undefined, "reduce", assert(isFunction, O => `${ O } is not
             accumulator = value;
         }
         var value: unknown, done: boolean | undefined;
+
         while ({ value, done } = await _next(), !done) try {
             accumulator = await fn(value, accumulator);
         } catch (error) {
             await closeAsyncIterator(this);
             throw error;
         }
+
         return accumulator;
     }
 )));

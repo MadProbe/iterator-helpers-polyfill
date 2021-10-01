@@ -21,7 +21,17 @@ module.exports = {
         "no-useless-return": "error",
         "import/no-unresolved": "off",
         "linebreak-style": ["error", "unix"],
-        "import/newline-after-import": ["error", { "count": 2 }]
+        "import/newline-after-import": ["error", { "count": 2 }],
+        "eol-last": ["error", "always"],
+        "quotes": ["error", "double", { "avoidEscape": true }],
+        "padding-line-between-statements": [
+            "error",
+            { blankLine: "always", prev: ["const", "let", "var", "class", "export"], next: "*" },
+            { blankLine: "any", prev: ["const", "let", "var"], next: ["const", "let", "var"] },
+            // { blankLine: "never", prev: ["const", "let", "var"].flatMap(x => [x, "multiline-" + x]), next: ["block-like", "multiline-block-like"] },
+            { blankLine: "always", prev: "*", next: "return" },
+            { blankLine: "always", prev: ["for", "while"], next: ["for", "while"] },
+        ]
     },
     settings: {
         "import/ignore": ["^tslib$"]

@@ -12,10 +12,12 @@ export class ClassField<T = unknown> {
     static init(...fields: ClassField<unknown>[]): new (...args: unknown[]) => object {
         const { length } = fields;
         const self = this;
+
         return class {
             constructor() {
                 for (var index = 0; index < length; index++) {
                     const field = fields[index];
+
                     field.map.set(this, field.initializer && apply(field.initializer, this, arguments));
                 }
             }
@@ -31,23 +33,29 @@ export class ClassField<T = unknown> {
             const prototype = Class.prototype;
             const proto = getPrototypeOf(prototype);
             const { methods, fields } = this.map.get(proto)!;
+
             for (var index = 0, length = methods.length; index < length; index++) {
                 const method = methods[index];
                 const errorString = `${ name }.prototype.${ method }: called on incompatible reciever `;
                 const func = prototype[method];
+
                 prototype[method] = decorator(function (this: never) {
                     if (!fields[0].has(this)) throw TypeError(errorString + typeof this);
+
                     return apply(func, this, arguments);
                 });
             }
             setPrototypeOf(prototype, getPrototypeOf(proto));
+
             return Class;
         };
     }
     @bound
     static check<T = unknown>(target: unknown, property: string, descriptor: TypedPropertyDescriptor<T>) {
         const methods = this.map.get(getPrototypeOf(target))!.methods;
+
         methods[methods.length] = property;
+
         return descriptor;
     }
     get<R extends T = T>(thisArg: object): R | undefined {
@@ -58,6 +66,7 @@ export class ClassField<T = unknown> {
     }
     set(thisArg: object, value: T): this {
         this.map.set(thisArg, value);
+
         return this;
     }
 }

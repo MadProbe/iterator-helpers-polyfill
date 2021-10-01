@@ -15,11 +15,13 @@ export class WrapForVaildIteratorPrototype extends ClassField.init(next = new Cl
     @ClassField.check
     return(value: unknown) {
         const $return = iterator.get(this)!.return;
+
         return { value: $return !== undefined ? call($return, iterator.get(this)) : value, done: true };
     }
     @ClassField.check
     throw(value: unknown) {
         const $throw = iterator.get(this)!.throw;
+
         if ($throw !== undefined) {
             call($throw, iterator.get(this), value);
         } else {
@@ -27,6 +29,8 @@ export class WrapForVaildIteratorPrototype extends ClassField.init(next = new Cl
         }
     }
 }
+
 const { prototype } = WrapForVaildIteratorPrototype;
+
 delete prototype.constructor;
 setPrototypeOf(prototype, IteratorPrototype);
