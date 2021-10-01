@@ -12,6 +12,7 @@ export { default as contains } from "./contains.js";
 export { default as chunked } from "./chunked.js";
 export { default as entries } from "../asIndexedPairs.js";
 export { default as repeat } from "./cycle.js";
+export { default as unique } from "./unique.js";
 export { default as chain } from "./chain.js";
 export { default as count } from "./count.js";
 export { default as cycle } from "./cycle.js";

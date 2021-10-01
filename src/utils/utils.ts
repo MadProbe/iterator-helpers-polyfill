@@ -1,6 +1,6 @@
 import {
-    AnyFunction, apply, bind, call, create, defineProperties, defineProperty, floor, get, getOwnPropertyDescriptor, getOwnPropertyNames,
-    getPrototypeOf, isExtensible, keys, preventExtensions, Proxy, set, setPrototypeOf, Symbol, TypeError, undefined, WeakMap
+    AnyFunction, apply, bind, call, create, defineProperties, defineProperty, floor, get, getOwnPropertyDescriptor, getOwnPropertyDescriptors,
+    getPrototypeOf, isExtensible, keys, preventExtensions, Proxy, Set, set, setPrototypeOf, Symbol, TypeError, undefined, WeakMap, WeakSet
 } from "tslib";
 
 
@@ -97,13 +97,27 @@ export const assertReplaceStar = (asserter: (argument: IArguments) => void, func
     $function[MimicedFunctionSymbol] = func[MimicedFunctionSymbol] || func;
     return $function;
 };
-export class SafeWeakMap<K extends object, V> extends WeakMap<K, V> {
-    static {
-        var { prototype } = WeakMap;
-        var a = getOwnPropertyNames(prototype);
-        for (var i = 0, l = a.length, key; key = a[i], i++ < l;) {
-            this.prototype[key] = prototype[key];
-        }
+const savePrototype = ({ prototype }: { readonly prototype: object }, constructor: { readonly prototype: object; }) => {
+    defineProperties(prototype, getOwnPropertyDescriptors(constructor.prototype));
+};
+export class SafeWeakMap<K extends object, V> extends WeakMap<K, V> { }
+export class SafeWeakSet<V extends object> extends WeakSet<V> { }
+export class SafeSet<V> extends Set<V> { }
+savePrototype(SafeWeakMap, WeakMap);
+savePrototype(SafeWeakSet, WeakSet);
+savePrototype(SafeSet, Set);
+const isObject = (x: unknown): x is object => typeof x === "function" || typeof x === "object";
+export class WeakenedSet {
+    private _set = new SafeSet;
+    private _weakSet = new SafeWeakSet;
+    has(item: unknown) {
+        return isObject(item) ? this._weakSet.has(item) : this._set.has(item);
+    }
+    add(item: unknown) {
+        return isObject(item) ? this._weakSet.add(item) : this._set.add(item), this;
+    }
+    delete(item: unknown) {
+        return isObject(item) ? this._weakSet.delete(item) : this._set.delete(item);
     }
 }
 export const bound = <T extends AnyFunction>(target: unknown, property: string, descriptor: TypedPropertyDescriptor<T>) =>

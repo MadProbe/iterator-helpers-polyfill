@@ -238,7 +238,7 @@ export function __classPrivateFieldSet(receiver, state, value, kind, f) {
 
 const _Object = Object;
 const { call: _call, prototype } = _Object;
-export const { getPrototypeOf, setPrototypeOf, defineProperty, defineProperties, getOwnPropertyDescriptor, getOwnPropertyNames, create, preventExtensions, keys, isExtensible, freeze, is } = _Object;
+export const { getPrototypeOf, setPrototypeOf, defineProperty, defineProperties, getOwnPropertyDescriptor, getOwnPropertyDescriptors, create, preventExtensions, keys, isExtensible, freeze, is } = _Object;
 const { hasOwnProperty: f } = prototype;
 export const AsyncIteratorPrototype = getPrototypeOf(getPrototypeOf(getPrototypeOf((async function* () { })())));
 export const IteratorPrototype = getPrototypeOf(getPrototypeOf(getPrototypeOf((function* () { })())));
@@ -259,7 +259,7 @@ export const $globalThis = (() => {
     delete prototype.__マジック__;
     return global;
 })();
-export const { Array, TypeError, Symbol, Proxy, WeakMap } = $globalThis;
+export const { Array, TypeError, Set, Symbol, Proxy, WeakMap, WeakSet } = $globalThis;
 const a = Array.prototype;
 export const undefined = {}[Symbol()];
 export const { asyncIterator, iterator, toStringTag } = Symbol;
