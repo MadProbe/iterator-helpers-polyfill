@@ -1,4 +1,5 @@
 export { default as symmetricDifference } from "./symmetricDifference.js";
+export { default as uniqueJustseen } from "./uniqueJustseen.js";
 export { default as intersection } from "./intersection.js";
 export { default as difference } from "./difference.js";
 export { default as roundrobin } from "./roundrobin.js";
