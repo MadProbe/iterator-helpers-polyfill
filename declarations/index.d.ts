@@ -1,9 +1,11 @@
 /// <reference lib="es2015.generator" />
 /// <reference lib="es2018.asyncgenerator" />
+// I don't want to change types of built-ins only because of this rule
+/* eslint-disable @typescript-eslint/no-explicit-any */
 
-declare type _Awaitable<T> = PromiseLike<T> | T;
-declare type _IteratorLike<T = unknown, TReturn = any, TNext = undefined> = Iterator<T, TReturn, TNext> | Iterable<T>;
-declare type _AsyncIteratorLike<T = unknown, TReturn = any, TNext = undefined> = AsyncIterator<T, TReturn, TNext> | AsyncIterable<T> | _IteratorLike<_Awaitable<T>, TReturn, TNext>;
+export declare type _Awaitable<T> = PromiseLike<T> | T;
+export declare type _IteratorLike<T = unknown, TReturn = any, TNext = undefined> = Iterator<T, TReturn, TNext> | Iterable<T>;
+export declare type _AsyncIteratorLike<T = unknown, TReturn = any, TNext = undefined> = AsyncIterator<T, TReturn, TNext> | AsyncIterable<T> | _IteratorLike<_Awaitable<T>, TReturn, TNext>;
 
 declare global {
     interface Iterator<T = unknown, TReturn = any, TNext = undefined> {
@@ -89,6 +91,7 @@ declare global {
     }
 
     interface AsyncIterator<T = unknown, TReturn = any, TNext = undefined> {
+        tee<N extends number = 2>(count?: N): _Tuple<AsyncGenerator<T, TReturn, TNext>, N>;
         zip<A extends _RA<_AsyncIteratorLike<unknown>>>(...iterators: A): AsyncGenerator<[T, ..._MapAsyncIterator<A>], void, _UnifyNexts<A>>;
         skip(count: number): AsyncGenerator<T, void, TNext>;
         chain<A extends _RA<_AsyncIteratorLike<unknown>>>(...iterators: A): AsyncGenerator<T | (A extends _RA<_AsyncIteratorLike<infer A>> ? A : never), void, _UnifyNexts<A>>;

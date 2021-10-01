@@ -47,21 +47,21 @@ $globalThis["Iterator"] = Iterator;
 $globalThis["AsyncIterator"] = AsyncIterator;
 
 const configOption = (additionalOptions: Record<string, (state: boolean) => void> = {}): MethodDecorator =>
-((target, property, descriptor) => {
-    const setState = descriptor.value as never as (state: boolean) => void, o = {};
-    for (let $keys = keys(additionalOptions), i = 0, l = $keys.length; i < l; i++) {
-        const key = $keys[i];
-        defineProperty(o, key, configOption()({}, "", getOwnPropertyDescriptor(additionalOptions, key)!)!);
-    }
-    freeze(o);
-    delete descriptor.value;
-    delete descriptor.writable;
-    descriptor.get = (() => o) as never;
-    descriptor.set = ((x: boolean) => {
-        setState!(x);
-    }) as never;
-    return descriptor;
-});
+    ((target, property, descriptor) => {
+        const setState = descriptor.value as never as (state: boolean) => void, o = {};
+        for (let $keys = keys(additionalOptions), i = 0, l = $keys.length; i < l; i++) {
+            const key = $keys[i];
+            defineProperty(o, key, configOption()({}, "", getOwnPropertyDescriptor(additionalOptions, key)!)!);
+        }
+        freeze(o);
+        delete descriptor.value;
+        delete descriptor.writable;
+        descriptor.get = (() => o) as never;
+        descriptor.set = ((x: boolean) => {
+            setState!(x);
+        }) as never;
+        return descriptor;
+    });
 
 const _ = (method: string, state: boolean, prototype: object, initialPrototype: Prototype) => {
     if (state) {

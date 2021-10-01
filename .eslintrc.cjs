@@ -3,13 +3,28 @@ module.exports = {
     parser: '@typescript-eslint/parser',
     plugins: [
         '@typescript-eslint',
+        "import",
     ],
     extends: [
         'eslint:recommended',
         'plugin:@typescript-eslint/recommended',
+        "plugin:import/recommended",
+        "plugin:import/typescript"
     ],
     rules: {
-        "no-empty": ["error", { "allowEmptyCatch": true }]
+        "no-empty": ["error", { "allowEmptyCatch": true }],
+        "no-new-object": "error",
+        "no-new-wrappers": "error",
+        "no-array-constructor": "error",
+        "indent": ["error", 4],
+        "yield-star-spacing": "error",
+        "no-useless-return": "error",
+        "import/no-unresolved": "off",
+        "linebreak-style": ["error", "unix"],
+        "import/newline-after-import": ["error", { "count": 2 }]
+    },
+    settings: {
+        "import/ignore": ["^tslib$"]
     },
     overrides: [
         {
@@ -25,7 +40,7 @@ module.exports = {
                 "@typescript-eslint/no-this-alias": ["error", { allowedNames: ["self"] }],
                 "@typescript-eslint/explicit-module-boundary-types": "off",
                 "prefer-rest-params": "off",
-                "no-var": "off",
+                "no-var": "off"
             }
         }
     ]

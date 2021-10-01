@@ -1,5 +1,6 @@
 import { undefined, $globalThis, TypeError } from "tslib";
 
+
 export const Iterator = function Iterator() {
     if (new.target === undefined || new.target as never === $globalThis) {
         throw TypeError("Iterator constructor cannot be called without `new`");

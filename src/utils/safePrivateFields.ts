@@ -1,6 +1,7 @@
 import { AnyFunction, apply, getPrototypeOf, setPrototypeOf, TypeError } from "tslib";
 import { bound, concealSourceCode, SafeWeakMap } from "./utils.js";
 
+
 interface FieldMetadata { methods: string[], fields: ClassField[]; }
 type ConstructorPrototype = object;
 

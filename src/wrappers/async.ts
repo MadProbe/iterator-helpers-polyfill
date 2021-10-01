@@ -2,6 +2,7 @@ import { AnyFunction, AsyncIteratorPrototype, call, setPrototypeOf, undefined } 
 import { ClassField } from "@utils/safePrivateFields.js";
 import { assertIsIterator } from "@utils/utils.js";
 
+
 var next: ClassField<AsyncIterator<unknown>["next"]>, iterator: ClassField<AsyncIterator<unknown>>;
 
 @ClassField.link("WrapForVaildAsyncIteratorPrototype")

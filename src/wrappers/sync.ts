@@ -2,6 +2,7 @@ import { AnyFunction, IteratorPrototype, call, setPrototypeOf, undefined } from 
 import { ClassField } from "@utils/safePrivateFields.js";
 import { assertIsIterator } from "@utils/utils.js";
 
+
 var next: ClassField<Iterator<unknown>["next"]>, iterator: ClassField<Iterator<unknown>>;
 
 @ClassField.link("WrapForVaildIteratorPrototype")
