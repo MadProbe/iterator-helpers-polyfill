@@ -1,8 +1,7 @@
-import { undefined } from "tslib";
 import { assert, assertIterator, closeAsyncIterator, isFunction, mimic } from "@utils/utils.js";
 
 
-export default mimic(undefined, "reduce", assert(isFunction, O => `${ O } is not a function`, assertIterator(
+export default mimic(1, "reduce", assert(isFunction, O => `${ O } is not a function`, assertIterator(
     async function (this: AsyncIterator<unknown>, _next: AsyncIterator<unknown, unknown, unknown>["next"], fn: (acc: unknown, item: unknown) => Promise<unknown>, accumulator?: unknown) {
         if (!(2 in arguments)) {
             if ({ value, done } = await _next(), done) {

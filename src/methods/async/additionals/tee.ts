@@ -1,4 +1,4 @@
-import { Array, undefined } from "tslib";
+import { Array } from "tslib";
 import { assertIterator, assertReplace, isPositiveInteger, mimic } from "@utils/utils.js";
 
 
@@ -61,7 +61,7 @@ class ClonedAsyncIterator {
     }
 }
 
-export default mimic(undefined, "tee", assertReplace((x = 2) => isPositiveInteger(x), assertIterator(
+export default mimic(0, "tee", assertReplace((x = 2) => isPositiveInteger(x), assertIterator(
     function (this: AsyncIterator<unknown>, _next: AsyncIterator<unknown, unknown, unknown>["next"], count: number) {
         return new ClonedAsyncIterator(_next).create(count);
     }
