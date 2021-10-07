@@ -25,7 +25,7 @@ declare module "tslib" {
     type NegativeLooseEquality<T, S> = LogicalNot<Equality<T, S>>;
     type UndefinedLike = undefined | void;
     type IsEmptyArray<A extends any[]> = [] extends A ? Exclude<keyof A, keyof []> extends never ? true : false : false;
-    type This<T extends (...args: any[]) => void> = unknown extends ThisParameterType<T> ? any : ThisParameterType<T>;
+    type This<T> = unknown extends ThisParameterType<T> ? any : ThisParameterType<T>;
     type LastRest<A extends any[]> = IsEmptyArray<A> extends true ? A : A extends [any?, ...(infer Rest)] ? LastRest<Rest> : A;
     type RemoveArgs<A extends any[], R extends any[]> = A extends [...OptionalArgs<R>, ...(infer Rest)] ? Rest : [];
     type OptionalArgs<A extends any[]> = any[] extends A ? A | undefined[] : A extends [] ? [] :
@@ -42,7 +42,7 @@ declare module "tslib" {
             ((this: S, ...args: [...RemoveArgs<Parameters<T>, OptionalArgs<A>>, ...LastRest<Parameters<T>>]) => ReturnType<T>)
 
     );
-    export type CallFunctionType = <T extends (this: any, ...args: any[]) => void>(fn: T, thisArg: This<T>, ...args: Parameters<T>) => ReturnType<T>;
+    export type CallFunctionType = <P extends readonly unknown[], T extends (this: any, ...args: P) => void>(fn: T, thisArg: This<T>, ...args: P) => ReturnType<T>;
     export type ApplyFunctionType = <T extends (this: any, ...args: any[]) => void>(fn: T, thisArg: This<T>, args: Parameters<T> | ArrayLike<unknown>) => ReturnType<T>;
 
     export function __extends(d: Function, b: Function): void;

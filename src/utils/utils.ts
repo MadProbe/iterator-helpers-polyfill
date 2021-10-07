@@ -71,6 +71,8 @@ export const assertIsIterator = (O: unknown) => {
     return next;
 };
 
+export const assertIsAsyncIterator = assertIsIterator as unknown as (O: unknown) => AsyncIterator<unknown>["next"];
+
 export const assertIterator = (func: AnyFunction) => {
     function $function(this: unknown) {
         const next = assertIsIterator(this);
@@ -135,8 +137,8 @@ savePrototype(SafeSet, Set);
 const isObject = (x: unknown): x is object => typeof x === "function" || typeof x === "object";
 
 export class WeakenedSet {
-    private _set = new SafeSet;
-    private _weakSet = new SafeWeakSet;
+    private readonly _weakSet = new SafeWeakSet;
+    private readonly _set = new SafeSet;
     has(item: unknown) {
         return isObject(item) ? this._weakSet.has(item) : this._set.has(item);
     }
@@ -154,7 +156,7 @@ export const bound = <T extends AnyFunction>(target: unknown, property: string, 
 export const isFunction = (value: unknown): value is AnyFunction => typeof value === "function";
 
 export const isPositiveInteger = (argument: unknown) => {
-    var number = +(argument as never);
+    const number = +(argument as never);
 
     if (number !== number || number === 0) {
         return 0;
@@ -162,7 +164,7 @@ export const isPositiveInteger = (argument: unknown) => {
     if (number === 1 / 0 || number === -1 / 0) {
         return number;
     }
-    var integer = floor(number);
+    const integer = floor(number);
 
     if (integer < 0) {
         throw TypeError("Negative integers are not supported by this function");
@@ -173,15 +175,13 @@ export const isPositiveInteger = (argument: unknown) => {
 
     return integer;
 };
-
 export const mimic = (argsLength: number | undefined, name: string, $function: AnyFunction) => {
     const { length } = $function[MimicedFunctionSymbol] || $function;
 
     // default is original function arguments length - 1 since
     // it will be very common to have next parameter as first parameter
     // while still having opportunity to change it manually
-    argsLength ??= length - 1;
-    defineProperties($function, { length: { value: argsLength, configurable: true }, name: { value: name, configurable: true } });
+    defineProperties($function, { length: { value: argsLength ?? length - 1, configurable: true }, name: { value: name, configurable: true } });
     delete $function[MimicedFunctionSymbol];
 
     return concealSourceCode($function);
