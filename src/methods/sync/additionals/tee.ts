@@ -9,8 +9,8 @@ class ClonedIterator {
     private done?: readonly [number, unknown];
     private index = 0;
     private lastValue!: unknown;
-    constructor(private readonly next: Iterator<unknown, unknown, unknown>["next"]) { }
-    create(count: number): Generator[] {
+    public constructor(private readonly next: Iterator<unknown, unknown, unknown>["next"]) { }
+    public create(count: number): Generator[] {
         const a = Array<Generator>(count);
 
         for (var i = 0; i < count; i++) {
@@ -19,7 +19,7 @@ class ClonedIterator {
 
         return a;
     }
-    *start() {
+    public *start() {
         const index = this.index++;
         // internal count of items consumed by this instance of iterator.
         var position = this.positions[index] = 0;
@@ -47,7 +47,7 @@ class ClonedIterator {
 
         return this.done[1];
     }
-    get minimal(): number {
+    public get minimal(): number {
         var index = 1;
         var result = this.positions[0];
         var length = this.positions.length;

@@ -7,19 +7,19 @@ var next: ClassField<Iterator<unknown, unknown, unknown>["next"]>, iterator: Cla
 
 @ClassField.link("WrapForVaildIteratorPrototype")
 export class WrapForVaildIteratorPrototype extends ClassField.init(next = new ClassField(assertIsIterator), iterator = new ClassField(x => x as never)) {
-    ["constructor"]?: WrapForVaildIteratorPrototype;
+    public ["constructor"]?: WrapForVaildIteratorPrototype;
     @ClassField.check
-    next(value: unknown) {
+    public next(value: unknown) {
         return 0 in arguments ? call(next.get(this)!, iterator.get(this), value) : call(next.get(this)!, iterator.get(this));
     }
     @ClassField.check
-    return(value: unknown) {
+    public return(value: unknown) {
         const $return = iterator.get(this)!.return;
 
         return { value: $return !== undefined ? call($return, iterator.get(this)) : value, done: true };
     }
     @ClassField.check
-    throw(value: unknown) {
+    public throw(value: unknown) {
         const $throw = iterator.get(this)!.throw;
 
         if ($throw !== undefined) {

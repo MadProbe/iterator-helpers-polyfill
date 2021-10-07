@@ -8,13 +8,13 @@ type ConstructorPrototype = object;
 export class ClassField<T = unknown> {
     private static readonly map = new SafeWeakMap<ConstructorPrototype, FieldMetadata>();
     private readonly map = new SafeWeakMap<object, T | undefined>();
-    constructor(private initializer: (this: object, ...args: unknown[]) => T = x => x as never) { }
-    static init(...fields: ClassField[]): new (...args: unknown[]) => object {
+    public constructor(private initializer: (this: object, ...args: unknown[]) => T = x => x as never) { }
+    public static init(...fields: ClassField[]): new (...args: unknown[]) => object {
         const { length } = fields;
         const { map } = this;
 
         return class {
-            constructor() {
+            public constructor() {
                 for (var index = 0; index < length; index++) {
                     const field = fields[index];
 
@@ -27,7 +27,7 @@ export class ClassField<T = unknown> {
         };
     }
     @bound
-    static link(name: string, decorator: AnyFunction = concealSourceCode): <T extends new (...args: unknown[]) => object>(Class: T) => T {
+    public static link(name: string, decorator: AnyFunction = concealSourceCode): <T extends new (...args: unknown[]) => object>(Class: T) => T {
         return Class => {
             const prototype = Class.prototype;
             const proto = getPrototypeOf(prototype);
@@ -51,19 +51,20 @@ export class ClassField<T = unknown> {
         };
     }
     @bound
-    static check<T = unknown>(target: unknown, property: string, descriptor: TypedPropertyDescriptor<T>) {
+    public static check<T = unknown>(target: unknown, property: string, descriptor: TypedPropertyDescriptor<T>) {
         const methods = this.map.get(getPrototypeOf(target))!.methods;
 
         methods[methods.length] = property;
+
         return descriptor;
     }
-    get<R extends T = T>(thisArg: object): R | undefined {
+    public get<R extends T = T>(thisArg: object): R | undefined {
         return this.map.get(thisArg) as R;
     }
-    has(thisArg: object): boolean {
+    public has(thisArg: object): boolean {
         return this.map.has(thisArg);
     }
-    set(thisArg: object, value: T): this {
+    public set(thisArg: object, value: T): this {
         return this.map.set(thisArg, value), this;
     }
 }

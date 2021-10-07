@@ -7,19 +7,19 @@ var next: ClassField<AsyncIterator<unknown, unknown, unknown>["next"]>, iterator
 
 @ClassField.link("WrapForVaildAsyncIteratorPrototype")
 export class WrapForVaildAsyncIteratorPrototype extends ClassField.init(next = new ClassField(assertIsAsyncIterator), iterator = new ClassField) {
-    ["constructor"]?: WrapForVaildAsyncIteratorPrototype;
+    public ["constructor"]?: WrapForVaildAsyncIteratorPrototype;
     @ClassField.check
-    async next(value: unknown) {
+    public async next(value: unknown) {
         return await (0 in arguments ? call(next.get(this)!, iterator.get(this)!, value) : call(next.get(this)!, iterator.get(this)!));
     }
     @ClassField.check
-    async return(value: unknown) {
+    public async return(value: unknown) {
         const $return = iterator.get(this)!.return;
 
         return { value: $return !== undefined ? await call($return, iterator.get(this)!) : value, done: true };
     }
     @ClassField.check
-    async throw(value: unknown) {
+    public async throw(value: unknown) {
         const $throw = iterator.get(this)!.throw;
 
         if ($throw !== undefined) {

@@ -44,9 +44,6 @@ initPrototype(AsyncIterator, AsyncIteratorPrototype, initialAsyncIteratorPrototy
 AsyncIterator.from = async_from;
 Iterator.from = from;
 
-$globalThis["Iterator"] = Iterator;
-$globalThis["AsyncIterator"] = AsyncIterator;
-
 const configOption = (additionalOptions: Record<string, (state: boolean) => void> = {}): MethodDecorator =>
     ((target, property, descriptor) => {
         const setState = descriptor.value as never as (state: boolean) => void, o = {};
@@ -91,7 +88,7 @@ const makeAdditionalsFrom = (keys: string[]) => {
 
 class Config {
     @configOption(makeAdditionalsFrom(keys(additionals_sync)))
-    additionals(state: boolean) {
+    public additionals(state: boolean) {
         if (state) {
             defineMethods(AsyncIteratorPrototype, additionals_async);
             defineMethods(IteratorPrototype, additionals_sync);
@@ -103,7 +100,7 @@ class Config {
         }
     }
     @configOption(makeAdditionalsFrom(keys(sync_methods)))
-    polyfilled(state: boolean) {
+    public polyfilled(state: boolean) {
         if (state) {
             defineMethods(AsyncIteratorPrototype, async_methods);
             defineMethods(IteratorPrototype, sync_methods);
@@ -120,5 +117,10 @@ defineProperty(IteratorPrototype, toStringTag, { value: "Iterator", configurable
 defineProperty(AsyncIteratorPrototype, toStringTag, { value: "AsyncIterator", configurable: true });
 
 export const config = new Config;
+
+export const installIntoGlobal = () => {
+    $globalThis["Iterator"] = Iterator;
+    $globalThis["AsyncIterator"] = AsyncIterator;
+}
 
 export * from "@utils/iterators.js";

@@ -50,6 +50,7 @@ module.exports = {
                 }],
                 "@typescript-eslint/no-this-alias": ["error", { allowedNames: ["self"] }],
                 "@typescript-eslint/explicit-module-boundary-types": "off",
+                "@typescript-eslint/explicit-member-accessibility": ["error"],
                 "prefer-rest-params": "off",
                 "no-var": "off"
             }

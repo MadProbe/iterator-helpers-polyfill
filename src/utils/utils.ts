@@ -139,13 +139,13 @@ const isObject = (x: unknown): x is object => typeof x === "function" || typeof 
 export class WeakenedSet {
     private readonly _weakSet = new SafeWeakSet;
     private readonly _set = new SafeSet;
-    has(item: unknown) {
+    public has(item: unknown) {
         return isObject(item) ? this._weakSet.has(item) : this._set.has(item);
     }
-    add(item: unknown) {
+    public add(item: unknown) {
         return isObject(item) ? this._weakSet.add(item) : this._set.add(item), this;
     }
-    delete(item: unknown) {
+    public delete(item: unknown) {
         return isObject(item) ? this._weakSet.delete(item) : this._set.delete(item);
     }
 }
@@ -175,6 +175,7 @@ export const isPositiveInteger = (argument: unknown) => {
 
     return integer;
 };
+
 export const mimic = (argsLength: number | undefined, name: string, $function: AnyFunction) => {
     const { length } = $function[MimicedFunctionSymbol] || $function;
 

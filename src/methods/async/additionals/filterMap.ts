@@ -8,6 +8,7 @@ export default mimic(1, "filterMap", assert(isFunction, O => `${ O } is not a fu
 
         while ({ done, value } = await _next(lastValue), !done) try {
             const val = await fn(...value);
+
             if (SameValueZero(val, ignoreValue)) {
                 lastValue = yield val;
             }

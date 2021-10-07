@@ -108,7 +108,7 @@ declare global {
 
 declare type keys = "zip" | "chain" | "count" | "cycle" | "skip" | "enties" | "starMap" | "dropWhile" | "partition" | "skipWhile" | "takeWhile" | "zipLongest";
 declare class Config {
-    additionals: boolean & Record<keys, boolean>;
-    polyfilled: boolean & Record<Exclude<keyof Iterator, keys>, boolean>;
+    public additionals: boolean & Record<keys, boolean>;
+    public polyfilled: boolean & Record<Exclude<keyof Iterator, keys>, boolean>;
 }
 export const config: Config;
