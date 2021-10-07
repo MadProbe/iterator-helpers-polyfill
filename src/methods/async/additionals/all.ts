@@ -6,6 +6,7 @@ export { default as roundrobin } from "./roundrobin.js";
 export { default as zipLongest } from "./zipLongest.js";
 export { default as dropWhile } from "./dropWhile.js";
 export { default as enumerate } from "../asIndexedPairs.js";
+export { default as filterMap } from "./filterMap.js";
 export { default as partition } from "./partition.js";
 export { default as skipWhile } from "./dropWhile.js";
 export { default as takeWhile } from "./takeWhile.js";
