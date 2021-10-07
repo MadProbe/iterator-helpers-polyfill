@@ -31,7 +31,8 @@ module.exports = {
             // { blankLine: "never", prev: ["const", "let", "var"].flatMap(x => [x, "multiline-" + x]), next: ["block-like", "multiline-block-like"] },
             { blankLine: "always", prev: "*", next: "return" },
             { blankLine: "always", prev: ["for", "while"], next: ["for", "while"] },
-        ]
+        ],
+        "spaced-comment": ["error", "always", { "markers": ["/"] }]
     },
     settings: {
         "import/ignore": ["^tslib$"]
