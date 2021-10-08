@@ -1,6 +1,7 @@
 export { default as symmetricDifference } from "./symmetricDifference.js";
 export { default as uniqueJustseen } from "./uniqueJustseen.js";
 export { default as intersection } from "./intersection.js";
+export { default as intersperse } from "./intersperse.js";
 export { default as difference } from "./difference.js";
 export { default as roundrobin } from "./roundrobin.js";
 export { default as zipLongest } from "./zipLongest.js";
@@ -13,6 +14,7 @@ export { default as takeWhile } from "./takeWhile.js";
 export { default as contains } from "./contains.js";
 export { default as chunked } from "./chunked.js";
 export { default as entries } from "../asIndexedPairs.js";
+export { default as flatten } from "./flatten.js";
 export { default as repeat } from "./cycle.js";
 export { default as unique } from "./unique.js";
 export { default as chain } from "./chain.js";

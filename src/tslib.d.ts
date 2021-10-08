@@ -43,7 +43,7 @@ declare module "tslib" {
 
     );
     export type CallFunctionType = <P extends readonly unknown[], T extends (this: any, ...args: P) => void>(fn: T, thisArg: This<T>, ...args: P) => ReturnType<T>;
-    export type ApplyFunctionType = <T extends (this: any, ...args: any[]) => void>(fn: T, thisArg: This<T>, args: Parameters<T> | ArrayLike<unknown>) => ReturnType<T>;
+    export type ApplyFunctionType = <T extends (this: any) => void>(fn: T, thisArg: This<T>, args: Parameters<T> | ArrayLike<unknown>) => ReturnType<T>;
 
     export function __extends(d: Function, b: Function): void;
     export function __assign(t: any, ...sources: any[]): any;
