@@ -9,18 +9,18 @@ export default mimic(undefined, "heads", assertReplaceStar(args => {
     }
 }, assertIterator(
     async function* (this: AsyncIterator<unknown>, next: AsyncIterator<unknown, unknown, unknown>["next"], ...nexts: Array<AsyncIterator<unknown, unknown, unknown>["next"] | null>) {
-        var index, length = unshift(nexts, next), lastValue: unknown, doneCount = 0, l: number, array: unknown[];
+        var index, length = unshift(nexts, next), doneCount = 0, l: number, array: unknown[];
 
         while (doneCount < length) {
             for (index = 0, l = 0, array = []; index < length; index++) {
                 if (nexts[index]) {
-                    var { done, value } = await nexts[index]!(lastValue);
+                    var { done, value } = await nexts[index]!();
 
                     if (done && ++doneCount) { nexts[index] = null; continue; }
                     array[l++] = value;
                 }
             }
-            done || (lastValue = yield array);
+            done || (yield value);
         }
     }
 )));

@@ -7,12 +7,12 @@ export default mimic(undefined, "symmetricDifference",
     assertReplace((x, s = from(x as never)) => bind(assertIsIterator(s), s), assertIterator(
         async function* (this: AsyncIterator<unknown>, next: AsyncIterator<unknown, unknown, unknown>["next"], next2: AsyncIterator<unknown, unknown, unknown>["next"]) {
             var array: unknown[] = [], blacklist: unknown[] = [];
-            var length = 0, lastValue: unknown, done, value, length2 = 0;
+            var length = 0, done, value, length2 = 0;
 
             while ({ done, value } = await next2(), !done) array[length++] = value;
 
-            while ({ done, value } = await next(lastValue), !done) {
-                if (!contains(array, value)) lastValue = yield value;
+            while ({ done, value } = await next(), !done) {
+                if (!contains(array, value)) yield value;
                 else blacklist[length2++] = value;
             }
 
