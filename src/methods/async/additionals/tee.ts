@@ -1,31 +1,27 @@
-import { Array } from "tslib";
+import { apply, Array, min, undefined } from "tslib";
 import { assertIterator, assertReplace, isPositiveInteger, mimic } from "@utils/utils.js";
 
 
 /** A clever implementation of tee method which is garbage-collection friendly */
 class ClonedAsyncIterator {
-    private readonly results: unknown[] = [];
-    private readonly positions: [number, ...number[]] = [] as never; // I assert that there'll be atleast 1 number in array.
     private done?: readonly [number, unknown];
-    private index = 0;
     private lastValue!: unknown;
     public constructor(private readonly next: AsyncIterator<unknown, unknown, unknown>["next"]) { }
     public create(count: number): AsyncGenerator[] {
-        const a = Array<AsyncGenerator>(count);
+        const a = Array<AsyncGenerator>(count), results: unknown[] = [], positions: number[] = [];
 
         for (var i = 0; i < count; i++) {
-            a[i] = this.start();
+            a[i] = this.start(i, results, positions);
         }
 
         return a;
     }
-    public async *start() {
-        const index = this.index++;
+    public async *start(index: number, results: unknown[], positions: number[]) {
         // internal count of items consumed by this instance of iterator.
-        var position = this.positions[index] = 0;
+        var position = positions[index] = 0;
 
         while (this.done?.[0] !== position) {
-            if (position >= this.results.length) {
+            if (position >= results.length) {
                 const { done, value } = await this.next(this.lastValue);
 
                 if (done) {
@@ -33,31 +29,20 @@ class ClonedAsyncIterator {
 
                     return value;
                 }
-                this.lastValue = yield this.results[position++] = value;
-                this.positions[index] = position;
+                this.lastValue = yield results[position++] = value;
+                positions[index] = position;
                 continue;
             }
-            const result = this.results[position++];
+            const result = results[position++];
 
-            this.positions[index] = position;
-            if (this.minimal === position) {
-                this.results[position - 1] = null;
+            positions[index] = position;
+            if (apply(min, undefined!, positions) === position) {
+                results[position - 1] = null;
             }
             yield result;
         }
 
         return this.done[1];
-    }
-    public get minimal(): number {
-        var index = 1;
-        var result = this.positions[0];
-        var length = this.positions.length;
-
-        for (; index < length; index++) {
-            result = result > this.positions[index] ? this.positions[index] : result;
-        }
-
-        return result;
     }
 }
 

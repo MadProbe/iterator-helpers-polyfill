@@ -3,48 +3,50 @@ import { assert, assertIterator, closeAsyncIterator, isFunction, mimic } from "@
 
 
 class PartitionateAsyncIterator {
-    private readonly items: readonly [unknown[], unknown[]] = [[], []];
     private done?: [unknown];
     private rejected?: [unknown];
     private lastValue?: unknown;
     public constructor(private readonly next: AsyncIterator<unknown, unknown, unknown>["next"],
         private readonly fn: (...args: unknown[]) => Promise<boolean>, private readonly iterator: AsyncIterator<unknown>) { }
-    private async *start(direction: boolean) {
-        var items = this.items[+direction], opposite = this.items[+!direction];
-
+    private async *start(direction: boolean, items: unknown[], opposite: unknown[]) {
         while (1) {
             if (this.rejected) throw this.rejected[0];
-            while (items.length > 0) yield shift(items);
-            if (this.done) return this.done[0];
-            do {
-                var { value, done } = await this.next(this.lastValue);
+            try {
+                while (items.length > 0) yield shift(items);
+                if (this.done) break;
+                while (1) {
+                    var { value, done } = await this.next(this.lastValue), result: boolean;
 
-                if (done) {
-                    this.done = [value];
-                    while (items.length > 0) yield shift(items);
+                    if (done) {
+                        this.done = [value];
+                        while (items.length > 0) yield shift(items);
 
-                    return value;
+                        return value;
+                    }
+                    try {
+                        result = await call(this.fn, undefined!, value); // fn would be otherwise called with `this` set with current `this` value (of PartitionateAsyncIterator class);
+                    } catch (error) {
+                        await closeAsyncIterator(this.iterator);
+                        throw error;
+                    }
+                    if (!!result === direction) {
+                        while (items.length > 0) yield shift(items);
+                        this.lastValue = yield value;
+                        break;
+                    } else {
+                        opposite[opposite.length] = value;
+                    }
                 }
-                try {
-                    var result = await call(this.fn, undefined!, value); // fn would be otherwise called with `this` set with current `this` value (of PartitionateAsyncIterator class);
-                } catch (error) {
-                    await closeAsyncIterator(this.iterator);
-                    throw error;
-                }
-                if (!!result === direction) {
-                    while (items.length > 0) yield shift(items);
-                    this.lastValue = yield value;
-                    break;
-                } else {
-                    opposite[opposite.length] = value;
-                }
-            } while (1);
+            } catch (error) {
+                this.rejected = [error];
+                throw error;
+            }
         }
 
         return this.done?.[0];
     }
-    public create() {
-        return [this.start(true), this.start(false)];
+    public create(items: unknown[] = [], items2: unknown[] = []) {
+        return [this.start(true, items, items2), this.start(false, items2, items)];
     }
 }
 
