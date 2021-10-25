@@ -8,19 +8,19 @@ export default mimic(undefined, "heads", assertReplaceStar(args => {
         args[i] = bind((t = from(args[i])).next as AnyFunction, t);
     }
 }, assertIterator(
-    async function* (this: AsyncIterator<unknown>, next: AsyncIterator<unknown, unknown, unknown>["next"], ...nexts: Array<AsyncIterator<unknown, unknown, unknown>["next"] | null>) {
+    async function* (this: AsyncIterator<unknown>, next: AsyncIterator<unknown, unknown, unknown>["next"], ...nexts: Array<AsyncIterator<unknown, unknown, unknown>["next"]>) {
         var index, length = unshift(nexts, next), doneCount = 0, l: number, array: unknown[];
 
         while (doneCount < length) {
             for (index = 0, l = 0, array = []; index < length; index++) {
-                if (nexts[index]) {
+                if (index in nexts) {
                     var { done, value } = await nexts[index]!();
 
-                    if (done && ++doneCount) { nexts[index] = null; continue; }
+                    if (done && ++doneCount) { delete nexts[index]; continue; }
                     array[l++] = value;
                 }
             }
-            done || (yield value);
+            l && (yield array);
         }
     }
 )));
