@@ -7,7 +7,7 @@ class ClonedAsyncIterator {
     private done?: readonly [number, unknown];
     private lastValue!: unknown;
     public constructor(private readonly next: AsyncIterator<unknown, unknown, unknown>["next"]) { }
-    public create(count: number): AsyncGenerator[] {
+    public create(count: number): readonly AsyncGenerator[] {
         const a = Array<AsyncGenerator>(count), results: unknown[] = [], positions: number[] = [];
 
         for (var i = 0; i < count; i++) {

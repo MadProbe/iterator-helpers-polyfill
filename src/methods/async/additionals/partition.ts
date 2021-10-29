@@ -3,11 +3,11 @@ import { assert, assertIterator, closeAsyncIterator, isFunction, mimic } from "@
 
 
 class PartitionateAsyncIterator {
-    private done?: [unknown];
-    private rejected?: [unknown];
+    private done?: readonly [unknown];
+    private rejected?: readonly [unknown];
     private lastValue?: unknown;
     public constructor(private readonly next: AsyncIterator<unknown, unknown, unknown>["next"],
-        private readonly fn: (...args: unknown[]) => Promise<boolean>, private readonly _iterator: AsyncIterator<unknown>) { }
+        private readonly fn: (...args: readonly unknown[]) => Promise<boolean>, private readonly _iterator: AsyncIterator<unknown>) { }
     private async *start(direction: boolean, items: unknown[], opposite: unknown[]) {
         while (1) {
             if (this.rejected) throw this.rejected[0];
@@ -52,7 +52,7 @@ class PartitionateAsyncIterator {
 
 
 export default mimic(undefined, "partition", assert(isFunction, O => `${ O } is not a function`, assertIterator(
-    function (this: AsyncIterator<unknown>, _next: AsyncIterator<unknown, unknown, unknown>["next"], fn: (...args: unknown[]) => Promise<boolean>) {
+    function (this: AsyncIterator<unknown>, _next: AsyncIterator<unknown, unknown, unknown>["next"], fn: (...args: readonly unknown[]) => Promise<boolean>) {
         return new PartitionateAsyncIterator(_next, fn, this).create();
     }
 )));

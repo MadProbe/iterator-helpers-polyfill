@@ -7,7 +7,7 @@ export default mimic(undefined, "zipLongest", assertReplaceStar(args => {
         args[i] = bind(assertIsIterator(args[i]), args[i]);
     }
 }, assertIterator(
-    async function* (this: AsyncIterator<unknown>, next: AsyncIterator<unknown, unknown, unknown>["next"], ...nexts: AsyncIterator<unknown, unknown, unknown>["next"][]) {
+    async function* (this: AsyncIterator<unknown>, next: AsyncIterator<unknown, unknown, unknown>["next"], ...nexts: readonly AsyncIterator<unknown, unknown, unknown>["next"][]) {
         var index, i = 0, length = unshift(nexts, next), array: unknown[], doneIndicators = Array<boolean>(length), broken: boolean;
 
         while ((array = Array(length))) {

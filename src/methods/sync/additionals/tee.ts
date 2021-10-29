@@ -7,7 +7,7 @@ class ClonedIterator {
     private done?: readonly [number, unknown];
     private lastValue!: unknown;
     public constructor(private readonly next: Iterator<unknown, unknown, unknown>["next"]) { }
-    public create(count: number): Generator[] {
+    public create(count: number): readonly Generator[] {
         const a = Array<Generator>(count), results: unknown[] = [], positions: number[] = [];
 
         for (var i = 0; i < count; i++) {

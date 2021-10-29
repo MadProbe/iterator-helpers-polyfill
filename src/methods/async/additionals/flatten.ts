@@ -9,7 +9,7 @@ export default mimic(0, "flatten", assertReplace((x = 1) => isPositiveInteger(x)
 
         while ({ done, value } = await _next(), !done) {
             if (times > 0) {
-                yield* call(recurse, iterator = from(value as AsyncIterator), (next = iterator.next, ((...args: unknown[]) => apply<typeof _next>(next, iterator, args))), times - 1);
+                yield* call(recurse, iterator = from(value as AsyncIterator), (next = iterator.next, ((...args: readonly unknown[]) => apply<typeof _next>(next, iterator, args))), times - 1);
             } else yield value;
         }
     }

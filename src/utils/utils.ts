@@ -77,7 +77,7 @@ export const assertIterator = (func: AnyFunction) => {
     function $function(this: unknown) {
         const next = assertIsIterator(this);
 
-        return call(func, this, (...args: unknown[]) => apply(next, this, args), ...arguments);
+        return call(func, this, (...args: readonly unknown[]) => apply(next, this, args), ...arguments);
     }
     $function[MimicedFunctionSymbol] = func[MimicedFunctionSymbol] || func;
 

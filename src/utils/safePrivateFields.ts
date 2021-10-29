@@ -2,14 +2,14 @@ import { AnyFunction, apply, getPrototypeOf, setPrototypeOf, TypeError } from "t
 import { bound, concealSourceCode, SafeWeakMap } from "./utils.js";
 
 
-interface FieldMetadata { methods: string[], fields: ClassField[]; }
+interface FieldMetadata { readonly methods: string[], readonly fields: readonly ClassField[]; }
 type ConstructorPrototype = object;
 
 export class ClassField<T = unknown> {
     private static readonly map = new SafeWeakMap<ConstructorPrototype, FieldMetadata>();
     private readonly map = new SafeWeakMap<object, T | undefined>();
     public constructor(private initializer: (this: object, ...args: unknown[]) => T = x => x as never) { }
-    public static init(...fields: ClassField[]): new (...args: unknown[]) => object {
+    public static init(...fields: readonly ClassField[]): new (...args: readonly unknown[]) => object {
         const { length } = fields;
         const { map } = this;
 
@@ -27,7 +27,7 @@ export class ClassField<T = unknown> {
         };
     }
     @bound
-    public static link(name: string, decorator: AnyFunction = concealSourceCode): <T extends new (...args: unknown[]) => object>(Class: T) => T {
+    public static link(name: string, decorator: AnyFunction = concealSourceCode): <T extends new (...args: readonly unknown[]) => object>(Class: T) => T {
         return Class => {
             const prototype = Class.prototype;
             const proto = getPrototypeOf(prototype);

@@ -8,7 +8,7 @@ export default mimic(undefined, "roundrobin", assertReplaceStar(args => {
         args[i] = bind((t = from(args[i])).next as AnyFunction, t);
     }
 }, assertIterator(
-    async function* (this: AsyncIterator<unknown>, next: AsyncIterator<unknown, unknown, unknown>["next"], ...nexts: Array<AsyncIterator<unknown, unknown, unknown>["next"] | null>) {
+    async function* (this: AsyncIterator<unknown>, next: AsyncIterator<unknown, unknown, unknown>["next"], ...nexts: AsyncIterator<unknown, unknown, unknown>["next"][]) {
         var index, length = unshift(nexts, next), doneCount = 0, lastValues: unknown[] = Array(length);
 
         while (doneCount < length) {
@@ -16,7 +16,7 @@ export default mimic(undefined, "roundrobin", assertReplaceStar(args => {
                 if (nexts[index]) {
                     const { done, value } = await nexts[index]!(lastValues[index]);
 
-                    if (done && ++doneCount) { nexts[index] = null; continue; }
+                    if (done && ++doneCount) { delete nexts[index]; continue; }
                     lastValues[index] = yield value;
                 }
             }

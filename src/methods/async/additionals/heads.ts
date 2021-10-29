@@ -8,7 +8,7 @@ export default mimic(undefined, "heads", assertReplaceStar(args => {
         args[i] = bind((t = from(args[i])).next as AnyFunction, t);
     }
 }, assertIterator(
-    async function* (this: AsyncIterator<unknown>, next: AsyncIterator<unknown, unknown, unknown>["next"], ...nexts: Array<AsyncIterator<unknown, unknown, unknown>["next"]>) {
+    async function* (this: AsyncIterator<unknown>, next: AsyncIterator<unknown, unknown, unknown>["next"], ...nexts: AsyncIterator<unknown, unknown, unknown>["next"][]) {
         var index, length = unshift(nexts, next), doneCount = 0, l: number, array: unknown[];
 
         while (doneCount < length) {

@@ -3,7 +3,7 @@ import { assert, assertIterator, closeAsyncIterator, isFunction, mimic } from "@
 
 
 export default mimic(undefined, "starMap", assert(isFunction, O => `${ O } is not a function`, assertIterator(
-    async function* (this: AsyncIterator<unknown>, _next: AsyncIterator<Iterator, never, unknown>["next"], fn: (...args: unknown[]) => Promise<unknown>) {
+    async function* (this: AsyncIterator<unknown>, _next: AsyncIterator<Iterator, never, unknown>["next"], fn: (...args: readonly unknown[]) => Promise<unknown>) {
         var lastValue: unknown, done: boolean | undefined, value: Iterator;
 
         while ({ done, value } = await _next(lastValue), !done) try {
