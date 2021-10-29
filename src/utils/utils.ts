@@ -71,7 +71,7 @@ export const assertIsIterator = (O: unknown) => {
     return next;
 };
 
-export const assertIsAsyncIterator = assertIsIterator as unknown as (O: unknown) => AsyncIterator<unknown>["next"];
+export const assertIsAsyncIterator = assertIsIterator as never as (O: unknown) => AsyncIterator<unknown>["next"];
 
 export const assertIterator = (func: AnyFunction) => {
     function $function(this: unknown) {

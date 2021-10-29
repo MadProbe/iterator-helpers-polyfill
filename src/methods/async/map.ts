@@ -9,7 +9,7 @@ export default mimic(undefined, "map", assert(isFunction, O => `${ O } is not a 
         var lastValue: unknown, done: boolean | undefined, value: unknown;
 
         while ({ done, value } = await _next(lastValue), !done) try {
-            lastValue = yield await fn(value as unknown);
+            lastValue = yield await fn(value as never);
         } catch (error) {
             await closeAsyncIterator(this);
             throw error;
