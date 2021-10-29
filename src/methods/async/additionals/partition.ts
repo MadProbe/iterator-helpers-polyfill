@@ -7,7 +7,7 @@ class PartitionateAsyncIterator {
     private rejected?: [unknown];
     private lastValue?: unknown;
     public constructor(private readonly next: AsyncIterator<unknown, unknown, unknown>["next"],
-        private readonly fn: (...args: unknown[]) => Promise<boolean>, private readonly iterator: AsyncIterator<unknown>) { }
+        private readonly fn: (...args: unknown[]) => Promise<boolean>, private readonly _iterator: AsyncIterator<unknown>) { }
     private async *start(direction: boolean, items: unknown[], opposite: unknown[]) {
         while (1) {
             if (this.rejected) throw this.rejected[0];
@@ -26,7 +26,7 @@ class PartitionateAsyncIterator {
                     try {
                         result = await call(this.fn, undefined!, value); // fn would be otherwise called with `this` set with current `this` value (of PartitionateAsyncIterator class);
                     } catch (error) {
-                        await closeAsyncIterator(this.iterator);
+                        await closeAsyncIterator(this._iterator);
                         throw error;
                     }
                     if (!!result === direction) {
