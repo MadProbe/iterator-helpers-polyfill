@@ -136,3 +136,9 @@ declare class Config {
     public polyfilled: boolean & Record<keys, boolean>;
 }
 export const config: Config;
+export const AsyncIterator: AsyncIteratorConstructor;
+export const Iterator: IteratorConstructor;
+/**
+ * Injects `Iterator` and `AsyncIterator` constructors onto globalThis.
+ */
+export function installIntoGlobal(): void;
