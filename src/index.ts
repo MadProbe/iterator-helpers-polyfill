@@ -1,72 +1,73 @@
-import { $globalThis, defineProperty, IteratorPrototype, AsyncIteratorPrototype, hasOwnProperty, AnyFunction, freeze, getPrototypeOf, keys } from "tslib";
+import { $globalThis, defineProperty, IteratorPrototype, AsyncIteratorPrototype, hasOwnProperty, AnyFunction, freeze, keys, toStringTag, getOwnPropertyDescriptor } from "tslib";
 import { Iterator, AsyncIterator } from "@utils/iterators.js";
 import * as async_methods from "@async/all.js";
 import * as sync_methods from "@sync/all.js";
-import * as additionals_async from "@async/additionals/all.js";
-import * as additionals_sync from "@sync/additionals/all.js";
-import async_from from "@async/from.js";
-import from from "@sync/from.js";
+import * as additional_async from "@async/additionals/all.js";
+import * as additional_sync from "@sync/additionals/all.js";
+import * as additional_async_statics from "@async/statics/additionals/all.js";
+import * as async_statics from "@async/statics/all.js";
+import * as additional_sync_statics from "@sync/statics/additionals/all.js";
+import * as sync_statics from "@sync/statics/all.js";
 
-function defineMethods(prototype: unknown, methods: Record<string, AnyFunction>) {
+
+type Methods = Record<string, AnyFunction>;
+
+
+function defineMethods(O: object, methods: Methods) {
     for (const key in methods) {
         if (hasOwnProperty(methods, key)) {
             const value = methods[key];
-            defineProperty(prototype, key, { value, configurable: true, writable: true });
+
+            defineProperty(O, key, { value, configurable: true, writable: true });
         }
     }
 }
 
-function deleteMethods(prototype: unknown, methods: string[]) {
-    for (const key of methods) {
-        if (hasOwnProperty(methods, key)) {
-            delete (prototype as never)[key];
-        }
+function deleteMethods(O: object, methods: string[]) {
+    for (let i = 0, l = methods.length; i < l; i++) {
+        delete O[methods[i]];
     }
 }
 
-function initPrototype(constructor: unknown, prototype: unknown, methods: Record<string, AnyFunction>) {
+function initPrototype(constructor: unknown, prototype: object, methods: Methods) {
     defineMethods(prototype, methods);
     defineProperty(constructor, "prototype", { value: prototype });
 }
 
-const initialIteratorPrototype = freeze({ ...freeze(sync_methods), ...freeze(additionals_sync) });
-const initialAsyncIteratorPrototype = freeze({ ...freeze(async_methods), ...freeze(additionals_async) });
+const initialIteratorPrototype = freeze({ ...freeze(sync_methods), ...freeze(additional_sync) });
+const initialAsyncIteratorPrototype = freeze({ ...freeze(async_methods), ...freeze(additional_async) });
+const initialIteratorStaticMethods = freeze({ ...freeze(sync_statics), ...freeze(additional_sync_statics) });
+const initialAsyncIteratorStaticMethods = freeze({ ...freeze(async_statics), ...freeze(additional_async_statics) });
 
 
 initPrototype(Iterator, IteratorPrototype, initialIteratorPrototype);
-
-
 initPrototype(AsyncIterator, AsyncIteratorPrototype, initialAsyncIteratorPrototype);
 
-AsyncIterator.from = async_from;
-Iterator.from = from;
+defineMethods(AsyncIterator, initialAsyncIteratorStaticMethods);
+defineMethods(Iterator, initialIteratorStaticMethods);
 
-$globalThis["Iterator"] = Iterator;
-$globalThis["AsyncIterator"] = AsyncIterator;
-
-const configOption = (defaultState: boolean = true, additionalOptions: Record<string, (state: boolean) => void> = {}) =>
+const configOption: (additionalOptions?: Record<string, (state: boolean) => void>) => MethodDecorator = (additionalOptions = {}) =>
     ((target, property, descriptor) => {
-        let state = defaultState, setState = descriptor.value as never as (state: boolean) => void;
+        const setState = descriptor.value as never as (state: boolean) => void, o = {};
+
         for (let $keys = keys(additionalOptions), i = 0, l = $keys.length; i < l; i++) {
             const key = $keys[i];
 
+            defineProperty(o, key, configOption()({}, "", getOwnPropertyDescriptor(additionalOptions, key)!)!);
         }
+        freeze(o);
         delete descriptor.value;
         delete descriptor.writable;
-        descriptor.get = (() => state) as never;
-        descriptor.set = (() => {
-            setState!(state);
-            state = !state;
+        descriptor.get = (() => o) as never;
+        descriptor.set = ((x: boolean) => {
+            setState!(x);
         }) as never;
-    }) as MethodDecorator;
 
-const EMPTY = (name: string) => {
-    // ! All options marked with this must be supported sooner or later!
-    throw `Option "${ name }" is not supported! (for now)`;
-};
-const _ = (method: string, state: boolean, prototype: unknown, initialPrototype: Record<string, AnyFunction>) => {
+        return descriptor;
+    });
+const _ = (method: string, state: boolean, prototype: object, initialPrototype: Methods) => {
     if (state) {
-        defineMethods(prototype, { [method]: initialPrototype[method] })
+        defineMethods(prototype, { [method]: initialPrototype[method] });
     } else {
         deleteMethods(prototype, [method]);
     }
@@ -74,43 +75,54 @@ const _ = (method: string, state: boolean, prototype: unknown, initialPrototype:
 const defaultStateChange = (method: string) => (state: boolean) => {
     _(method, state, IteratorPrototype, initialIteratorPrototype);
     _(method, state, AsyncIteratorPrototype, initialAsyncIteratorPrototype);
-}
-
+};
 const makeAdditionalsFrom = (keys: string[]) => {
     const entries = {};
+
     for (var i = 0, l = keys.length; i < l; i++) {
         const key = keys[i];
-        
+
+        entries[key] = defaultStateChange(key);
     }
-    return entries
-}
+
+    return entries;
+};
 
 class Config {
-    @configOption(true, makeAdditionalsFrom(keys(additionals_sync)))
-    additionals(state: boolean) {
+    @configOption(makeAdditionalsFrom(keys(additional_sync)))
+    public additionals(state: boolean) {
         if (state) {
-            defineMethods(AsyncIteratorPrototype, additionals_async);
-            defineMethods(IteratorPrototype, additionals_sync);
+            defineMethods(AsyncIteratorPrototype, additional_async);
+            defineMethods(IteratorPrototype, additional_sync);
         } else {
-            const k = keys(additionals_async);
+            const k = keys(additional_async);
+
             deleteMethods(AsyncIteratorPrototype, k);
             deleteMethods(IteratorPrototype, k);
         }
     }
-    @configOption(true, makeAdditionalsFrom(keys(sync_methods)))
-    polyfilled(state: boolean) {
+    @configOption(makeAdditionalsFrom(keys(sync_methods)))
+    public polyfilled(state: boolean) {
         if (state) {
             defineMethods(AsyncIteratorPrototype, async_methods);
             defineMethods(IteratorPrototype, sync_methods);
         } else {
             const k = keys(async_methods);
+
             deleteMethods(AsyncIteratorPrototype, k);
             deleteMethods(IteratorPrototype, k);
         }
     }
 }
 
+defineProperty(IteratorPrototype, toStringTag, { value: "Iterator", configurable: true });
+defineProperty(AsyncIteratorPrototype, toStringTag, { value: "AsyncIterator", configurable: true });
+
 export const config = new Config;
-freeze(getPrototypeOf(freeze(config)));
+
+export const installIntoGlobal = () => {
+    $globalThis["Iterator"] = Iterator;
+    $globalThis["AsyncIterator"] = AsyncIterator;
+};
 
 export * from "@utils/iterators.js";

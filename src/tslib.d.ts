@@ -25,7 +25,7 @@ declare module "tslib" {
     type NegativeLooseEquality<T, S> = LogicalNot<Equality<T, S>>;
     type UndefinedLike = undefined | void;
     type IsEmptyArray<A extends any[]> = [] extends A ? Exclude<keyof A, keyof []> extends never ? true : false : false;
-    type This<T extends (...args: any[]) => void> = unknown extends ThisParameterType<T> ? any : ThisParameterType<T>;
+    type This<T> = unknown extends ThisParameterType<T> ? any : ThisParameterType<T>;
     type LastRest<A extends any[]> = IsEmptyArray<A> extends true ? A : A extends [any?, ...(infer Rest)] ? LastRest<Rest> : A;
     type RemoveArgs<A extends any[], R extends any[]> = A extends [...OptionalArgs<R>, ...(infer Rest)] ? Rest : [];
     type OptionalArgs<A extends any[]> = any[] extends A ? A | undefined[] : A extends [] ? [] :
@@ -42,8 +42,8 @@ declare module "tslib" {
             ((this: S, ...args: [...RemoveArgs<Parameters<T>, OptionalArgs<A>>, ...LastRest<Parameters<T>>]) => ReturnType<T>)
 
     );
-    export type CallFunctionType = <T extends (this: any, ...args: any[]) => void>(fn: T, thisArg: This<T>, ...args: Parameters<T>) => ReturnType<T>;
-    export type ApplyFunctionType = <T extends (this: any, ...args: any[]) => void>(fn: T, thisArg: This<T>, args: Parameters<T> | ArrayLike<unknown>) => ReturnType<T>;
+    export type CallFunctionType = <P extends readonly unknown[], T extends (this: any, ...args: P) => void>(fn: T, thisArg: This<T>, ...args: P) => ReturnType<T>;
+    export type ApplyFunctionType = <T extends (this: any) => void>(fn: T, thisArg: This<T>, args: Parameters<T> | ArrayLike<unknown>) => ReturnType<T>;
 
     export function __extends(d: Function, b: Function): void;
     export function __assign(t: any, ...sources: any[]): any;
@@ -164,9 +164,10 @@ declare module "tslib" {
 
     type globalThis = typeof globalThis;
     export const $globalThis: globalThis;
-    export type AnyFunction = (...args: any[]) => unknown;
+    export type AnyFunction = (...args: readonly any[]) => unknown;
     export const asyncIterator: SymbolConstructor["asyncIterator"];
     export const iterator: SymbolConstructor["iterator"];
+    export const toStringTag: SymbolConstructor["toStringTag"];
     export const AsyncIteratorPrototype: AsyncIterator<unknown>;
     export const IteratorPrototype: Iterator<unknown>;
     export const call: CallFunctionType;
@@ -174,8 +175,15 @@ declare module "tslib" {
     export const bind: BindFunctionType;
     export const hasOwnProperty: (object: object, property: PropertyKey) => boolean;
     export const { get, set }: typeof Reflect;
-    export const { getPrototypeOf, setPrototypeOf, defineProperty, defineProperties, create, getOwnPropertyDescriptor, getOwnPropertyNames, preventExtensions, keys, isExtensible, freeze }: ObjectConstructor;
-    export const { floor }: Math;
-    export const unshift: <T>(array: T[], element: T) => number;
-    export const { Array, Object, Proxy, TypeError, WeakMap, Symbol, undefined }: globalThis;
+    export const {
+        getPrototypeOf, setPrototypeOf, defineProperty, defineProperties, create, getOwnPropertyDescriptor,
+        getOwnPropertyDescriptors, getOwnPropertyNames, preventExtensions, keys, is, isExtensible, freeze
+    }: ObjectConstructor;
+    export const { floor, min }: Math;
+    export const unshift: <T>(array: readonly T[] | ArrayLike<T>, element: T) => number;
+    export const shift: <T>(array: readonly T[] | ArrayLike<T>) => T;
+    export const contains: <T>(array: readonly T[] | ArrayLike<T>, value: T) => boolean;
+    export const { Array, Object, Proxy, RangeError, Set, String, TypeError, WeakMap, WeakSet, Symbol, undefined }: globalThis;
+    export const SameValueZero: (value1: unknown, value2: unknown) => boolean;
+    export const __throw: (error: unknown) => never;
 }

@@ -1,5 +1,7 @@
-.*
+.trash
+.vscode
 node_modules
 build
 index.html
 *.tgz
+.serverconfig.json

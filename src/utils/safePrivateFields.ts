@@ -1,62 +1,70 @@
-import { AnyFunction, apply, getPrototypeOf, setPrototypeOf, TypeError } from "tslib";
+import { type AnyFunction, apply, getPrototypeOf, setPrototypeOf, TypeError } from "tslib";
 import { bound, concealSourceCode, SafeWeakMap } from "./utils.js";
 
-interface FieldMetadata { methods: string[], fields: ClassField[]; }
+
+interface FieldMetadata { readonly methods: readonly string[], readonly fields: readonly ClassField[]; }
 type ConstructorPrototype = object;
 
-export class ClassField<T = any> {
-    private static map = new SafeWeakMap<ConstructorPrototype, FieldMetadata>();
-    private map = new SafeWeakMap<object, T | undefined>();
-    constructor(private initializer?: (this: object, ...args: unknown[]) => T) { }
-    static init(...fields: ClassField<unknown>[]): new (...args: unknown[]) => object {
+export class ClassField<T = unknown> {
+    private static readonly _map = new SafeWeakMap<ConstructorPrototype, FieldMetadata>();
+    private readonly _map = new SafeWeakMap<object, T | undefined>();
+    public constructor(private initializer: (this: object, ...args: readonly unknown[]) => T = x => x as never) { }
+    public static init(...fields: readonly ClassField[]): new (...args: readonly unknown[]) => object {
         const { length } = fields;
-        const self = this;
+        const { _map } = this;
+
         return class {
-            constructor() {
+            public constructor() {
                 for (var index = 0; index < length; index++) {
                     const field = fields[index];
-                    field.map.set(this, field.initializer && apply(field.initializer, this, arguments));
+
+                    field._map.set(this, apply(field.initializer, this, arguments));
                 }
             }
             static {
-                // @ts-ignore; false-positive ts(2454)
-                self.map.set(this.prototype, { methods: [], fields });
+                _map.set(this.prototype, { methods: [], fields });
             }
         };
     }
     @bound
-    static link(name: string, decorator: AnyFunction = concealSourceCode): <T extends new (...args: unknown[]) => any>(Class: T) => T {
+    public static link(name: string, decorator: (...args: readonly unknown[]) => AnyFunction = concealSourceCode as never): <T extends new (...args: readonly unknown[]) => object>(Class: T) => T {
         return Class => {
-            const prototype = Class.prototype;
+            const prototype: Record<string, AnyFunction> = Class.prototype;
             const proto = getPrototypeOf(prototype);
-            const { methods, fields } = this.map.get(proto)!;
-            for (var index = 0, length = methods.length; index < length; index++) {
+            const { methods, fields } = this._map.get(proto)!;
+            const length = methods.length;
+
+            for (var index = 0; index < length; index++) {
                 const method = methods[index];
                 const errorString = `${ name }.prototype.${ method }: called on incompatible reciever `;
-                const func = prototype[method];
+                const func: AnyFunction = prototype[method];
+
                 prototype[method] = decorator(function (this: never) {
                     if (!fields[0].has(this)) throw TypeError(errorString + typeof this);
+
                     return apply(func, this, arguments);
                 });
             }
             setPrototypeOf(prototype, getPrototypeOf(proto));
+
             return Class;
         };
     }
     @bound
-    static check<T = any>(target: any, property: string, descriptor: TypedPropertyDescriptor<T>) {
-        const methods = this.map.get(getPrototypeOf(target))!.methods;
+    public static check<T = unknown>(target: unknown, property: string, descriptor: TypedPropertyDescriptor<T>) {
+        const methods = this._map.get(getPrototypeOf(target))!.methods as string[];
+
         methods[methods.length] = property;
+
         return descriptor;
     }
-    get<R extends T = T>(thisArg: object): R | undefined {
-        return this.map.get(thisArg) as R;
+    public get<R extends T = T>(thisArg: object): R | undefined {
+        return this._map.get(thisArg) as R;
     }
-    has(thisArg: object): boolean {
-        return this.map.has(thisArg);
+    public has(thisArg: object): boolean {
+        return this._map.has(thisArg);
     }
-    set(thisArg: object, value: T): this {
-        this.map.set(thisArg, value);
-        return this;
+    public set(thisArg: object, value: T): this {
+        return this._map.set(thisArg, value), this;
     }
 }

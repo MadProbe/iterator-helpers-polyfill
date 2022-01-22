@@ -1,58 +1,52 @@
-import { Array, undefined } from "tslib";
+import { apply, Array, min, undefined } from "tslib";
 import { assertIterator, assertReplace, isPositiveInteger, mimic } from "@utils/utils.js";
 
 
 /** A clever implementation of tee method which is garbage-collection friendly */
 class ClonedIterator {
-    private readonly results: unknown[] = [];
-    private readonly positions: [number, ...number[]] = [] as never; // I assert that there'll be atleast 1 number in array.
-    private doneMoment?: readonly [number, unknown];
-    private index: number = 0;
+    private _done?: readonly [number, unknown];
     private lastValue!: unknown;
-    constructor(private readonly next: Iterator<unknown, unknown, unknown>["next"]) { }
-    create(count: number): Generator[] {
-        const a = Array<Generator>(count);
+    public constructor(private readonly _next: Iterator<unknown, unknown, unknown>["next"]) { }
+    public _create(count: number): readonly Generator[] {
+        const a = Array<Generator>(count), results: unknown[] = [], positions: number[] = [];
+
         for (var i = 0; i < count; i++) {
-            a[i] = this.start();
+            a[i] = this.start(i, results, positions);
         }
+
         return a;
-    };
-    *start() {
-        const index = this.index++;
+    }
+    public *start(index: number, results: unknown[], positions: number[]) {
         // internal count of items consumed by this instance of iterator.
-        var position = this.positions[index] = 0;
-        while (this.doneMoment?.[0] !== position) {
-            if (position >= this.results.length) {
-                const { done, value } = this.next(this.lastValue);
+        var position = positions[index] = 0;
+
+        while ((this._done && this._done[0]) !== position) {
+            if (position >= results.length) {
+                const { done, value } = this._next(this.lastValue);
+
                 if (done) {
-                    this.doneMoment = [position, value];
+                    this._done = [position, value];
+
                     return value;
                 }
-                this.lastValue = yield this.results[this.positions[index] = position++] = value;
+                this.lastValue = yield results[positions[index] = position++] = value;
                 continue;
             }
-            const result = this.results[position++];
-            this.positions[index] = position;
-            if (this.minimal === position) {
-                this.results[position - 1] = null;
+            const result = results[position++];
+
+            positions[index] = position;
+            if (apply(min, undefined!, positions) === position) {
+                delete results[position - 1];
             }
             yield result;
         }
-        return this.doneMoment[1];
-    }
-    get minimal(): number {
-        var index = 1;
-        var result = this.positions[0];
-        var length = this.positions.length;
-        for (; index < length; index++) {
-            result = result > this.positions[index] ? this.positions[index] : result;
-        }
-        return result;
+
+        return this._done && this._done[1];
     }
 }
 
-export default mimic(undefined, "tee", assertReplace((x = 2) => isPositiveInteger(x), assertIterator(
+export default mimic(0, "tee", assertReplace((x = 2) => isPositiveInteger(x), assertIterator(
     function (this: Iterator<unknown>, _next: Iterator<unknown, unknown, unknown>["next"], count: number) {
-        return new ClonedIterator(_next).create(count);
+        return new ClonedIterator(_next)._create(count);
     }
 )));

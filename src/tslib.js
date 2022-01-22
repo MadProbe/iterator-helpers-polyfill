@@ -238,7 +238,7 @@ export function __classPrivateFieldSet(receiver, state, value, kind, f) {
 
 const _Object = Object;
 const { call: _call, prototype } = _Object;
-export const { getPrototypeOf, setPrototypeOf, defineProperty, defineProperties, getOwnPropertyDescriptor, getOwnPropertyNames, create, preventExtensions, keys, isExtensible, freeze } = _Object;
+export const { getPrototypeOf, setPrototypeOf, defineProperty, defineProperties, getOwnPropertyDescriptor, getOwnPropertyDescriptors, create, preventExtensions, keys, isExtensible, freeze, is } = _Object;
 const { hasOwnProperty: f } = prototype;
 export const AsyncIteratorPrototype = getPrototypeOf(getPrototypeOf(getPrototypeOf((async function* () { })())));
 export const IteratorPrototype = getPrototypeOf(getPrototypeOf(getPrototypeOf((function* () { })())));
@@ -254,18 +254,22 @@ export const $globalThis = (() => {
         },
         configurable: true
     });
-    // JS magic should be ignored
     global = __マジック__;
     delete prototype.__マジック__;
     return global;
 })();
-export const { Array, TypeError, Symbol, Proxy, WeakMap } = $globalThis;
-export const undefined = {}[Symbol()];
-export const { asyncIterator, iterator } = Symbol;
+export const { Array, TypeError, RangeError, Set, Symbol, Proxy, WeakMap, WeakSet } = $globalThis;
+const a = Array.prototype;
+export const undefined = (function() { "use strict"; return this; })();
+export const { asyncIterator, iterator, toStringTag } = Symbol;
 export const bind = _call.bind(_call.bind);
 export const call = bind(_call, _call);
 export const apply = bind(_call, _call.apply);
 export const hasOwnProperty = bind(_call, f);
-export const unshift = bind(_call, Array.prototype.unshift);
-export const { floor } = Math;
+export const unshift = bind(_call, a.unshift);
+export const shift = bind(_call, a.shift);
+export const contains = bind(_call, a.includes);
+export const { floor, min } = Math;
 export const { get, set } = Reflect;
+export const SameValueZero = (x, y) => x === y || (x !== x && y !== y);
+export const __throw = error => { throw error; };

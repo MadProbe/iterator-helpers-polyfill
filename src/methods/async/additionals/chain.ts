@@ -1,6 +1,6 @@
 import { asyncIterator, undefined } from "tslib";
 import { assertIterator, assertReplaceStar, mimic } from "@utils/utils.js";
-import from from "@async/from.js";
+import from from "@async/statics/from.js";
 
 
 export default mimic(undefined, "chain", assertReplaceStar(args => {
@@ -8,7 +8,7 @@ export default mimic(undefined, "chain", assertReplaceStar(args => {
         args[i] = from(args[i]);
     }
 }, assertIterator(
-    async function* (this: AsyncIterator<unknown>, next: AsyncIterator<unknown, unknown, unknown>["next"], ...iterators: AsyncIterator<unknown>[]) {
+    async function* (this: AsyncIterator<unknown>, next: AsyncIterator<unknown, unknown, unknown>["next"], ...iterators: readonly AsyncIterator<unknown>[]) {
         yield* { [asyncIterator]: () => ({ next }) };
         for (var i = 0, l = iterators.length; i < l;) {
             yield* iterators[i++];

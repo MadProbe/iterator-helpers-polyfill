@@ -19,25 +19,42 @@
     "scripts": {
         "test": "node ./tests/test.js",
         "build": "rollup -c",
-        "build-full": "rollup -c --environment FULL"
+        "build-full": "rollup -c --environment FULL",
+        "build-dev": "rollup -c rollup.config.dev.js",
+        "lint": "eslint . --ext .js,.jsx,.ts,.tsx",
+        "lint-fix": "eslint . --ext .js,.jsx,.ts,.tsx --fix",
+        "update": "npm i -D @typescript-eslint/eslint-plugin@latest eslint@latest eslint-plugin-import@latest rollup@latest rollup-plugin-eslint@latest rollup-plugin-terser@latest rollup-plugin-typescript2@latest typescript@latest"
     },
     "repository": {
         "type": "git",
         "url": "git+https://github.com/MadProbe/iterator-helpers-polyfill.git"
     },
     "keywords": [
-        "polyfill",
-        "iterator-helpers-proposal",
-        "iterator-helpers"
+        "javascript",
+        "typescript",
+        "iterator-library",
+        "iterator-functions",
+        "iterator-helpers",
+        "iterator-helpers-proposal"
     ],
+    "engines": {
+        "node": ">=10.0.0",
+        "chrome": ">=63",
+        "firefox": ">=57",
+        "safari": ">=11"
+    },
     "bugs": {
         "url": "https://github.com/MadProbe/iterator-helpers-polyfill/issues"
     },
     "homepage": "https://github.com/MadProbe/iterator-helpers-polyfill#readme",
     "devDependencies": {
-        "rollup": "^2.56.3",
+        "@typescript-eslint/eslint-plugin": "^5.10.0",
+        "eslint": "^8.7.0",
+        "eslint-plugin-import": "^2.25.4",
+        "rollup": "^2.66.0",
+        "rollup-plugin-eslint": "^7.0.0",
         "rollup-plugin-terser": "^7.0.2",
-        "rollup-plugin-typescript2": "^0.30.0",
-        "typescript": "^4.4.3"
+        "rollup-plugin-typescript2": "^0.31.1",
+        "typescript": "^4.5.5"
     }
 }

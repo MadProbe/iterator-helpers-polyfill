@@ -9,3 +9,6 @@ tsconfig.json
 *.md
 *.tgz
 *.map
+bundle.mjs
+bundle.cjs
+bundle.js
