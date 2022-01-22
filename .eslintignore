@@ -5,3 +5,5 @@ tslib.js
 tslib.d.ts
 rollup.*
 all.ts
+*.7z
+*.zip

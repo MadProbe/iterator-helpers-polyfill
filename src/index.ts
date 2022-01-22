@@ -2,49 +2,51 @@ import { $globalThis, defineProperty, IteratorPrototype, AsyncIteratorPrototype,
 import { Iterator, AsyncIterator } from "@utils/iterators.js";
 import * as async_methods from "@async/all.js";
 import * as sync_methods from "@sync/all.js";
-import * as additionals_async from "@async/additionals/all.js";
-import * as additionals_sync from "@sync/additionals/all.js";
-import async_from from "@async/from.js";
-import from from "@sync/from.js";
+import * as additional_async from "@async/additionals/all.js";
+import * as additional_sync from "@sync/additionals/all.js";
+import * as additional_async_statics from "@async/statics/additionals/all.js";
+import * as async_statics from "@async/statics/all.js";
+import * as additional_sync_statics from "@sync/statics/additionals/all.js";
+import * as sync_statics from "@sync/statics/all.js";
 
 
-type Prototype = Record<string, AnyFunction>;
+type Methods = Record<string, AnyFunction>;
 
 
-function defineMethods(prototype: object, methods: Prototype) {
+function defineMethods(O: object, methods: Methods) {
     for (const key in methods) {
         if (hasOwnProperty(methods, key)) {
             const value = methods[key];
 
-            defineProperty(prototype, key, { value, configurable: true, writable: true });
+            defineProperty(O, key, { value, configurable: true, writable: true });
         }
     }
 }
 
-function deleteMethods(prototype: object, methods: string[]) {
+function deleteMethods(O: object, methods: string[]) {
     for (let i = 0, l = methods.length; i < l; i++) {
-        delete prototype[methods[i]];
+        delete O[methods[i]];
     }
 }
 
-function initPrototype(constructor: unknown, prototype: object, methods: Prototype) {
+function initPrototype(constructor: unknown, prototype: object, methods: Methods) {
     defineMethods(prototype, methods);
     defineProperty(constructor, "prototype", { value: prototype });
 }
 
-const initialIteratorPrototype = freeze({ ...freeze(sync_methods), ...freeze(additionals_sync) });
-const initialAsyncIteratorPrototype = freeze({ ...freeze(async_methods), ...freeze(additionals_async) });
+const initialIteratorPrototype = freeze({ ...freeze(sync_methods), ...freeze(additional_sync) });
+const initialAsyncIteratorPrototype = freeze({ ...freeze(async_methods), ...freeze(additional_async) });
+const initialIteratorStaticMethods = freeze({ ...freeze(sync_statics), ...freeze(additional_sync_statics) });
+const initialAsyncIteratorStaticMethods = freeze({ ...freeze(async_statics), ...freeze(additional_async_statics) });
 
 
 initPrototype(Iterator, IteratorPrototype, initialIteratorPrototype);
-
-
 initPrototype(AsyncIterator, AsyncIteratorPrototype, initialAsyncIteratorPrototype);
 
-AsyncIterator.from = async_from;
-Iterator.from = from;
+defineMethods(AsyncIterator, initialAsyncIteratorStaticMethods);
+defineMethods(Iterator, initialIteratorStaticMethods);
 
-const configOption = (additionalOptions: Record<string, (state: boolean) => void> = {}): MethodDecorator =>
+const configOption: (additionalOptions?: Record<string, (state: boolean) => void>) => MethodDecorator = (additionalOptions = {}) =>
     ((target, property, descriptor) => {
         const setState = descriptor.value as never as (state: boolean) => void, o = {};
 
@@ -63,7 +65,7 @@ const configOption = (additionalOptions: Record<string, (state: boolean) => void
 
         return descriptor;
     });
-const _ = (method: string, state: boolean, prototype: object, initialPrototype: Prototype) => {
+const _ = (method: string, state: boolean, prototype: object, initialPrototype: Methods) => {
     if (state) {
         defineMethods(prototype, { [method]: initialPrototype[method] });
     } else {
@@ -87,13 +89,13 @@ const makeAdditionalsFrom = (keys: string[]) => {
 };
 
 class Config {
-    @configOption(makeAdditionalsFrom(keys(additionals_sync)))
+    @configOption(makeAdditionalsFrom(keys(additional_sync)))
     public additionals(state: boolean) {
         if (state) {
-            defineMethods(AsyncIteratorPrototype, additionals_async);
-            defineMethods(IteratorPrototype, additionals_sync);
+            defineMethods(AsyncIteratorPrototype, additional_async);
+            defineMethods(IteratorPrototype, additional_sync);
         } else {
-            const k = keys(additionals_async);
+            const k = keys(additional_async);
 
             deleteMethods(AsyncIteratorPrototype, k);
             deleteMethods(IteratorPrototype, k);
@@ -121,6 +123,6 @@ export const config = new Config;
 export const installIntoGlobal = () => {
     $globalThis["Iterator"] = Iterator;
     $globalThis["AsyncIterator"] = AsyncIterator;
-}
+};
 
 export * from "@utils/iterators.js";

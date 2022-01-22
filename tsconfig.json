@@ -2,6 +2,7 @@
     "compilerOptions": {
         "experimentalDecorators": true,
         "module": "esnext",
+        "moduleResolution": "classic",
         "paths": {
             "@async/*": ["./src/methods/async/*"],
             "@sync/*": ["./src/methods/sync/*"],

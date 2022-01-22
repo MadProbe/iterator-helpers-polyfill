@@ -180,9 +180,10 @@ declare module "tslib" {
         getOwnPropertyDescriptors, getOwnPropertyNames, preventExtensions, keys, is, isExtensible, freeze
     }: ObjectConstructor;
     export const { floor, min }: Math;
-    export const unshift: <T>(array: readonly T[], element: T) => number;
-    export const shift: <T>(array: readonly T[]) => T;
-    export const contains: <T>(array: readonly T[], value: T) => boolean;
-    export const { Array, Object, Proxy, Set, String, TypeError, WeakMap, WeakSet, Symbol, undefined }: globalThis;
+    export const unshift: <T>(array: readonly T[] | ArrayLike<T>, element: T) => number;
+    export const shift: <T>(array: readonly T[] | ArrayLike<T>) => T;
+    export const contains: <T>(array: readonly T[] | ArrayLike<T>, value: T) => boolean;
+    export const { Array, Object, Proxy, RangeError, Set, String, TypeError, WeakMap, WeakSet, Symbol, undefined }: globalThis;
     export const SameValueZero: (value1: unknown, value2: unknown) => boolean;
+    export const __throw: (error: unknown) => never;
 }

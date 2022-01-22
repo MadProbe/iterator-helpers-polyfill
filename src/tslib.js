@@ -254,14 +254,13 @@ export const $globalThis = (() => {
         },
         configurable: true
     });
-    // JS magic should be ignored
     global = __マジック__;
     delete prototype.__マジック__;
     return global;
 })();
-export const { Array, TypeError, Set, Symbol, Proxy, WeakMap, WeakSet } = $globalThis;
+export const { Array, TypeError, RangeError, Set, Symbol, Proxy, WeakMap, WeakSet } = $globalThis;
 const a = Array.prototype;
-export const undefined = {}[Symbol()];
+export const undefined = (function() { "use strict"; return this; })();
 export const { asyncIterator, iterator, toStringTag } = Symbol;
 export const bind = _call.bind(_call.bind);
 export const call = bind(_call, _call);
@@ -273,3 +272,4 @@ export const contains = bind(_call, a.includes);
 export const { floor, min } = Math;
 export const { get, set } = Reflect;
 export const SameValueZero = (x, y) => x === y || (x !== x && y !== y);
+export const __throw = error => { throw error; };

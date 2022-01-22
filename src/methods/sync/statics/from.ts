@@ -1,4 +1,4 @@
-import { call, iterator, undefined } from "tslib";
+import { call, iterator, undefined, Object } from "tslib";
 import { mimic } from "@utils/utils.js";
 import { Iterator } from "@utils/iterators.js";
 import { WrapForVaildIteratorPrototype } from "@wrappers/sync.js";
@@ -9,7 +9,7 @@ export default mimic(1, "from", function (O: unknown) {
     var usingIterator = object[iterator];
     var iteratorRecord: Iterator<unknown>;
 
-    if (usingIterator != undefined) {
+    if (usingIterator !== undefined && usingIterator !== null) {
         iteratorRecord = call(usingIterator, object);
         if (iteratorRecord instanceof Iterator) return iteratorRecord as Iterator<unknown>;
     } else iteratorRecord = object;

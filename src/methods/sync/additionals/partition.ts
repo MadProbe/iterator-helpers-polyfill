@@ -1,21 +1,21 @@
 import { call, shift, undefined } from "tslib";
-import { assert, assertIterator, closeAsyncIterator, isFunction, mimic } from "@utils/utils.js";
+import { assert, assertIterator, closeIterator, isFunction, mimic } from "@utils/utils.js";
 
 
-class PartitionateAsyncIterator {
+class PartitionateIterator {
     private _done?: readonly [unknown];
     private rejected?: readonly [unknown];
     private lastValue?: unknown;
-    public constructor(private readonly _next: AsyncIterator<unknown, unknown, unknown>["next"],
-        private readonly fn: (...args: readonly unknown[]) => Promise<boolean>, private readonly _iterator: AsyncIterator<unknown>) { }
-    private async *start(direction: boolean, items: unknown[], opposite: unknown[]) {
+    public constructor(private readonly _next: Iterator<unknown, unknown, unknown>["next"],
+        private readonly fn: (...args: readonly unknown[]) => boolean, private readonly _iterator: Iterator<unknown>) { }
+    private *start(direction: boolean, items: unknown[], opposite: unknown[]) {
         while (1) {
             if (this.rejected) throw this.rejected[0];
             try {
                 while (items.length > 0) yield shift(items);
                 if (this._done) break;
                 while (1) {
-                    var { value, done } = await this._next(this.lastValue), result: boolean;
+                    var { value, done } = this._next(this.lastValue), result: boolean;
 
                     if (done) {
                         this._done = [value];
@@ -24,9 +24,9 @@ class PartitionateAsyncIterator {
                         return value;
                     }
                     try {
-                        result = await call(this.fn, undefined!, value); // fn would be otherwise called with `this` set with current `this` value (of PartitionateAsyncIterator class);
+                        result = call(this.fn, undefined!, value); // fn would be otherwise called with `this` set with current `this` value (of PartitionateIterator class);
                     } catch (error) {
-                        await closeAsyncIterator(this._iterator);
+                        closeIterator(this._iterator);
                         throw error;
                     }
                     if (!!result === direction) {
@@ -52,7 +52,7 @@ class PartitionateAsyncIterator {
 
 
 export default mimic(undefined, "partition", assert(isFunction, O => `${ O } is not a function`, assertIterator(
-    function (this: AsyncIterator<unknown>, _next: AsyncIterator<unknown, unknown, unknown>["next"], fn: (...args: readonly unknown[]) => Promise<boolean>) {
-        return new PartitionateAsyncIterator(_next, fn, this)._create();
+    function (this: Iterator<unknown>, _next: Iterator<unknown, unknown, unknown>["next"], fn: (...args: readonly unknown[]) => boolean) {
+        return new PartitionateIterator(_next, fn, this)._create();
     }
 )));

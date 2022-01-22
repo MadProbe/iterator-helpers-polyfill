@@ -31,6 +31,16 @@ export default {
     ],
     plugins: [
         Object.defineProperty(typescript(), "load", { value: x => x === "\0tslib.js" ? tslib : null }),
-        terser({ format: { comments: false }, mangle: { properties: { builtins: true, regex: /^(?:fn|minimal|results|rejected|lastValue|initializer|methods|fields|positions|index|start|_(?:[^_]\w+)?)$/m }, reserved: ['AsyncIterator', 'Iterator', 'Config'] }, compress: { unsafe: true } })
+        terser({
+            format: { comments: false },
+            mangle: {
+                properties: {
+                    builtins: true,
+                    regex: /^(?:fn|minimal|results|rejected|lastValue|initializer|methods|fields|positions|index|start|_(?:[^_]\w+)?)$/m
+                },
+                reserved: ['AsyncIterator', 'Iterator', 'Config']
+            },
+            compress: { unsafe: true }
+        })
     ]
 };

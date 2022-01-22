@@ -1,6 +1,6 @@
 import { asyncIterator, undefined } from "tslib";
 import { assertIterator, assertReplaceStar, mimic } from "@utils/utils.js";
-import from from "@async/from.js";
+import from from "@async/statics/from.js";
 
 
 export default mimic(undefined, "chain", assertReplaceStar(args => {

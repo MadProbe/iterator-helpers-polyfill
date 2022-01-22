@@ -1,16 +1,17 @@
-import { asyncIterator, call, iterator, undefined } from "tslib";
+import { asyncIterator, call, iterator, undefined, Object } from "tslib";
 import { mimic } from "@utils/utils.js";
 import { AsyncIterator } from "@utils/iterators.js";
 import { WrapForVaildAsyncIteratorPrototype } from "@wrappers/async.js";
 
 
-export default mimic(1, "from", function (O: unknown) {
+export default mimic(1, "from", (O: unknown) => {
     var object = Object(O);
     var usingAsyncIterator = object[asyncIterator];
-    var usingIterator = usingAsyncIterator != undefined ? usingAsyncIterator : object[iterator];
+    // I wish there never was such a thing as document.all
+    var usingIterator = usingAsyncIterator !== undefined && usingAsyncIterator !== null ? usingAsyncIterator : object[iterator];
     var asyncIteratorRecord: AsyncIterator<unknown>;
 
-    if (usingIterator != undefined) {
+    if (usingIterator !== undefined && usingIterator !== null) {
         asyncIteratorRecord = call(usingIterator, object);
         if (asyncIteratorRecord instanceof AsyncIterator) return asyncIteratorRecord as AsyncIterator<unknown>;
     } else asyncIteratorRecord = object;

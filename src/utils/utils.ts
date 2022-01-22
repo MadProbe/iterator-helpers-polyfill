@@ -1,67 +1,67 @@
 import {
     AnyFunction, apply, bind, call, create, defineProperties, defineProperty, floor, get, getOwnPropertyDescriptor, getOwnPropertyDescriptors,
-    getPrototypeOf, isExtensible, keys, preventExtensions, Proxy, Set, set, setPrototypeOf, Symbol, TypeError, undefined, WeakMap, WeakSet
+    getPrototypeOf, isExtensible, keys, preventExtensions, Proxy, Set, set, setPrototypeOf, shift, Symbol, TypeError, undefined, WeakMap, WeakSet
 } from "tslib";
 
 
-const MimicedFunctionSymbol = Symbol();
+const MimicedFunctionSymbol: unique symbol = Symbol() as never;
 
 // gaudy name btw
-export const concealSourceCode = (func: AnyFunction, name = func.name, prototypeHolder = create(null)) => new Proxy(call, {
-    apply(_, thisArg, args) {
+export const concealSourceCode = <T extends AnyFunction = AnyFunction>(func: T, name = func.name, prototypeHolder = create(null)): T => new Proxy(call, {
+    apply(_, thisArg, args): unknown {
         return apply(func, thisArg, args);
     },
-    construct() {
+    construct(): never {
         throw `${ name } is not a constructor!`;
     },
-    defineProperty(_, property, attrs) {
+    defineProperty(_, property, attrs): boolean {
         return defineProperty(property === "prototype" ? prototypeHolder : func, property, attrs);
     },
-    deleteProperty(_, property) {
+    deleteProperty(_, property): boolean {
         return delete (property === "prototype" ? prototypeHolder : func)[property];
     },
-    get(_, property, reciever) {
+    get(_, property, reciever): unknown {
         return get(property === "prototype" ? prototypeHolder : func, property, reciever);
     },
-    getPrototypeOf() {
+    getPrototypeOf(): object {
         return getPrototypeOf(func);
     },
-    getOwnPropertyDescriptor(_, property) {
+    getOwnPropertyDescriptor(_, property): PropertyDescriptor | undefined {
         return getOwnPropertyDescriptor(property === "prototype" ? prototypeHolder : func, property);
     },
-    has(_, property) {
+    has(_, property): boolean {
         return property in (property === "prototype" ? prototypeHolder : func);
     },
-    isExtensible() {
+    isExtensible(): boolean {
         return isExtensible(func);
     },
-    ownKeys() {
+    ownKeys(): string[] {
         return [...keys(func), ...keys(prototypeHolder)];
     },
-    preventExtensions() {
+    preventExtensions(): boolean {
         return preventExtensions(prototypeHolder) && preventExtensions(func);
     },
-    set(_, property, value, reciever) {
+    set(_, property, value, reciever): boolean {
         return set(property === "prototype" ? prototypeHolder : func, property, value, reciever);
     },
-    setPrototypeOf(_, proto) {
+    setPrototypeOf(_, proto): boolean {
         return setPrototypeOf(func, proto);
     },
-});
+}) as T;
 
-export const closeIterator = (iterator: Iterator<unknown>, completion?: unknown, { return: $return } = iterator) => {
+export const closeIterator = <T>(iterator: Iterator<unknown>, completion?: T, { return: $return } = iterator): T | undefined => {
     if ($return !== undefined) call($return as AnyFunction, iterator);
 
     return completion;
 };
 
-export const closeAsyncIterator = async (iterator: AsyncIterator<unknown>, completion?: unknown, { return: $return } = iterator) => {
+export const closeAsyncIterator = async <T>(iterator: AsyncIterator<T>, completion?: T, { return: $return } = iterator): Promise<T | undefined> => {
     if ($return !== undefined) await call($return as AnyFunction, iterator);
 
     return completion;
 };
 
-export const assertIsIterator = (O: unknown) => {
+export const assertIsIterator = (O: unknown): Iterator<unknown>["next"] => {
     var next: Iterator["next"] | AsyncIterator<unknown>["next"];
 
     if (!O || !isFunction(next = (O as Iterator).next)) {
@@ -71,20 +71,20 @@ export const assertIsIterator = (O: unknown) => {
     return next;
 };
 
-export const assertIsAsyncIterator = assertIsIterator as never as (O: unknown) => AsyncIterator<unknown>["next"];
+export const assertIsAsyncIterator: (O: unknown) => AsyncIterator<unknown>["next"] = assertIsIterator as never;
 
-export const assertIterator = (func: AnyFunction) => {
-    function $function(this: unknown) {
+export const assertIterator = <T extends AnyFunction>(func: T): T => {
+    function $function(this: ThisParameterType<T>) {
         const next = assertIsIterator(this);
 
         return call(func, this, (...args: readonly unknown[]) => apply(next, this, args), ...arguments);
     }
     $function[MimicedFunctionSymbol] = func[MimicedFunctionSymbol] || func;
 
-    return $function;
+    return $function as T;
 };
 
-export const assert = (asserter: AnyFunction, message: (argument: unknown) => string, func: AnyFunction) => {
+export const assert = (asserter: AnyFunction, message: (argument: unknown) => string, func: AnyFunction): AnyFunction => {
     function $function(this: unknown, _: unknown) {
         if (!asserter(_)) {
             throw TypeError(message(_));
@@ -97,7 +97,7 @@ export const assert = (asserter: AnyFunction, message: (argument: unknown) => st
     return $function;
 };
 
-export const assertReplace = (asserter: (argument: unknown) => unknown, func: AnyFunction) => {
+export const assertReplace = (asserter: (argument: unknown) => unknown, func: AnyFunction): AnyFunction => {
     function $function(this: unknown, $: unknown) {
         arguments.length ||= 1;
         arguments[0] = asserter($);
@@ -109,7 +109,7 @@ export const assertReplace = (asserter: (argument: unknown) => unknown, func: An
     return $function;
 };
 
-export const assertReplaceStar = (asserter: (argument: IArguments) => void, func: AnyFunction) => {
+export const assertReplaceStar = (asserter: (argument: IArguments) => void, func: AnyFunction): AnyFunction => {
     function $function(this: unknown) {
         asserter(arguments);
 
@@ -120,7 +120,7 @@ export const assertReplaceStar = (asserter: (argument: IArguments) => void, func
     return $function;
 };
 
-const savePrototype = ({ prototype }: { readonly prototype: object }, constructor: { readonly prototype: object; }) => {
+const savePrototype = ({ prototype }: { readonly prototype: object; }, constructor: { readonly prototype: object; }) => {
     defineProperties(prototype, getOwnPropertyDescriptors(constructor.prototype));
 };
 
@@ -136,39 +136,40 @@ savePrototype(SafeSet, Set);
 
 const isObject = (x: unknown): x is object => typeof x === "function" || typeof x === "object";
 
-export class WeakenedSet {
-    private readonly _weakSet = new SafeWeakSet;
-    private readonly _set = new SafeSet;
-    public has(item: unknown) {
-        return isObject(item) ? this._weakSet.has(item) : this._set.has(item);
+export class WeakenedSet<T> {
+    private readonly _weakSet = new SafeWeakSet<T extends object ? T : never>();
+    private readonly _set = new SafeSet<T>();
+    public has(item: T): boolean {
+        return isObject(item) ? this._weakSet.has(item as never) : this._set.has(item);
     }
-    public add(item: unknown) {
-        return isObject(item) ? this._weakSet.add(item) : this._set.add(item), this;
+    public add(item: T): this {
+        return isObject(item) ? this._weakSet.add(item as never) : this._set.add(item), this;
     }
-    public delete(item: unknown) {
-        return isObject(item) ? this._weakSet.delete(item) : this._set.delete(item);
+    public delete(item: T): boolean {
+        return isObject(item) ? this._weakSet.delete(item as never) : this._set.delete(item);
     }
 }
 
-export const bound = <T extends AnyFunction>(target: unknown, property: string, descriptor: TypedPropertyDescriptor<T>) =>
+export const bound = <T extends AnyFunction>(target: unknown, property: string, descriptor: TypedPropertyDescriptor<T>): TypedPropertyDescriptor<T> =>
     (descriptor.value = bind(descriptor.value! as AnyFunction, target) as never, descriptor);
 
 export const isFunction = (value: unknown): value is AnyFunction => typeof value === "function";
 
-export const isPositiveInteger = (argument: unknown) => {
+export const isPositiveInteger = (argument: unknown): number => {
     const number = +(argument as never);
 
     if (number !== number || number === 0) {
         return 0;
     }
-    if (number === 1 / 0 || number === -1 / 0) {
-        return number;
-    }
-    const integer = floor(number);
-
-    if (integer < 0) {
+    if (number < 0) {
         throw TypeError("Negative integers are not supported by this function");
     }
+    if (number === 1 / 0) {
+        return number;
+    }
+
+    const integer = floor(number);
+
     if (integer === 0) {
         return 0;
     }
@@ -176,7 +177,20 @@ export const isPositiveInteger = (argument: unknown) => {
     return integer;
 };
 
-export const mimic = (argsLength: number | undefined, name: string, $function: AnyFunction) => {
+export const isNumber = (argument: unknown): number => {
+    const number = +(argument as never);
+
+    if (number !== number || number === 0) {
+        return 0;
+    }
+
+    return number;
+};
+
+export const uncurryThis = (func: AnyFunction): AnyFunction =>
+    mimic(func.length + 1, func.name, (...args: readonly unknown[]) => apply(func, shift(args), args));
+
+export const mimic = (argsLength: number | undefined, name: string, $function: AnyFunction): AnyFunction => {
     const { length } = $function[MimicedFunctionSymbol] || $function;
 
     // default is original function arguments length - 1 since

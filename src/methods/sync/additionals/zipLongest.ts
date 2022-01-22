@@ -1,10 +1,10 @@
 import { assertIsIterator, assertIterator, assertReplaceStar, mimic } from "@utils/utils.js";
-import { Array, bind, undefined, unshift } from "tslib";
+import { type AnyFunction, Array, bind, undefined, unshift } from "tslib";
 
 
 export default mimic(undefined, "zipLongest", assertReplaceStar(args => {
     for (var i = 0, l = args.length; i < l; i++) {
-        args[i] = bind(assertIsIterator(args[i]), args[i]);
+        args[i] = bind(assertIsIterator(args[i]) as AnyFunction, args[i]);
     }
 }, assertIterator(
     function* (this: Iterator<unknown>, next: Iterator<unknown, unknown, unknown>["next"], ...nexts: Iterator<unknown, unknown, unknown>["next"][]) {

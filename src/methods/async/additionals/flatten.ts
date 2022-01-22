@@ -1,4 +1,4 @@
-import from from "@async/from.js";
+import from from "@async/statics/from.js";
 import { assertIterator, assertReplace, isPositiveInteger, mimic } from "@utils/utils.js";
 import { apply, call } from "tslib";
 

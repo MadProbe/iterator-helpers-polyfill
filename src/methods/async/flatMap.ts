@@ -1,6 +1,6 @@
 import { undefined } from "tslib";
 import { assert, assertIterator, closeAsyncIterator, isFunction, mimic } from "@utils/utils.js";
-import from from "./from.js";
+import from from "./statics/from.js";
 
 
 export default mimic(undefined, "flatMap", assert(isFunction, O => `${ O } is not a function`, assertIterator(
