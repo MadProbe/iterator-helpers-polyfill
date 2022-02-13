@@ -5,3 +5,4 @@ build
 index.html
 *.tgz
 .serverconfig.json
+tests/test.js
