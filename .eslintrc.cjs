@@ -52,7 +52,9 @@ module.exports = {
                 "@typescript-eslint/explicit-module-boundary-types": "off",
                 "@typescript-eslint/explicit-member-accessibility": ["error"],
                 "prefer-rest-params": "off",
-                "no-var": "off"
+                "no-var": "off",
+                "@typescript-eslint/no-explicit-any": "off" // FUCK THIS SHIT: MY CODE MERCILESSLY TURNED INTO SHITCODE BY THIS FUCKING BASTRADED  RULE MAKES ME **EVERY**!!!!! TIME USE `as never` JUST TO ESCAPE "THE BIGGEST EVIL AMONG ALL OTHER EVILS" TYPE `any`!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+                // FUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUCK
             }
         }
     ]
