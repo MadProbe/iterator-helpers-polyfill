@@ -124,7 +124,7 @@ declare global {
         max(): number;
         min(): number;
         count(): number;
-        chuncked<N extends number = 2>(times?: N): Generator<_Tuple<T, N>>;
+        chunked<N extends number = 2>(times?: N): Generator<_Tuple<T, N>>;
         chain<A extends _RA<_IteratorLike | null | undefined>>(...iterables: A): Generator<_IRANR<_RA<(A extends readonly (infer V)[] ? NonNullable<V> : never)>, T>, void, _UnifyNexts<A>>;
         concat<A extends _RA<_IteratorLike | null | undefined>>(...iterables: A): Generator<_IRANR<_RA<(A extends readonly (infer V)[] ? NonNullable<V> : never)>, T>, void, _UnifyNexts<A>>;
         cycle<N extends number = 2>(times: N): Generator<T, void, TNext>;
@@ -162,7 +162,7 @@ declare global {
         max(): Promise<number>;
         min(): Promise<number>;
         count(): Promise<number>;
-        chuncked<N extends number = 2>(times?: N): AsyncGenerator<_Tuple<T, N>>;
+        chunked<N extends number = 2>(times?: N): AsyncGenerator<_Tuple<T, N>>;
         chain<A extends _RA<_AsyncIteratorLike | null | undefined>>(...iterables: A): AsyncGenerator<_IRANR<_RA<(A extends readonly (infer V)[] ? NonNullable<V> : never)>, T>, void, _UnifyNexts<A>>;
         concat<A extends _RA<_AsyncIteratorLike | null | undefined>>(...iterables: A): AsyncGenerator<_IRANR<_RA<(A extends readonly (infer V)[] ? NonNullable<V> : never)>, T>, void, _UnifyNexts<A>>;
         cycle<N extends number = 2>(times: N): AsyncGenerator<T, void, TNext>;
