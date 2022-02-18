@@ -136,6 +136,8 @@ declare global {
         unique(): Generator<T, void>;
         uniqueJustseen(): Generator<T, void>;
         join<S extends string = ", ">(separator?: S): string;
+        partition(filterer: (value: T) => unknown): readonly [Generator<T, TReturn, TNext>, Generator<T, TReturn, TNext>];
+        partition<R extends T = T>(filterer: (value: T) => value is R): readonly [Generator<R, TReturn, TNext>, Generator<Exclude<T, R>, TReturn, TNext>];
     }
 
     interface AsyncIterator<T = unknown, TReturn = any, TNext = undefined> {
@@ -172,6 +174,8 @@ declare global {
         unique(): AsyncGenerator<T, void>;
         uniqueJustseen(): AsyncGenerator<T, void>;
         join<S extends string = ", ">(separator?: S): Promise<string>;
+        partition(filterer: (value: T) => _Awaitable<unknown>): readonly [Generator<T, TReturn, TNext>, Generator<T, TReturn, TNext>];
+        partition<R extends T = T>(filterer: (value: T) => value is R): readonly [Generator<R, TReturn, TNext>, Generator<Exclude<T, R>, TReturn, TNext>];
     }
 }
 
