@@ -2,7 +2,7 @@
     "author": "MadProbe#7435",
     "name": "iterator-helpers-polyfill",
     "description": "A polyfill for Iterator helpers proposal",
-    "version": "2.2.1",
+    "version": "2.2.2",
     "license": "MIT",
     "main": "./build/bundle.min.js",
     "module": "./build/bundle.min.mjs",

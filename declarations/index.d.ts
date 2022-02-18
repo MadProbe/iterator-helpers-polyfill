@@ -108,8 +108,8 @@ declare global {
         heads<A extends _RA<_IteratorLike>>(...iterables: A): Generator<_Tuple<_IRANR<A, T>, _Length<readonly [T, ...A]>>, void>;
         flatten<Depth extends number = 1>(times?: Depth): Generator<FlattenIterator<T, Depth>, void, unknown>;
         filterMap<S, E = undefined>(fn: (item: T) => S | E, excludedValue?: E): S;
-        groupBy<S extends PropertyKey>(fn: (item: T) => S): Record<S, T>;
-        groupByToMap<S>(fn: (item: T) => S): Map<S, T>;
+        groupBy<S extends PropertyKey>(fn: (item: T) => S): Record<S, T[]>;
+        groupByToMap<S>(fn: (item: T) => S): Map<S, T[]>;
         symmetricDifference<S>(iterable: _IteratorLike<S>): Generator<Exclude<T, S> | Exclude<S, T>, void>;
         difference<S>(iterable: _IteratorLike<S>): Generator<Exclude<T, S>, void>;
         intersection<S>(iterable: _IteratorLike<S>): Generator<S & T, void>;
@@ -147,8 +147,8 @@ declare global {
         heads<A extends _RA<_AsyncIteratorLike>>(...iterables: A): AsyncGenerator<_Tuple<_IRANR<A, T>, _Length<readonly [T, ...A]>>, void>;
         flatten<Depth extends number = 1>(times?: Depth): AsyncGenerator<FlattenIterator<T, Depth>, void, unknown>; // TODO: Better typing
         filterMap<S, E = undefined>(fn: (item: T) => S | E, excludedValue?: E): S;
-        groupBy<S extends PropertyKey>(fn: (item: T) => S): Promise<Record<S, T>>;
-        groupByToMap<S>(fn: (item: T) => S): Promise<Map<S, T>>;
+        groupBy<S extends PropertyKey>(fn: (item: T) => S): Promise<Record<S, T[]>>;
+        groupByToMap<S>(fn: (item: T) => S): Promise<Map<S, T[]>>;
         symmetricDifference<S>(iterable: _AsyncIteratorLike<S>): AsyncGenerator<Exclude<T, S> | Exclude<S, T>, void>;
         difference<S>(iterable: _AsyncIteratorLike<S>): AsyncGenerator<Exclude<T, S>, void>;
         intersection<S>(iterable: _AsyncIteratorLike<S>): AsyncGenerator<S & T, void>;
