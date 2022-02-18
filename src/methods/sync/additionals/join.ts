@@ -2,7 +2,7 @@ import { assertIterator, mimic } from "@utils/utils.js";
 
 
 export default mimic(1, "join", assertIterator(
-    function (this: Iterator<unknown>, next: Iterator<unknown, unknown, unknown>["next"], string: string) {
+    function (this: Iterator<unknown>, next: Iterator<unknown, unknown, unknown>["next"], string = ", ") {
         var result: string, joinString = String(string);
         var { done, value } = next();
 

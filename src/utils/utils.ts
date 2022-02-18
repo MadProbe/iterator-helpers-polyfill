@@ -128,11 +128,23 @@ export class SafeWeakMap<K extends object, V> extends WeakMap<K, V> { }
 
 export class SafeWeakSet<V extends object> extends WeakSet<V> { }
 
+export class SafeMap<K, V> extends Map<K, V> {
+    public getSet(key: K, value: () => V): V {
+        if (this.has(key)) return this.get(key) as V;
+        const result = value();
+
+        this.set(key, result);
+
+        return result;
+    }
+}
+
 export class SafeSet<V> extends Set<V> { }
 
 savePrototype(SafeWeakMap, WeakMap);
 savePrototype(SafeWeakSet, WeakSet);
 savePrototype(SafeSet, Set);
+savePrototype(SafeMap, Map);
 
 const isObject = (x: unknown): x is object => typeof x === "function" || typeof x === "object";
 

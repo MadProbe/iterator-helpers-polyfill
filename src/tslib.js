@@ -258,10 +258,10 @@ export const $globalThis = (() => {
     delete prototype.__マジック__;
     return global;
 })();
-export const { Array, TypeError, RangeError, Set, Symbol, Proxy, WeakMap, WeakSet } = $globalThis;
+export const { Array, Map, Proxy, RangeError, Set, Symbol, TypeError, WeakMap, WeakSet } = $globalThis;
 const a = Array.prototype;
 export const undefined = (function() { "use strict"; return this; })();
-export const { asyncIterator, iterator, toStringTag } = Symbol;
+export const { asyncIterator, iterator, toStringTag, toPrimitive } = Symbol;
 export const bind = _call.bind(_call.bind);
 export const call = bind(_call, _call);
 export const apply = bind(_call, _call.apply);

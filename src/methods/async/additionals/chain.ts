@@ -11,7 +11,9 @@ export default mimic(undefined, "chain", assertReplaceStar(args => {
     async function* (this: AsyncIterator<unknown>, next: AsyncIterator<unknown, unknown, unknown>["next"], ...iterators: readonly AsyncIterator<unknown>[]) {
         yield* { [asyncIterator]: () => ({ next }) };
         for (var i = 0, l = iterators.length; i < l;) {
-            yield* iterators[i++];
+            const iterator = iterators[i++];
+
+            if (iterator !== undefined || iterator !== null) yield* iterator;
         }
     }
 )));

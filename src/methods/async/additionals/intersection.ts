@@ -8,9 +8,9 @@ export default mimic(undefined, "intersection", assertReplace((x, s = from(x as 
         var array: unknown[] = [];
         var length = 0, done, value;
 
-        while ({ done, value } = await next2(), !done) array[length++] = value;
+        while ({ done, value } = await next2(), !done) array[length++] = await value;
 
-        while ({ done, value } = await next(), !done)
+        while ({ done, value } = await next(), value = await value, !done)
             if (contains(array, value)) yield value;
     }
 )));

@@ -1,3 +1,4 @@
+
 /// <reference lib="es2015.generator" />
 /// <reference lib="es2018.asyncgenerator" />
 // I don't want to change types of built-ins only because of this rule
@@ -11,9 +12,9 @@ export declare type _AsyncIteratorLike<T = any, TReturn = any, TNext = undefined
 
 // Unused type parameters are intentional!
 // eslint-disable-next-line @typescript-eslint/no-unused-vars
-type _Iterable<T = unknown, TReturn = any, TNext = undefined> = Iterable<T>
+type _Iterable<T = unknown, TReturn = any, TNext = undefined> = Iterable<T>;
 // eslint-disable-next-line @typescript-eslint/no-unused-vars
-type _AsyncIterable<T = unknown, TReturn = any, TNext = undefined> = AsyncIterable<T>
+type _AsyncIterable<T = unknown, TReturn = any, TNext = undefined> = AsyncIterable<T>;
 
 declare global {
     interface Iterator<T = unknown, TReturn = any, TNext = undefined> {
@@ -31,7 +32,7 @@ declare global {
         reduce<U>(reducer: (previousValue: U, currentValue: T) => U, initialValue: U): U;
         some(fn: (value: T) => unknown): boolean;
         every(fn: (value: T) => unknown): boolean;
-        find(fn: (value: T) => unknown): T;
+        find(fn: (value: T) => unknown): T | undefined;
         [Symbol.iterator](): Iterator<T, TReturn, TNext>;
     }
     interface AsyncIterator<T = unknown, TReturn = any, TNext = undefined> {
@@ -48,7 +49,7 @@ declare global {
         reduce<U>(reducer: (previousValue: U, currentValue: T) => _Awaitable<U>, initialValue: U): Promise<U>;
         some(fn: (value: T) => _Awaitable<unknown>): Promise<boolean>;
         every(fn: (value: T) => _Awaitable<unknown>): Promise<boolean>;
-        find(fn: (value: T) => _Awaitable<unknown>): Promise<T>;
+        find(fn: (value: T) => _Awaitable<unknown>): Promise<T | undefined>;
         [Symbol.asyncIterator](): AsyncIterator<T, TReturn, TNext>;
     }
     interface IteratorConstructor {
@@ -91,41 +92,86 @@ declare type _IRANR<A extends _RA<_AsyncIteratorLike>, T = never> = A extends _R
 declare type _IfElse<C extends boolean, T, F> = true extends C ? T : F;
 // Testing purposes & indicator that something is broken
 type _ = IterableIterator<Iterator<string>> extends _IteratorLike<infer V> ? V : never;
-type _StarMap<T, TNext, C extends boolean> = <S>(fn: (...args: T extends _IteratorLike<infer V> ? T extends _RA ? T : readonly V[] : never) => _IfElse<C, _Awaitable<S>, S>) => 
+type _StarMap<T, TNext, C extends boolean> = <S>(fn: (...args: T extends _IteratorLike<infer V> ? T extends _RA ? T : readonly V[] : never) => _IfElse<C, _Awaitable<S>, S>) =>
     _IfElse<C, AsyncGenerator<S, void, TNext>, Generator<S, void, TNext>>;
+
+type DecrementLoop<N extends number, R extends number> = _Tuple<0, (readonly [0, ..._Tuple<0, R>])["length"] & number> extends _Tuple<0, N> ? R: DecrementLoop<N, (readonly [0, ..._Tuple<0, R>])["length"] & number>;
+type Decrement<N extends number> = number extends N ? number : DecrementLoop<N, 0>;
+type FlattenIterator<T, Depth extends number, Saved = never> = T extends string ? never : T extends _AsyncIteratorLike<infer V> ? number extends Depth ? 
+    FlattenIterator<V, Decrement<Depth>, T | Saved> : 0 extends Decrement<Depth> ? V | Saved : FlattenIterator<V, Decrement<Depth>, Saved> : T;
 
 declare global {
     interface Iterator<T = unknown, TReturn = any, TNext = undefined> {
-        roundrobin<A extends _RA<_IteratorLike>>(...iterators: A): Generator<_IRANR<A, T>, void, _UnifyNexts<A>>;
-        heads<A extends _RA<_IteratorLike>>(...iterators: A): Generator<_Tuple<_IRANR<A, T>, _Length<readonly [T, ...A]>>, void>;
+        enumerate(): Generator<readonly [number, T], void, TNext>;
+        entries(): Generator<readonly [number, T], void, TNext>;
+        roundrobin<A extends _RA<_IteratorLike>>(...iterables: A): Generator<_IRANR<A, T>, void, _UnifyNexts<A>>;
+        heads<A extends _RA<_IteratorLike>>(...iterables: A): Generator<_Tuple<_IRANR<A, T>, _Length<readonly [T, ...A]>>, void>;
+        flatten<Depth extends number = 1>(times?: Depth): Generator<FlattenIterator<T, Depth>, void, unknown>;
         filterMap<S, E = undefined>(fn: (item: T) => S | E, excludedValue?: E): S;
-        intersection<S>(generator: Generator<S>): Generator<S & T, void>;
+        groupBy<S extends PropertyKey>(fn: (item: T) => S): Record<S, T>;
+        groupByToMap<S>(fn: (item: T) => S): Map<S, T>;
+        symmetricDifference<S>(iterable: _IteratorLike<S>): Generator<Exclude<T, S> | Exclude<S, T>, void>;
+        difference<S>(iterable: _IteratorLike<S>): Generator<Exclude<T, S>, void>;
+        intersection<S>(iterable: _IteratorLike<S>): Generator<S & T, void>;
         intersperse<S>(item: S): Generator<T | S>;
+        each(fn: (value: T) => void): Generator<T, void, TNext>;
         /** @note <TNext> value is used only when the `next` method of `this` iterator is actually called */
         tee<N extends number = 2>(count?: N): _Tuple<Generator<T, TReturn, TNext>, N>;
-        zip<A extends _RA<_IteratorLike>>(...iterators: A): Generator<readonly [T, ..._MapIterator<A>], void, _UnifyNexts<A>>;
+        zip<A extends _RA<_IteratorLike>>(...iterables: A): Generator<readonly [T, ..._MapIterator<A>], void, _UnifyNexts<A>>;
         skip(count: number): Generator<T, void, TNext>;
-        chain<A extends _RA<_IteratorLike>>(...iterators: A): Generator<_IRANR<A, T>, void, _UnifyNexts<A>>;
-        cycle<N extends number = 2>(times: N): AsyncGenerator<T, void, TNext>;
+        contains(value: T): boolean;
+        average(): number;
+        max(): number;
+        min(): number;
+        count(): number;
+        chuncked<N extends number = 2>(times?: N): Generator<_Tuple<T, N>>;
+        chain<A extends _RA<_IteratorLike | null | undefined>>(...iterables: A): Generator<_IRANR<_RA<(A extends readonly (infer V)[] ? NonNullable<V> : never)>, T>, void, _UnifyNexts<A>>;
+        concat<A extends _RA<_IteratorLike | null | undefined>>(...iterables: A): Generator<_IRANR<_RA<(A extends readonly (infer V)[] ? NonNullable<V> : never)>, T>, void, _UnifyNexts<A>>;
+        cycle<N extends number = 2>(times: N): Generator<T, void, TNext>;
         starMap: _StarMap<T, TNext, false>;
         skipWhile(fn: (item: T) => unknown): Generator<T, void, TNext>;
         takeWhile(fn: (item: T) => unknown): Generator<T, void, TNext>;
         dropWhile(fn: (item: T) => unknown): Generator<T, void, TNext>;
-        zipLongest<A extends _RA<_IteratorLike>>(...iterators: A): Generator<readonly [T, ..._MapIterator<A>], void, _UnifyNexts<A>>;
+        zipLongest<A extends _RA<_IteratorLike>>(...iterables: A): Generator<readonly [T, ..._MapIterator<A>], void, _UnifyNexts<A>>;
+        unique(): Generator<T, void>;
+        uniqueJustseen(): Generator<T, void>;
+        join<S extends string = ", ">(separator?: S): string;
     }
 
     interface AsyncIterator<T = unknown, TReturn = any, TNext = undefined> {
-        tee<N extends number = 2>(count?: N): _Tuple<AsyncGenerator<T, TReturn, TNext>, N>;
-        zip<A extends _RA<_AsyncIteratorLike>>(...iterators: A): AsyncGenerator<readonly [T, ..._MapAsyncIterator<A>], void, _UnifyNexts<A>>;
-        skip(count: number): AsyncGenerator<T, void, TNext>;
-        chain<A extends _RA<_AsyncIteratorLike>>(...iterators: A): AsyncGenerator<_IRANR<A, T>, void, _UnifyNexts<A>>;
-        cycle<N extends number = 2>(times: N): AsyncGenerator<T, void, TNext>;
         entries(): AsyncGenerator<readonly [number, T], void, TNext>;
-        starMap: _StarMap<T, TNext, true>
-        skipWhile(fn: (item: T) => unknown): AsyncGenerator<T, void, TNext>;
-        takeWhile(fn: (item: T) => unknown): AsyncGenerator<T, void, TNext>;
-        dropWhile(fn: (item: T) => unknown): AsyncGenerator<T, void, TNext>;
-        zipLongest<A extends _RA<_AsyncIteratorLike>>(...iterators: A): AsyncGenerator<readonly [T, ..._MapAsyncIterator<A>], void, _UnifyNexts<A>>;
+        enumerate(): AsyncGenerator<readonly [number, T], void, TNext>;
+        roundrobin<A extends _RA<_AsyncIteratorLike>>(...iterables: A): AsyncGenerator<_IRANR<A, T>, void, _UnifyNexts<A>>;
+        heads<A extends _RA<_AsyncIteratorLike>>(...iterables: A): AsyncGenerator<_Tuple<_IRANR<A, T>, _Length<readonly [T, ...A]>>, void>;
+        flatten<Depth extends number = 1>(times?: Depth): AsyncGenerator<FlattenIterator<T, Depth>, void, unknown>; // TODO: Better typing
+        filterMap<S, E = undefined>(fn: (item: T) => S | E, excludedValue?: E): S;
+        groupBy<S extends PropertyKey>(fn: (item: T) => S): Promise<Record<S, T>>;
+        groupByToMap<S>(fn: (item: T) => S): Promise<Map<S, T>>;
+        symmetricDifference<S>(iterable: _AsyncIteratorLike<S>): AsyncGenerator<Exclude<T, S> | Exclude<S, T>, void>;
+        difference<S>(iterable: _AsyncIteratorLike<S>): AsyncGenerator<Exclude<T, S>, void>;
+        intersection<S>(iterable: _AsyncIteratorLike<S>): AsyncGenerator<S & T, void>;
+        intersperse<S>(item: _Awaitable<S>): AsyncGenerator<T | S>;
+        each(fn: (value: T) => _Awaitable<unknown>): AsyncGenerator<T, void, TNext>;
+        tee<N extends number = 2>(count?: N): _Tuple<AsyncGenerator<T, TReturn, TNext>, N>;
+        zip<A extends _RA<_AsyncIteratorLike>>(...iterables: A): AsyncGenerator<readonly [T, ..._MapAsyncIterator<A>], void, _UnifyNexts<A>>;
+        skip(count: number): AsyncGenerator<T, void, TNext>;
+        contains(value: T): Promise<boolean>;
+        average(): Promise<number>;
+        max(): Promise<number>;
+        min(): Promise<number>;
+        count(): Promise<number>;
+        chuncked<N extends number = 2>(times?: N): AsyncGenerator<_Tuple<T, N>>;
+        chain<A extends _RA<_AsyncIteratorLike | null | undefined>>(...iterables: A): AsyncGenerator<_IRANR<_RA<(A extends readonly (infer V)[] ? NonNullable<V> : never)>, T>, void, _UnifyNexts<A>>;
+        concat<A extends _RA<_AsyncIteratorLike | null | undefined>>(...iterables: A): AsyncGenerator<_IRANR<_RA<(A extends readonly (infer V)[] ? NonNullable<V> : never)>, T>, void, _UnifyNexts<A>>;
+        cycle<N extends number = 2>(times: N): AsyncGenerator<T, void, TNext>;
+        starMap: _StarMap<T, TNext, true>;
+        skipWhile(fn: (item: T) => _Awaitable<unknown>): AsyncGenerator<T, void, TNext>;
+        takeWhile(fn: (item: T) => _Awaitable<unknown>): AsyncGenerator<T, void, TNext>;
+        dropWhile(fn: (item: T) => _Awaitable<unknown>): AsyncGenerator<T, void, TNext>;
+        zipLongest<A extends _RA<_AsyncIteratorLike>>(...iterables: A): AsyncGenerator<readonly [T, ..._MapAsyncIterator<A>], void, _UnifyNexts<A>>;
+        unique(): AsyncGenerator<T, void>;
+        uniqueJustseen(): AsyncGenerator<T, void>;
+        join<S extends string = ", ">(separator?: S): Promise<string>;
     }
 }
 
@@ -136,8 +182,11 @@ declare class Config {
     public polyfilled: boolean & Record<keys, boolean>;
 }
 export const config: Config;
+
 export const AsyncIterator: AsyncIteratorConstructor;
+
 export const Iterator: IteratorConstructor;
+
 /**
  * Injects `Iterator` and `AsyncIterator` constructors onto globalThis.
  */

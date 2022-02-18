@@ -168,6 +168,7 @@ declare module "tslib" {
     export const asyncIterator: SymbolConstructor["asyncIterator"];
     export const iterator: SymbolConstructor["iterator"];
     export const toStringTag: SymbolConstructor["toStringTag"];
+    export const toPrimitive: SymbolConstructor["toPrimitive"];
     export const AsyncIteratorPrototype: AsyncIterator<unknown>;
     export const IteratorPrototype: Iterator<unknown>;
     export const call: CallFunctionType;
