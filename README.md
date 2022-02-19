@@ -6,6 +6,138 @@ The polyfill aims to be as immune to built-in values changes as possible (NOTE: 
 The polyfill aims to be as close to the specification as possible, including `function () { [native code] }` return value of `functions.toString()`.  
 **NOTE:** By default `Iterator` and `AsyncIterator` constructors are not installed onto globalThis by default: you can import them directly or call imported `installIntoGlobal` function.  
 
+
+# Method Documentation
+## Polyfilled methods
+These methods were polyfilled word-to-word as specified in the iterator helpers proposal.
+### .map(mapper);
+Transforms each `this` iterator value by calling passed mapper function.  
+Example:  
+```ts
+Iterator.range(1, 5).map(x => x * 2).toArray(); // [2, 4, 6, 8, 10]
+```
+### .filter(filterer);
+Filters each value out from `this` iterator if called filterer function returns false for this value.  
+Example:
+```ts
+Iterator.range(1, 10).filter(x => x % 2 === 1).toArray(); // [1, 3, 5, 7, 9]
+```
+### .asIndexedPairs();
+Aliases: .enumerate(); .entries();  
+Transforn each value of `this` iterator into array of value's position index in the iterator and value itself.  
+Example:
+```ts
+Iterator.range(1, 10).map(x => Math.random() * 256 | x).asIndexedPairs().toArray() // [[0, 153], [1, 94], ...]
+```
+### .drop(times: number);
+Aliases: .skip();  
+Drops values from `this` iterator passed number of times (throws error if negative).  
+Example:
+```ts
+Iterator.range(1, 10).drop(5).toArray(); // [6, 7, 8, 9, 10]
+```
+### .take(times: number);
+Takes values from `this` iterator passed number of times (throws error if negative).  
+Example:
+```ts
+Iterator.range(1, 10).take(5).toArray(); // [1, 2, 3, 4, 5]
+```
+### .every(fn);
+Returns true if `this` iterator is empty or every value of it satisfies function `fn`.  
+Examples:
+```ts
+Iterator.range(2, 10).every(x => x % 2 === 0); // false
+Iterator.range(1, 10).every(x => x > 0); // true
+Iterator.from().every(() => false); // true
+```
+### .find(finder);
+Returns first value of `this` iterator that satisfies function `finder`.  
+Example:
+```ts
+Iterator.range(1, 10).find(x => x % 2 === 0) // 2
+```
+### .flatMap(mapper);
+Yields values of each transformed values of `this` iterator by calling mapper (throws when mapper function throws non-iterable/iterator value).  
+Examples:
+```ts
+Iterator.range(1, 4).flatMap(x => `${ x }`.repeat(x)).toArray(); // ["1", "2", "2", "3", "3", "3", "4", "4", "4", "4"]
+Iterator.range(1, 5).flatMap(function* (x) {
+    yield x ** 2;
+    yield x * 10;
+}).toArray(); // [1, 10, 4, 20, 9, 30, 16, 40, 25, 50]
+```
+### .forEach(mapper);
+Calles mapper function with each value of `this` iterator and returns `undefined`.  
+Example:
+```ts
+Iterator.range(1, 5).forEach(console.log);
+// Console output:
+// 1
+// 2
+// 3
+// 4
+// 5
+```
+### .reduce(reducer, initialValue?);
+TLDR: basically same as `Array.prototype.reduce()`.
+Firstly, this method creates an accumulator variable for later use from `initialValue` parameter if it's specified or gets first value of `this` iterator or throws if neither of these were the case.
+Then it takes following values and calls `reducer` function with them and accumulator and then assigns result of the call to the accumulator variable.
+Examples:
+```ts
+Iterator.range(1, 10).reduce((accumulator, x) => accumulator + x); // 55
+["This", "is", "interesting!"].values().reduce((accumulator, x) => `${ accumulator } ${ x }`); // "This is interesting!"
+["this", "is", "also", "interesting!"].values().reduce((accumulator, x) => `${ accumulator } ${ x }`, "And also i know that"); // "And i also know that this is interesting!"
+Iterator.from().reduce(() => { throw "Never happens!" }, 1); // 1
+Iterator.from().reduce(() => {}); // This throws an error since iterator is empty and no `initialValue` parameter is specified.
+Iterator.from().reduce(() => {}, undefined); // But this works since `initialValue` parameter is set to the undefined value; undefined
+```
+
+### .some(filterer);
+Returns true if `this` iterator is empty or also returns true if some values of `this` satisfy condition function `filterer` or returns false otherwise.  
+Examples:
+```ts
+Iterator.range(1, 10).some(x => x === 5); // true
+Iterator.from().some(() => {}); // true
+```
+
+### .toArray();
+Returns array containing all values of `this` iterator.  
+Example:
+```ts
+Iterator.range(1, 5).toArray(); // [1, 2, 3, 4, 5]
+```
+
+### Iterator.from(value);
+Returns a iterator if value is a valid iterable (if iterator is with %Iterator.prototype% in the prototype chain) or wraps invalid iterator into %WrapForValidIteratorPrototype%.  
+Examples:
+```ts
+Iterator.from([0, 1, 2, 3, 4]); // same as [0, 1, 2, 3, 4][Symbol.iterator]();
+Iterator.from({ next() { return { done: true, value: undefined } } }); // wrapped into %WrapForValidIteratorPrototype%.
+```
+
+## Additional methods
+### .max();
+Returns maximum number found in `this` iterator.  
+Example:
+```ts
+Iterator.from([0, -9, 23, 96, 10, 92]).max(); // 96
+```
+
+### .max();
+Returns minimal number found in `this` iterator.  
+Example:
+```ts
+Iterator.from([0, -9, 23, 96, 10, 92]).min(); // -9
+```
+
+### .average();
+Returns average number from all the numbers from `this` iterator.  
+Example:
+```ts
+Iterator.from([10, 50, 40, 20]).average(); // 30
+```
+
+
 ## Notes:
 * It also implements (Async)Iterator.prototype.flatMap() behavior from [issue #114 - flatMap should act like it does a `yield *` on each iterable](https://github.com/tc39/proposal-iterator-helpers/issues/114).  
 * Pre-checks are done **BEFORE** all functions start doing their stuff, **INCLUDING** async ones. (Yet i have unsettled thinking about async function pre-checks, maybe variations of pre-check will come out behind a flag? (in the config variable)).  
