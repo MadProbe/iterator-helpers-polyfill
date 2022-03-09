@@ -12,7 +12,7 @@ export default mimic(1, "reduce", assert(isFunction, O => `${ O } is not a funct
         var value: unknown, done: boolean | undefined;
 
         while ({ value, done } = _next(), !done) try {
-            accumulator = fn(value, accumulator);
+            accumulator = fn(accumulator, value);
         } catch (error) {
             closeIterator(this);
             throw error;
