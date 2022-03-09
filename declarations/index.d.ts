@@ -94,6 +94,8 @@ declare type _IfElse<C extends boolean, T, F> = true extends C ? T : F;
 type _ = IterableIterator<Iterator<string>> extends _IteratorLike<infer V> ? V : never;
 type _StarMap<T, TNext, C extends boolean> = <S>(fn: (...args: T extends _IteratorLike<infer V> ? T extends _RA ? T : readonly V[] : never) => _IfElse<C, _Awaitable<S>, S>) =>
     _IfElse<C, AsyncGenerator<S, void, TNext>, Generator<S, void, TNext>>;
+type _SymmetricDifference<T> = <S>(iterable: _IteratorLike<S>) => Generator<Exclude<T, S> | Exclude<S, T>, void>;
+type _SymmetricDifferenceAsync<T> = <S>(iterable: _AsyncIteratorLike<S>) => AsyncGenerator<Exclude<T, S> | Exclude<S, T>, void>;
 
 type DecrementLoop<N extends number, R extends number> = _Tuple<0, (readonly [0, ..._Tuple<0, R>])["length"] & number> extends _Tuple<0, N> ? R: DecrementLoop<N, (readonly [0, ..._Tuple<0, R>])["length"] & number>;
 type Decrement<N extends number> = number extends N ? number : DecrementLoop<N, 0>;
@@ -110,7 +112,7 @@ declare global {
         filterMap<S, E = undefined>(fn: (item: T) => S | E, excludedValue?: E): S;
         groupBy<S extends PropertyKey>(fn: (item: T) => S): Record<S, T[]>;
         groupByToMap<S>(fn: (item: T) => S): Map<S, T[]>;
-        symmetricDifference<S>(iterable: _IteratorLike<S>): Generator<Exclude<T, S> | Exclude<S, T>, void>;
+        symmetricDifference: _SymmetricDifference<T>;
         difference<S>(iterable: _IteratorLike<S>): Generator<Exclude<T, S>, void>;
         intersection<S>(iterable: _IteratorLike<S>): Generator<S & T, void>;
         intersperse<S>(item: S): Generator<T | S>;
@@ -150,7 +152,7 @@ declare global {
         filterMap<S, E = undefined>(fn: (item: T) => S | E, excludedValue?: E): S;
         groupBy<S extends PropertyKey>(fn: (item: T) => S): Promise<Record<S, T[]>>;
         groupByToMap<S>(fn: (item: T) => S): Promise<Map<S, T[]>>;
-        symmetricDifference<S>(iterable: _AsyncIteratorLike<S>): AsyncGenerator<Exclude<T, S> | Exclude<S, T>, void>;
+        symmetricDifference: _SymmetricDifferenceAsync<T>;
         difference<S>(iterable: _AsyncIteratorLike<S>): AsyncGenerator<Exclude<T, S>, void>;
         intersection<S>(iterable: _AsyncIteratorLike<S>): AsyncGenerator<S & T, void>;
         intersperse<S>(item: _Awaitable<S>): AsyncGenerator<T | S>;
