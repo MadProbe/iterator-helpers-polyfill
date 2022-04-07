@@ -19,8 +19,8 @@ type _AsyncIterable<T = unknown, TReturn = any, TNext = undefined> = AsyncIterab
 declare global {
     interface Iterator<T = unknown, TReturn = any, TNext = undefined> {
         map<R = T>(mapper: (value: T) => R): Generator<R, void, TNext>;
-        filter(filterer: (value: T) => unknown): Generator<T, void, TNext>;
         filter<R extends T = T>(filterer: (value: T) => value is R): Generator<R, void, TNext>;
+        filter(filterer: (value: T) => unknown): Generator<T, void, TNext>;
         asIndexedPairs(): Generator<readonly [number, T], void, TNext>;
         take(limit: number): Generator<T, void, TNext>;
         drop(limit: number): Generator<T, void, TNext>;
@@ -37,6 +37,7 @@ declare global {
     }
     interface AsyncIterator<T = unknown, TReturn = any, TNext = undefined> {
         map<R = T>(mapper: (value: T) => _Awaitable<R>): AsyncGenerator<R, void, TNext>;
+        filter<R extends T = T>(filterer: (value: T) => value is R): AsyncGenerator<R, void, TNext>;
         filter(filterer: (value: T) => _Awaitable<unknown>): AsyncGenerator<T, void, TNext>;
         asIndexedPairs(): AsyncGenerator<readonly [number, T], void, TNext>;
         take(limit: number): AsyncGenerator<T, void, TNext>;
