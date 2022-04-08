@@ -24,7 +24,7 @@ declare global {
         asIndexedPairs(): Generator<readonly [number, T], void, TNext>;
         take(limit: number): Generator<T, void, TNext>;
         drop(limit: number): Generator<T, void, TNext>;
-        flatMap<R = T>(mapper: (value: T) => Iterator<R>): Generator<R, void, never>;
+        flatMap<R = T, RNext = undefined>(mapper: (value: T) => Iterator<R, unknown, RNext>): Generator<R, void, RNext>;
         forEach(fn: (value: T) => void): void;
         toArray(): T[];
         reduce(reducer: (previousValue: T, currentValue: T) => T): T;
@@ -42,7 +42,7 @@ declare global {
         asIndexedPairs(): AsyncGenerator<readonly [number, T], void, TNext>;
         take(limit: number): AsyncGenerator<T, void, TNext>;
         drop(limit: number): AsyncGenerator<T, void, TNext>;
-        flatMap<R = T>(mapper: (value: T) => _Awaitable<_AsyncIteratorLike<R>>): AsyncGenerator<R, void, TNext>;
+        flatMap<R = T, RNext = undefined>(mapper: (value: T) => _Awaitable<_AsyncIteratorLike<R, unknown, RNext>>): AsyncGenerator<R, void, RNext>;
         forEach(fn: (value: T) => _Awaitable<unknown>): Promise<void>;
         toArray(): Promise<_RA<T>>;
         reduce(reducer: (previousValue: T, currentValue: T) => _Awaitable<T>): Promise<T>;
