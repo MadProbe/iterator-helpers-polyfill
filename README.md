@@ -79,9 +79,10 @@ Iterator.range(1, 5).forEach(console.log);
 // 5
 ```
 ### .reduce(reducer, initialValue?);
-TLDR: basically same as `Array.prototype.reduce()`.
+
+**TLDR**: basically same as `Array.prototype.reduce()`.  
 Firstly, this method creates an accumulator variable for later use from `initialValue` parameter if it's specified or gets first value of `this` iterator or throws if neither of these were the case.
-Then it takes following values and calls `reducer` function with them and accumulator and then assigns result of the call to the accumulator variable.
+Then it takes following values and calls `reducer` function with them and accumulator and then assigns result of the call to the accumulator variable.  
 Examples:
 ```ts
 Iterator.range(1, 10).reduce((accumulator, x) => accumulator + x); // 55
@@ -135,6 +136,29 @@ Returns average number from all the numbers from `this` iterator.
 Example:
 ```ts
 Iterator.from([10, 50, 40, 20]).average(); // 30
+```
+
+### .chain(...iterators);
+Returns an iterator which yields values sequencially of `this` iterator first and then all the `iterators` one by one left to right.  
+Example:
+```ts
+Iterator.range(1, 3).chain(Iterator.range(4, 6), Iteratior.range(7, 10)).toArray; // [1, 2, 3, 4, 5, 6, 7, 8, 9, 10]
+```
+
+### .join(separator: string = ", ");
+TLDR: Same as `Array.prototype.join()` but default separator is `", "`, not `","`.  
+Returns a string of all values of `this` iterator stringified and joined by `seperator`.  
+Example:
+```ts
+Iterator.range(1, 5).join(); // "1, 2, 3, 4, 5"
+```
+
+### .cycle(times: number = Infinity);
+Aliases: .repeat()
+Repeats values of `this` iterator passed number of times or infinite amount of times if nothing is passed as `times` argument.  
+Example:
+```ts
+Iterator.range(1, 3).cycle(2).toArray(); // [1, 2, 3, 1, 2, 3]
 ```
 
 
