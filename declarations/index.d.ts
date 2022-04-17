@@ -1,4 +1,3 @@
-
 /// <reference lib="es2015.generator" />
 /// <reference lib="es2018.asyncgenerator" />
 // I don't want to change types of built-ins only because of this rule
