@@ -4,6 +4,7 @@ tests
 node_modules
 *.html
 package-lock.json
+.serverconfig.json
 tsconfig.json
 *.config.js
 *.config.dev.js

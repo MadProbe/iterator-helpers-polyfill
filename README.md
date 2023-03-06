@@ -1,10 +1,8 @@
 # Iterator Helpers Polyfill
 
-This is a polyfill for [Iterator Helpers Proposal](https://github.com/tc39/proposal-iterator-helpers/).  
-It is independent (doesn't have any dependecies) and can be used in enviroments supporting ES2018 (Notably Async Generators, Generators, Async Functions, Reflect and Proxy).  
-The polyfill aims to be as immune to built-in values changes as possible (NOTE: It borrows and caches built-in values from globalThis only once at start and uses them without accessing them after, so if they are changed before the script is run, the polyfill will use the changed built-ins (or not so at this case)).  
-The polyfill aims to be as close to the specification as possible, including `function () { [native code] }` return value of `functions.toString()`.  
-**NOTE:** By default `Iterator` and `AsyncIterator` constructors are not installed onto globalThis by default: you can import them directly or call imported `installIntoGlobal` function.  
+This is a dependenciless ES2018+ polyfill for [Iterator Helpers Proposal](https://github.com/tc39/proposal-iterator-helpers/).  
+The polyfill aims to be as specification-conformant as possible.  
+**NOTE:** By default this package is pure: to add the `Iterator` and `AsyncIterator` as globals please use the `installIntoGlobal` function to add them into `globalThis`.  
 
 
 # Method Documentation

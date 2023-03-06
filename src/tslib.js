@@ -258,7 +258,7 @@ export const $globalThis = (() => {
     delete prototype.__マジック__;
     return global;
 })();
-export const { Array, Map, Proxy, RangeError, Set, Symbol, TypeError, WeakMap, WeakSet } = $globalThis;
+export const { Array, Map, Proxy, RangeError, Set, Symbol, TypeError, WeakMap, WeakSet } = /** @type {globalThis} */ $globalThis;
 const a = Array.prototype;
 export const undefined = (function() { "use strict"; return this; })();
 export const { asyncIterator, iterator, toStringTag, toPrimitive } = Symbol;

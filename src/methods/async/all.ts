@@ -1,6 +1,7 @@
-export { default as asIndexedPairs } from "./asIndexedPairs.js";
+export { default as asIndexedPairs } from "./indexed.js";
 export { default as flatMap } from "./flatMap.js";
 export { default as forEach } from "./forEach.js";
+export { default as indexed } from "./indexed.js";
 export { default as toArray } from "./toArray.js";
 export { default as filter } from "./filter.js";
 export { default as reduce } from "./reduce.js";

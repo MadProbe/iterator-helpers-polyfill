@@ -1,6 +1,6 @@
 import {
     AnyFunction, apply, bind, call, create, defineProperties, defineProperty, floor, get, getOwnPropertyDescriptor, getOwnPropertyDescriptors,
-    getPrototypeOf, isExtensible, keys, preventExtensions, Proxy, Set, set, setPrototypeOf, shift, Symbol, TypeError, undefined, WeakMap, WeakSet
+    getPrototypeOf, isExtensible, keys, preventExtensions, Proxy, Set, set, setPrototypeOf, shift, Symbol, toPrimitive, TypeError, undefined, WeakMap, WeakSet
 } from "tslib";
 
 
@@ -79,7 +79,7 @@ export const assertIterator = <T extends AnyFunction>(func: T): T => {
 
         return call(func, this, (...args: readonly unknown[]) => apply(next, this, args), ...arguments);
     }
-    $function[MimicedFunctionSymbol] = func[MimicedFunctionSymbol] || func;
+    $function[MimicedFunctionSymbol as never] = (func[MimicedFunctionSymbol as never] || func) as never;
 
     return $function as T;
 };
@@ -92,7 +92,7 @@ export const assert = (asserter: AnyFunction, message: (argument: unknown) => st
 
         return apply(func, this, arguments);
     }
-    $function[MimicedFunctionSymbol] = func[MimicedFunctionSymbol] || func;
+    $function[MimicedFunctionSymbol as never] = (func[MimicedFunctionSymbol as never] || func) as never;
 
     return $function;
 };
@@ -104,7 +104,7 @@ export const assertReplace = (asserter: (argument: unknown) => unknown, func: An
 
         return apply(func, this, arguments);
     }
-    $function[MimicedFunctionSymbol] = func[MimicedFunctionSymbol] || func;
+    $function[MimicedFunctionSymbol as never] = (func[MimicedFunctionSymbol as never] || func) as never;
 
     return $function;
 };
@@ -115,7 +115,7 @@ export const assertReplaceStar = (asserter: (argument: IArguments) => void, func
 
         return apply(func, this, arguments);
     }
-    $function[MimicedFunctionSymbol] = func[MimicedFunctionSymbol] || func;
+    $function[MimicedFunctionSymbol as never] = (func[MimicedFunctionSymbol as never] || func) as never;
 
     return $function;
 };
@@ -203,13 +203,49 @@ export const uncurryThis = (func: AnyFunction): AnyFunction =>
     mimic(func.length + 1, func.name, (...args: readonly unknown[]) => apply(func, shift(args), args));
 
 export const mimic = (argsLength: number | undefined, name: string, $function: AnyFunction): AnyFunction => {
-    const { length } = $function[MimicedFunctionSymbol] || $function;
+    const { length } = $function[MimicedFunctionSymbol as never] || $function;
 
     // default is original function arguments length - 1 since
     // it will be very common to have next parameter as first parameter
     // while still having opportunity to change it manually
     defineProperties($function, { length: { value: argsLength ?? length - 1, configurable: true }, name: { value: name, configurable: true } });
-    delete $function[MimicedFunctionSymbol];
+    delete $function[MimicedFunctionSymbol as never];
 
     return concealSourceCode($function);
 };
+
+
+export const safeObjectMethodCall = (object: Record<never, unknown>, name: string) => {
+    const method = object[name as never];
+
+    if (typeof method === "function") {
+        return call(method, object as never);
+    }
+
+    return object;
+};
+
+export const isNonNullObject = (property: unknown): property is Record<PropertyKey, unknown> => isObject(property) && property !== null;
+
+export const toPropertyKey = (property: unknown): PropertyKey => {
+    if (isNonNullObject(property)) { // is it right to do here null check or not?
+        const method = property[toPrimitive];
+
+        if (method !== undefined) {
+            property = call(method as never, property as never, "string") as never;
+            if (isNonNullObject(property)) ({} as Record<PropertyKey, never>)[{ [toPrimitive]: () => property } as never];
+        } else {
+            property = safeObjectMethodCall(property as never, "toString") as never;
+            if (isNonNullObject(property)) {
+                property = safeObjectMethodCall(property as never, "valueOf") as never;
+                if (isNonNullObject(property)) {
+                    throw create(null)[{ toString() { return this; }, valueOf() { return this; } } as never];
+                }
+            }
+        }
+    }
+
+    return property as never;
+};
+
+export const pushValue = <T>(array: readonly T[], value: T): T => (array as T[])[array.length] = value;

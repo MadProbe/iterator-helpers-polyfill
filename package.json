@@ -2,8 +2,9 @@
     "author": "MadProbe#7435",
     "name": "iterator-helpers-polyfill",
     "description": "A polyfill for Iterator helpers proposal",
-    "version": "2.2.8",
+    "version": "2.3.0",
     "license": "MIT",
+    "type": "module",
     "main": "./build/bundle.min.js",
     "module": "./build/bundle.min.mjs",
     "types": "./declarations/index.d.ts",
@@ -23,7 +24,7 @@
         "build-dev": "rollup -c rollup.config.dev.js",
         "lint": "eslint . --ext .js,.jsx,.ts,.tsx",
         "lint-fix": "eslint . --ext .js,.jsx,.ts,.tsx --fix",
-        "update": "npm i -D @typescript-eslint/eslint-plugin@latest eslint@latest eslint-plugin-import@latest rollup@latest @rollup/plugin-eslint@latest rollup-plugin-terser@latest rollup-plugin-typescript2@latest typescript@latest",
+        "update": "npm i -D @typescript-eslint/eslint-plugin@latest eslint@latest eslint-plugin-import@latest rollup@latest @rollup/plugin-eslint@latest @rollup/plugin-terser rollup-plugin-typescript2@latest typescript@latest --force",
         "prepublishOnly": "npm run build-full"
     },
     "repository": {
@@ -49,13 +50,13 @@
     },
     "homepage": "https://github.com/MadProbe/iterator-helpers-polyfill#readme",
     "devDependencies": {
-        "@rollup/plugin-eslint": "^8.0.2",
-        "@typescript-eslint/eslint-plugin": "^5.19.0",
-        "eslint": "^8.13.0",
-        "eslint-plugin-import": "^2.26.0",
-        "rollup": "^2.70.2",
-        "rollup-plugin-terser": "^7.0.2",
-        "rollup-plugin-typescript2": "^0.31.2",
-        "typescript": "^4.6.3"
+        "@rollup/plugin-eslint": "^9.0.3",
+        "@rollup/plugin-terser": "^0.4.0",
+        "@typescript-eslint/eslint-plugin": "^5.54.0",
+        "eslint": "^8.35.0",
+        "eslint-plugin-import": "^2.27.5",
+        "rollup": "^3.18.0",
+        "rollup-plugin-typescript2": "^0.34.1",
+        "typescript": "^4.9.5"
     }
 }

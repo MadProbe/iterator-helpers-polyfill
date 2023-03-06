@@ -1,5 +1,5 @@
 import { undefined } from "tslib";
-import { assert, assertIterator, closeIterator, isFunction, mimic, SafeMap } from "@utils/utils.js";
+import { assert, assertIterator, closeIterator, isFunction, mimic, pushValue, SafeMap } from "@utils/utils.js";
 
 
 export default mimic(undefined, "groupByToMap", assert(isFunction, O => `${ O } is not a function`, assertIterator(
@@ -7,15 +7,13 @@ export default mimic(undefined, "groupByToMap", assert(isFunction, O => `${ O } 
         var done: boolean | undefined, value: unknown, map: SafeMap<unknown, unknown[]> = new SafeMap;
 
         while ({ done, value } = _next(), !done) try {
-            const array: unknown[] = map.getSet(fn(value), Array);
-
-            array[array.length] = value;
+            pushValue(map.getSet(fn(value), Array), value);
         } catch (error) {
             closeIterator(this);
             throw error;
         }
 
-        return map;
+        return new Map(map);
     }
 )));
 

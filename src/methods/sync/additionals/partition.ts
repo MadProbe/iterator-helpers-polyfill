@@ -1,5 +1,5 @@
 import { call, shift, undefined } from "tslib";
-import { assert, assertIterator, closeIterator, isFunction, mimic } from "@utils/utils.js";
+import { assert, assertIterator, closeIterator, isFunction, mimic, pushValue } from "@utils/utils.js";
 
 
 class PartitionateIterator {
@@ -34,7 +34,7 @@ class PartitionateIterator {
                         this.lastValue = yield value;
                         break;
                     } else {
-                        opposite[opposite.length] = value;
+                        pushValue(opposite, value);
                     }
                 }
             } catch (error) {

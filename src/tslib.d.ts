@@ -28,7 +28,7 @@ declare module "tslib" {
     type This<T> = unknown extends ThisParameterType<T> ? any : ThisParameterType<T>;
     type LastRest<A extends any[]> = IsEmptyArray<A> extends true ? A : A extends [any?, ...(infer Rest)] ? LastRest<Rest> : A;
     type RemoveArgs<A extends any[], R extends any[]> = A extends [...OptionalArgs<R>, ...(infer Rest)] ? Rest : [];
-    type OptionalArgs<A extends any[]> = any[] extends A ? A | undefined[] : A extends [] ? [] :
+    type OptionalArgs<A extends any[]> = any[] extends A ? A : A extends [] ? [] :
         A extends [infer R, ...(infer Rest)] ? [R?, ...OptionalArgs<Rest>] : A;
     export type BindFunctionType = (
         <T extends (this: any, ...args: any[]) => void, A extends any[], S extends ThisParameterType<T>, V extends unknown extends S ? any | void : Equality<S, UndefinedLike> extends true ? UndefinedLike : S | UndefinedLike>(
@@ -184,7 +184,7 @@ declare module "tslib" {
     export const unshift: <T>(array: readonly T[] | ArrayLike<T>, element: T) => number;
     export const shift: <T>(array: readonly T[] | ArrayLike<T>) => T;
     export const contains: <T>(array: readonly T[] | ArrayLike<T>, value: T) => boolean;
-    export const { Array, Object, Proxy, RangeError, Set, String, TypeError, WeakMap, WeakSet, Symbol, undefined }: globalThis;
+    export const { Array, Map, Object, Proxy, RangeError, Set, String, TypeError, WeakMap, WeakSet, Symbol, undefined }: globalThis;
     export const SameValueZero: (value1: unknown, value2: unknown) => boolean;
     export const __throw: (error: unknown) => never;
 }

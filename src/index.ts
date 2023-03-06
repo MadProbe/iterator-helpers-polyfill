@@ -25,7 +25,7 @@ function defineMethods(O: object, methods: Methods) {
 
 function deleteMethods(O: object, methods: string[]) {
     for (let i = 0, l = methods.length; i < l; i++) {
-        delete O[methods[i]];
+        delete O[methods[i] as never];
     }
 }
 
@@ -82,7 +82,7 @@ const makeAdditionalsFrom = (keys: string[]) => {
     for (var i = 0, l = keys.length; i < l; i++) {
         const key = keys[i];
 
-        entries[key] = defaultStateChange(key);
+        entries[key as never] = defaultStateChange(key) as never;
     }
 
     return entries;
@@ -95,7 +95,7 @@ class Config {
             defineMethods(AsyncIteratorPrototype, additional_async);
             defineMethods(IteratorPrototype, additional_sync);
         } else {
-            const k = keys(additional_async);
+            const k = keys(additional_sync);
 
             deleteMethods(AsyncIteratorPrototype, k);
             deleteMethods(IteratorPrototype, k);

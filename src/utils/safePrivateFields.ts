@@ -1,8 +1,10 @@
 import { type AnyFunction, apply, getPrototypeOf, setPrototypeOf, TypeError } from "tslib";
-import { bound, concealSourceCode, SafeWeakMap } from "./utils.js";
+import { bound, concealSourceCode, pushValue, SafeWeakMap } from "./utils.js";
 
 
-interface FieldMetadata { readonly methods: readonly string[], readonly fields: readonly ClassField[]; }
+class FieldMetadata {
+    constructor(public readonly methods: readonly string[], public readonly fields: readonly ClassField[]) { }
+}
 type ConstructorPrototype = object;
 
 export class ClassField<T = unknown> {
@@ -22,7 +24,7 @@ export class ClassField<T = unknown> {
                 }
             }
             static {
-                _map.set(this.prototype, { methods: [], fields });
+                _map.set(this.prototype, new FieldMetadata([], fields));
             }
         };
     }
@@ -52,10 +54,7 @@ export class ClassField<T = unknown> {
     }
     @bound
     public static check<T = unknown>(target: unknown, property: string, descriptor: TypedPropertyDescriptor<T>) {
-        const methods = this._map.get(getPrototypeOf(target))!.methods as string[];
-
-        methods[methods.length] = property;
-
+        pushValue(this._map.get(getPrototypeOf(target))!.methods, property);
         return descriptor;
     }
     public get<R extends T = T>(thisArg: object): R | undefined {
