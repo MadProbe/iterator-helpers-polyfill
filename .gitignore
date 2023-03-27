@@ -5,3 +5,5 @@ build
 index.html
 *.tgz
 .serverconfig.json
+declarations/index.d.cts
+declarations/index.d.mts

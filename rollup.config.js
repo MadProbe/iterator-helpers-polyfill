@@ -1,4 +1,5 @@
 import terser from "@rollup/plugin-terser";
+import copy from 'rollup-plugin-copy';
 import typescript from "rollup-plugin-typescript2";
 import { readFileSync } from "fs";
 
@@ -41,6 +42,14 @@ export default {
                 reserved: ['AsyncIterator', 'Iterator', 'Config']
             },
             compress: { unsafe: true }
-        })
+        }),
+        ...(process.env.FULL ? [
+            copy({
+                targets: [
+                    { src: 'declarations/index.d.ts', dest: 'declarations', rename: 'index.d.cts' },
+                    { src: 'declarations/index.d.ts', dest: 'declarations', rename: 'index.d.mts' },
+                ]
+            })
+        ] : [])
     ]
 };
