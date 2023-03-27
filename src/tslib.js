@@ -273,3 +273,4 @@ export const { floor, min } = Math;
 export const { get, set } = Reflect;
 export const SameValueZero = (x, y) => x === y || (x !== x && y !== y);
 export const __throw = error => { throw error; };
+export const emptyObject = create(null);

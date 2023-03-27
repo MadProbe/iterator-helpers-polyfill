@@ -46,6 +46,7 @@ initPrototype(AsyncIterator, AsyncIteratorPrototype, initialAsyncIteratorPrototy
 defineMethods(AsyncIterator, initialAsyncIteratorStaticMethods);
 defineMethods(Iterator, initialIteratorStaticMethods);
 
+// eslint-disable-next-line @typescript-eslint/no-unused-vars
 const configOption: (additionalOptions?: Record<string, (state: boolean) => void>) => MethodDecorator = (additionalOptions = {}) =>
     ((target, property, descriptor) => {
         const setState = descriptor.value as never as (state: boolean) => void, o = {};
@@ -76,6 +77,7 @@ const defaultStateChange = (method: string) => (state: boolean) => {
     _(method, state, IteratorPrototype, initialIteratorPrototype);
     _(method, state, AsyncIteratorPrototype, initialAsyncIteratorPrototype);
 };
+// eslint-disable-next-line @typescript-eslint/no-unused-vars
 const makeAdditionalsFrom = (keys: string[]) => {
     const entries = {};
 

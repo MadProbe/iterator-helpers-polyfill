@@ -1,10 +1,12 @@
 import { type AnyFunction, apply, getPrototypeOf, setPrototypeOf, TypeError } from "tslib";
+// eslint-disable-next-line @typescript-eslint/no-unused-vars
 import { bound, concealSourceCode, pushValue, SafeWeakMap } from "./utils.js";
 
 
 class FieldMetadata {
-    constructor(public readonly methods: readonly string[], public readonly fields: readonly ClassField[]) { }
+    public constructor(public readonly methods: readonly string[], public readonly fields: readonly ClassField[]) { }
 }
+
 type ConstructorPrototype = object;
 
 export class ClassField<T = unknown> {
@@ -55,6 +57,7 @@ export class ClassField<T = unknown> {
     @bound
     public static check<T = unknown>(target: unknown, property: string, descriptor: TypedPropertyDescriptor<T>) {
         pushValue(this._map.get(getPrototypeOf(target))!.methods, property);
+
         return descriptor;
     }
     public get<R extends T = T>(thisArg: object): R | undefined {

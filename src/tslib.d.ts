@@ -187,4 +187,6 @@ declare module "tslib" {
     export const { Array, Map, Object, Proxy, RangeError, Set, String, TypeError, WeakMap, WeakSet, Symbol, undefined }: globalThis;
     export const SameValueZero: (value1: unknown, value2: unknown) => boolean;
     export const __throw: (error: unknown) => never;
+    class _ extends null {}
+    export const emptyObject: _;
 }

@@ -1,5 +1,6 @@
 import {
-    AnyFunction, apply, bind, call, create, defineProperties, defineProperty, floor, get, getOwnPropertyDescriptor, getOwnPropertyDescriptors,
+    __throw,
+    AnyFunction, apply, bind, call, create, defineProperties, defineProperty, emptyObject, floor, get, getOwnPropertyDescriptor, getOwnPropertyDescriptors,
     getPrototypeOf, isExtensible, keys, preventExtensions, Proxy, Set, set, setPrototypeOf, shift, Symbol, toPrimitive, TypeError, undefined, WeakMap, WeakSet
 } from "tslib";
 
@@ -168,36 +169,17 @@ export const bound = <T extends AnyFunction>(target: unknown, property: string, 
 export const isFunction = (value: unknown): value is AnyFunction => typeof value === "function";
 
 export const isPositiveInteger = (argument: unknown): number => {
-    const number = +(argument as never);
+    const number = isNumber(argument as never);
 
-    if (number !== number || number === 0) {
-        return 0;
-    }
     if (number < 0) {
-        throw TypeError("Negative integers are not supported by this function");
-    }
-    if (number === 1 / 0) {
-        return number;
+        __throw(TypeError("Negative integers are not supported by this function"));
     }
 
-    const integer = floor(number);
-
-    if (integer === 0) {
-        return 0;
-    }
-
-    return integer;
+    return floor(number);
 };
 
-export const isNumber = (argument: unknown): number => {
-    const number = +(argument as never);
-
-    if (number !== number || number === 0) {
-        return 0;
-    }
-
-    return number;
-};
+// There's no need to be so explicit and do one-by-one operation as in spec as they are already packed in + and || operators
+export const isNumber = (argument: unknown): number => +(argument as never) || 0;
 
 export const uncurryThis = (func: AnyFunction): AnyFunction =>
     mimic(func.length + 1, func.name, (...args: readonly unknown[]) => apply(func, shift(args), args));
@@ -227,19 +209,23 @@ export const safeObjectMethodCall = (object: Record<never, unknown>, name: strin
 
 export const isNonNullObject = (property: unknown): property is Record<PropertyKey, unknown> => isObject(property) && property !== null;
 
+// eslint-disable-next-line @typescript-eslint/no-unused-vars
+const self_referencing_object: typeof emptyObject = { toString: (_: unknown) => self_referencing_object, valueOf: (_: unknown) => self_referencing_object };
+
 export const toPropertyKey = (property: unknown): PropertyKey => {
     if (isNonNullObject(property)) { // is it right to do here null check or not?
         const method = property[toPrimitive];
 
         if (method !== undefined) {
             property = call(method as never, property as never, "string") as never;
-            if (isNonNullObject(property)) ({} as Record<PropertyKey, never>)[{ [toPrimitive]: () => property } as never];
+            // eslint-disable-next-line @typescript-eslint/no-unused-vars
+            if (isNonNullObject(property)) emptyObject[{ [toPrimitive]: (_: unknown) => property } as never];
         } else {
             property = safeObjectMethodCall(property as never, "toString") as never;
             if (isNonNullObject(property)) {
                 property = safeObjectMethodCall(property as never, "valueOf") as never;
                 if (isNonNullObject(property)) {
-                    throw create(null)[{ toString() { return this; }, valueOf() { return this; } } as never];
+                    emptyObject[self_referencing_object as never];
                 }
             }
         }
