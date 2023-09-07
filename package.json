@@ -2,7 +2,7 @@
     "author": "MadProbe#7435",
     "name": "iterator-helpers-polyfill",
     "description": "A polyfill for Iterator helpers proposal",
-    "version": "2.3.1",
+    "version": "2.3.2",
     "license": "MIT",
     "type": "module",
     "main": "./build/bundle.min.js",
@@ -55,14 +55,14 @@
     },
     "homepage": "https://github.com/MadProbe/iterator-helpers-polyfill#readme",
     "devDependencies": {
-        "@rollup/plugin-eslint": "^9.0.3",
-        "@rollup/plugin-terser": "^0.4.0",
-        "@typescript-eslint/eslint-plugin": "^5.56.0",
-        "eslint": "^8.36.0",
-        "eslint-plugin-import": "^2.27.5",
-        "rollup": "^3.20.2",
-        "rollup-plugin-copy": "^3.4.0",
-        "rollup-plugin-typescript2": "^0.34.1",
-        "typescript": "^5.0.2"
+        "@rollup/plugin-eslint": "^9.0.4",
+        "@rollup/plugin-terser": "^0.4.3",
+        "@typescript-eslint/eslint-plugin": "^6.6.0",
+        "eslint": "^8.48.0",
+        "eslint-plugin-import": "^2.28.1",
+        "rollup": "^3.29.0",
+        "rollup-plugin-copy": "^3.5.0",
+        "rollup-plugin-typescript2": "^0.35.0",
+        "typescript": "^5.2.2"
     }
 }

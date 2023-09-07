@@ -247,20 +247,25 @@ export const $globalThis = (() => {
     // I've actually taken this snippet from a wonderful article made by Mathias Bynens:
     // https://mathiasbynens.be/notes/globalthis, go and check it out!
     // (actually it's modified a bit, but anyway)
-    var global;
-    defineProperty(prototype, '__マジック__', {
-        get() {
-            return this;
-        },
-        configurable: true
-    });
-    global = __マジック__;
-    delete prototype.__マジック__;
-    return global;
-})();
+    var g;
+    try {
+        defineProperty(prototype, '__0x_6642_5d0e_72c2_4e09', {
+            get() {
+                return this;
+            },
+            configurable: true
+        });
+        g = __0x_6642_5d0e_72c2_4e09;
+        delete prototype.__0x_6642_5d0e_72c2_4e09;
+    } catch { } // suppress any error if it occurs
+    try { g ||= globalThis; } catch { }
+    try { g ||= window; } catch { }
+    try { g ||= global; } catch { }
+    return g;
+})() || globalThis || window || global; // globalThis default search
 export const { Array, Map, Proxy, RangeError, Set, Symbol, TypeError, WeakMap, WeakSet } = /** @type {globalThis} */ $globalThis;
 const a = Array.prototype;
-export const undefined = (function() { "use strict"; return this; })();
+export const undefined = (function () { "use strict"; return this; })();
 export const { asyncIterator, iterator, toStringTag, toPrimitive } = Symbol;
 export const bind = _call.bind(_call.bind);
 export const call = bind(_call, _call);

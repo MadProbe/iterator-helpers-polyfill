@@ -56,13 +56,13 @@ declare global {
         readonly prototype: Iterator;
         new <T = unknown, TReturn = any, TNext = undefined>(): Iterator<T, TReturn, TNext>;
         from<T>(iterable: _IteratorLike<T>): Iterator<T>;
-        range(start: number, end?: number, step?: number): Generator<number>;
+        range(start: number, end?: number, step?: number, inclusive?: boolean): Generator<number>;
     }
     interface AsyncIteratorConstructor {
         readonly prototype: AsyncIterator;
         new <T = unknown, TReturn = any, TNext = undefined>(): AsyncIterator<T, TReturn, TNext>;
         from<T>(iterable: _AsyncIteratorLike<T>): AsyncIterator<T>;
-        range(start: number, end?: number, step?: number): AsyncGenerator<number>;
+        range(start: number, end?: number, step?: number, inclusive?: boolean): AsyncGenerator<number>;
     }
     var Iterator: IteratorConstructor;
     var AsyncIterator: AsyncIteratorConstructor;
