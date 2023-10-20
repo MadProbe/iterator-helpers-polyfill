@@ -147,7 +147,7 @@ savePrototype(SafeWeakSet, WeakSet);
 savePrototype(SafeSet, Set);
 savePrototype(SafeMap, Map);
 
-const isObject = (x: unknown): x is object => typeof x === "function" || typeof x === "object";
+const isObject = (x: unknown): x is Record<PropertyKey, unknown> => typeof x === "function" || typeof x === "object" && x !== null;
 
 export class WeakenedSet<T> {
     private readonly _weakSet = new SafeWeakSet<T extends object ? T : never>();
@@ -207,24 +207,24 @@ export const safeObjectMethodCall = (object: Record<never, unknown>, name: strin
     return object;
 };
 
-export const isNonNullObject = (property: unknown): property is Record<PropertyKey, unknown> => isObject(property) && property !== null;
+export { isObject as isNonNullObject }
 
 // eslint-disable-next-line @typescript-eslint/no-unused-vars
 const self_referencing_object: typeof emptyObject = { toString: (_: unknown) => self_referencing_object, valueOf: (_: unknown) => self_referencing_object };
 
 export const toPropertyKey = (property: unknown): PropertyKey => {
-    if (isNonNullObject(property)) { // is it right to do here null check or not?
+    if (isObject(property)) { // is it right to do here null check or not?
         const method = property[toPrimitive];
 
         if (method !== undefined) {
             property = call(method as never, property as never, "string") as never;
             // eslint-disable-next-line @typescript-eslint/no-unused-vars
-            if (isNonNullObject(property)) emptyObject[{ [toPrimitive]: (_: unknown) => property } as never];
+            if (isObject(property)) emptyObject[{ [toPrimitive]: (_: unknown) => property } as never];
         } else {
             property = safeObjectMethodCall(property as never, "toString") as never;
-            if (isNonNullObject(property)) {
+            if (isObject(property)) {
                 property = safeObjectMethodCall(property as never, "valueOf") as never;
-                if (isNonNullObject(property)) {
+                if (isObject(property)) {
                     emptyObject[self_referencing_object as never];
                 }
             }
