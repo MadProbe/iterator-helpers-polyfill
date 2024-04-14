@@ -5,7 +5,7 @@ import { assert, assertIterator, closeIterator, isFunction, mimic, pushValue } f
 class PartitionateIterator {
     private _done?: readonly [unknown];
     private rejected?: readonly [unknown];
-    private lastValue?: unknown;
+    private index: number = 0;
     public constructor(private readonly _next: Iterator<unknown, unknown, unknown>["next"],
         private readonly fn: (...args: readonly unknown[]) => boolean, private readonly _iterator: Iterator<unknown>) { }
     private *start(direction: boolean, items: unknown[], opposite: unknown[]) {
@@ -15,7 +15,7 @@ class PartitionateIterator {
                 while (items.length > 0) yield shift(items);
                 if (this._done) break;
                 while (1) {
-                    var { value, done } = this._next(this.lastValue), result: boolean;
+                    var { value, done } = this._next(), result: boolean;
 
                     if (done) {
                         this._done = [value];
@@ -24,14 +24,14 @@ class PartitionateIterator {
                         return value;
                     }
                     try {
-                        result = call(this.fn, undefined!, value); // fn would be otherwise called with `this` set with current `this` value (of PartitionateIterator class);
+                        result = call(this.fn, undefined!, value, this.index++); // fn would be otherwise called with `this` set with current `this` value (of PartitionateIterator class);
                     } catch (error) {
                         closeIterator(this._iterator);
                         throw error;
                     }
                     if (!!result === direction) {
                         while (items.length > 0) yield shift(items);
-                        this.lastValue = yield value;
+                        yield value;
                         break;
                     } else {
                         pushValue(opposite, value);

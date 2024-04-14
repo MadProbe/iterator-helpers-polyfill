@@ -63,9 +63,9 @@ export const closeAsyncIterator = async <T>(iterator: AsyncIterator<T>, completi
 };
 
 export const assertIsIterator = (O: unknown): Iterator<unknown>["next"] => {
-    var next: Iterator["next"] | AsyncIterator<unknown>["next"];
+    var next: Iterator<unknown>["next"] | AsyncIterator<unknown>["next"];
 
-    if (!O || !isFunction(next = (O as Iterator).next)) {
+    if (!O || !isFunction(next = (O as Iterator<unknown>).next)) {
         throw TypeError("Iterator method is called on incompatible reciever " + O);
     }
 

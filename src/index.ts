@@ -4,10 +4,10 @@ import * as async_methods from "@async/all.js";
 import * as sync_methods from "@sync/all.js";
 import * as additional_async from "@async/additionals/all.js";
 import * as additional_sync from "@sync/additionals/all.js";
-import * as additional_async_statics from "@async/statics/additionals/all.js";
 import * as async_statics from "@async/statics/all.js";
-import * as additional_sync_statics from "@sync/statics/additionals/all.js";
 import * as sync_statics from "@sync/statics/all.js";
+import * as additional_async_statics from "@async/statics/additionals/all.js";
+import * as additional_sync_statics from "@sync/statics/additionals/all.js";
 
 
 type Methods = Record<string, AnyFunction>;

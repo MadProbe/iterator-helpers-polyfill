@@ -9,10 +9,10 @@ export default mimic(undefined, "drop", assertReplace(isPositiveInteger, assertI
         }
 
         while (1) {
-            var lastValue: unknown, { done, value } = _next(lastValue);
+            var { done, value } = _next();
 
             if (done) return;
-            lastValue = yield value;
+            yield value;
         }
     }
 )));

@@ -1,4 +1,3 @@
-export { default as asIndexedPairs } from "./indexed.js";
 export { default as flatMap } from "./flatMap.js";
 export { default as forEach } from "./forEach.js";
 export { default as indexed } from "./indexed.js";

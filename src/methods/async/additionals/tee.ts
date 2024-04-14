@@ -5,7 +5,6 @@ import { assertIterator, assertReplace, isPositiveInteger, mimic } from "@utils/
 /** A clever implementation of tee method which is garbage-collection friendly */
 class ClonedAsyncIterator {
     private _done?: readonly [number, unknown];
-    private lastValue!: unknown;
     public constructor(private readonly _next: AsyncIterator<unknown, unknown, unknown>["next"]) { }
     public _create(count: number): readonly AsyncGenerator[] {
         const a = Array<AsyncGenerator>(count), results: unknown[] = [], positions = Array<number>(count);
@@ -23,14 +22,14 @@ class ClonedAsyncIterator {
 
         while ((this._done && this._done[0]) !== position) {
             if (position >= results.length) {
-                const { done, value } = await this._next(this.lastValue);
+                const { done, value } = await this._next();
 
                 if (done) {
                     this._done = [position, value];
 
                     return value;
                 }
-                this.lastValue = yield results[position++] = value;
+                yield results[position++] = value;
                 positions[index] = position;
                 continue;
             }

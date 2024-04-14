@@ -9,24 +9,14 @@ var next: ClassField<Iterator<unknown, unknown, unknown>["next"]>, iterator: Cla
 export class WrapForVaildIteratorPrototype extends ClassField.init(next = new ClassField(assertIsIterator), iterator = new ClassField(x => x as never)) {
     public ["constructor"]?: WrapForVaildIteratorPrototype;
     @ClassField.check
-    public next(value: unknown) {
-        return 0 in arguments ? call(next.get(this)!, iterator.get(this), value) : call(next.get(this)!, iterator.get(this));
+    public next() {
+        return call(next.get(this)!, iterator.get(this));
     }
     @ClassField.check
-    public return(value: unknown) {
+    public return() {
         const $return = iterator.get(this)!.return;
 
-        return { value: $return !== undefined ? call($return, iterator.get(this)) : value, done: true };
-    }
-    @ClassField.check
-    public throw(value: unknown) {
-        const $throw = iterator.get(this)!.throw;
-
-        if ($throw !== undefined) {
-            call($throw, iterator.get(this), value);
-        } else {
-            throw value;
-        }
+        return $return !== undefined ? call($return, iterator.get(this)) : { value: undefined, done: true };
     }
 }
 

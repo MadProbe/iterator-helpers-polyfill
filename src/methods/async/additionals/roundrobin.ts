@@ -1,5 +1,5 @@
 import { assertIterator, assertReplaceStar, mimic } from "@utils/utils.js";
-import { type AnyFunction, Array, bind, undefined, unshift } from "tslib";
+import { type AnyFunction, bind, undefined, unshift } from "tslib";
 import from from "@async/statics/from.js";
 
 
@@ -9,15 +9,15 @@ export default mimic(undefined, "roundrobin", assertReplaceStar(args => {
     }
 }, assertIterator(
     async function* (this: AsyncIterator<unknown>, next: AsyncIterator<unknown, unknown, unknown>["next"], ...nexts: AsyncIterator<unknown, unknown, unknown>["next"][]) {
-        var index, length = unshift(nexts, next), doneCount = 0, lastValues: unknown[] = Array(length);
+        var index, length = unshift(nexts, next), doneCount = 0;
 
         while (doneCount < length) {
             for (index = 0; index < length; index++) {
                 if (nexts[index]) {
-                    const { done, value } = await nexts[index]!(lastValues[index]);
+                    const { done, value } = await nexts[index]();
 
                     if (done && ++doneCount) { delete nexts[index]; continue; }
-                    lastValues[index] = yield value;
+                    yield value;
                 }
             }
         }

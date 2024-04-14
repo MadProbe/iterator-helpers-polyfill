@@ -3,11 +3,11 @@ import { assert, assertIterator, closeAsyncIterator, isFunction, mimic } from "@
 
 
 export default mimic(undefined, "starMap", assert(isFunction, O => `${ O } is not a function`, assertIterator(
-    async function* (this: AsyncIterator<unknown>, _next: AsyncIterator<Iterator, never, unknown>["next"], fn: (...args: readonly unknown[]) => Promise<unknown>) {
-        var lastValue: unknown, done: boolean | undefined, value: Iterator;
+    async function* (this: AsyncIterator<unknown>, _next: AsyncIterator<Iterator<unknown>, never, unknown>["next"], fn: (...args: readonly unknown[]) => Promise<unknown>) {
+        var done: boolean | undefined, value: Iterator<unknown>;
 
-        while ({ done, value } = await _next(lastValue), !done) try {
-            lastValue = yield await fn(...value);
+        while ({ done, value } = await _next(), !done) try {
+            yield await fn(...value);
         } catch (error) {
             await closeAsyncIterator(this);
             throw error;

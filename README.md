@@ -167,11 +167,11 @@ Example:
 // inclusive
 Iterator.range(1, 3, 1, true).toArray(); // [1, 2, 3]
 // exclusive
-Iterator.range(1, 3, 1, true).toArray(); // [1, 2]
+Iterator.range(1, 3, 1).toArray(); // [1, 2]
 // inclusive reverse
 Iterator.range(-1, -3, -1, true).toArray(); // [-1, -2, -3]
 // exclusive
-Iterator.range(-1, -3, -1, true).toArray(); // [-1, -2]
+Iterator.range(-1, -3, -1).toArray(); // [-1, -2]
 // edge cases
 Iterator.range(1, 1, 0, false).toArray(); // []
 Iterator.range(0, 1, 0, true).toArray(); // []
@@ -185,7 +185,6 @@ Iterator.range(0, 0, 0, true).take(2).toArray(); // [0, 0], .range() itetates in
 * It takes globalThis by a polyfill written by Mathias Bynens from [his awensome article](https://mathiasbynens.be/notes/globalthis) (Lingers on fact that `__0x_6642_5d0e_72c2_4e09` preperty is writable and extensible in Object.prototype and Object.defineProperty isn't changed before the script is run).  
 * UMD bundle is exposed into global as `__IteratorHelpersPolyfill`.  
 * All bundles are **minified**.  
-* Typings mutate `AsyncIterator` interface so its `T` type variable is optional and defaults to `unknown` (just to be consistent with `Iterator` interface).  
 * Additional helpers can be removed by the `config` variable from exports.  
 * This polyfill's size is less than 5 kb (4.62 kb atm) when compressed by Brotli compression algorithm.  
 * Typings are made to accurately reflect behaviour of methods as much as possible.  

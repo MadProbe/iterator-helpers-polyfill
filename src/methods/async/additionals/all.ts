@@ -1,4 +1,5 @@
 export { default as symmetricDifference } from "./symmetricDifference.js";
+export { default as asIndexedPairs } from "../indexed.js";
 export { default as uniqueJustseen } from "./uniqueJustseen.js";
 export { default as groupByToMap } from "./groupByToMap.js";
 export { default as intersection } from "./intersection.js";

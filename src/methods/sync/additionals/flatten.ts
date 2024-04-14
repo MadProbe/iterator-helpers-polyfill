@@ -9,7 +9,7 @@ export default mimic(0, "flatten", assertReplace((x = 1) => isPositiveInteger(x)
 
         while ({ done, value } = _next(), !done) {
             if (depth > 0 && (typeof value !== "string" || !keepStringsAsIs && value.length > 1)) {
-                yield* call(recurse, iterator = from(value as Iterator), (next = iterator.next, ((...args: readonly unknown[]) => apply<typeof _next>(next, iterator, args))), depth - 1);
+                yield* call(recurse, iterator = from(value as Iterator<unknown>), (next = iterator.next, ((...args: readonly unknown[]) => apply<typeof _next>(next, iterator, args))), depth - 1);
             } else yield value;
         }
     }
