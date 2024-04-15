@@ -1,4 +1,4 @@
-require('..');
+require('../build/bundle.min.cjs').installIntoGlobal();
 const { readdirSync } = require("fs");
 const { join } = require("path");
 
@@ -25,4 +25,3 @@ const { join } = require("path");
         }
     }
 })();
-module.exports = null;

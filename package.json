@@ -23,7 +23,7 @@
         "lib": "src"
     },
     "scripts": {
-        "test": "node ./tests/test.js",
+        "test": "npm run build-full && node ./tests/test.cjs",
         "build": "rollup -c",
         "build-full": "rollup -c --environment FULL",
         "build-dev": "rollup -c rollup.config.dev.js",
