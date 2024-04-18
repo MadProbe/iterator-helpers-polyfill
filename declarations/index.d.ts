@@ -9,9 +9,9 @@ export declare type _IteratorSkeleton<T> = { next(value?: unknown): IteratorResu
 
 export declare type _AsyncIteratorSkeleton<T> = { next(value?: unknown): PromiseLike<IteratorResult<T>> };
 
-export declare type _IterableSkeleton<T> = { [Symbol.iterator]: _IteratorSkeleton<T> };
+export declare type _IterableSkeleton<T> = { [Symbol.iterator](): _IteratorSkeleton<T> };
 
-export declare type _AsyncIterableSkeleton<T> = { [Symbol.asyncIterator]: _AsyncIteratorSkeleton<T> };
+export declare type _AsyncIterableSkeleton<T> = { [Symbol.asyncIterator](): _AsyncIteratorSkeleton<T> };
 
 export declare type _IteratorLike<T = any> = _IteratorSkeleton<T> | _IterableSkeleton<T>;
 
